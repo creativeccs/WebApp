@@ -1,9 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay, EffectFade, Parallax, Keyboard, Mousewheel } from 'swiper/modules';
 import type { Swiper as SwiperType } from 'swiper';
@@ -145,12 +140,7 @@ export function Slideshow({
         </div>
       </Swiper>
 
-      <style jsx>{`
-        .swiper-pagination-custom .swiper-pagination-bullet-active {
-          background: white !important;
-          transform: scale(1.2);
-        }
-      `}</style>
+
     </div>
   );
 }

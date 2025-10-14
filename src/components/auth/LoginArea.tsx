@@ -36,7 +36,7 @@ export function LoginArea({ className }: LoginAreaProps) {
         </Button>
       )}
 
-      <SimpleLoginDialog
+      <LoginDialog
         isOpen={loginDialogOpen}
         onClose={() => setLoginDialogOpen(false)}
         onLogin={handleLogin}
