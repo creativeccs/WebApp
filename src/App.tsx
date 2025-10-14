@@ -14,7 +14,8 @@ import { NWCProvider } from '@/contexts/NWCContext';
 import { AppConfig } from '@/contexts/AppContext';
 import { I18nProvider } from '@/components/I18nProvider';
 import NavigationLayout from '@/components/NavigationLayout';
-import AppRouter from './AppRouter';
+import { BrowserRouter } from 'react-router-dom';
+import { AppRouter } from './AppRouter';
 
 const head = createHead({
   plugins: [
@@ -56,9 +57,11 @@ export function App() {
                   <TooltipProvider>
                     <Toaster />
                     <Suspense>
-                      <NavigationLayout>
-                        <AppRouter />
-                      </NavigationLayout>
+                      <BrowserRouter>
+                        <NavigationLayout>
+                          <AppRouter />
+                        </NavigationLayout>
+                      </BrowserRouter>
                     </Suspense>
                   </TooltipProvider>
                 </NWCProvider>

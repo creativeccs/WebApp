@@ -24,7 +24,7 @@ interface NavigationLayoutProps {
 }
 
 export function NavigationLayout({ children }: NavigationLayoutProps) {
-  const { t } = useI18n();
+  const { t, isRTL } = useI18n();
   const { user } = useCurrentUser();
   const { theme, setTheme } = useTheme();
   
@@ -55,8 +55,8 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
-            <div className="flex items-center space-x-4">
-              <Link to="/" className="flex items-center space-x-2">
+            <div className={`flex items-center ${isRTL ? 'space-x-reverse space-x-4' : 'space-x-4'}`}>
+              <Link to="/" className={`flex items-center ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
                 <div className="bg-primary text-primary-foreground rounded-lg p-2">
                   <Building className="h-6 w-6" />
                 </div>
@@ -68,14 +68,14 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-1">
+            <nav className={`hidden md:flex items-center ${isRTL ? 'space-x-reverse space-x-1' : 'space-x-1'}`}>
               {navigationItems.map((item) => {
                 const IconComponent = item.icon;
                 return (
                   <Link key={item.path} to={item.path}>
                     <Button 
                       variant={isActive(item.path) ? "default" : "ghost"}
-                      className="gap-2"
+                      className={`gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}
                     >
                       <IconComponent className="h-4 w-4" />
                       {item.label}
@@ -86,7 +86,7 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
             </nav>
 
             {/* Right Side Actions */}
-            <div className="flex items-center space-x-2">
+            <div className={`flex items-center ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
               {/* Theme Toggle */}
               <Button
                 variant="ghost"
@@ -128,10 +128,10 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
                     <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-72">
+                <SheetContent side={isRTL ? "left" : "right"} className="w-72">
                   <div className="flex flex-col h-full">
                     {/* Mobile Logo */}
-                    <div className="flex items-center space-x-2 pb-4 border-b">
+                    <div className={`flex items-center pb-4 border-b ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
                       <div className="bg-primary text-primary-foreground rounded-lg p-2">
                         <Building className="h-6 w-6" />
                       </div>
@@ -153,7 +153,7 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
                           >
                             <Button 
                               variant={isActive(item.path) ? "default" : "ghost"}
-                              className="w-full justify-start gap-3"
+                              className={`w-full gap-3 ${isRTL ? 'justify-end flex-row-reverse' : 'justify-start'}`}
                             >
                               <IconComponent className="h-5 w-5" />
                               {item.label}
@@ -233,7 +233,7 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Company Info */}
             <div className="md:col-span-2">
-              <div className="flex items-center space-x-2 mb-4">
+              <div className={`flex items-center mb-4 ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
                 <div className="bg-primary text-primary-foreground rounded-lg p-2">
                   <Building className="h-6 w-6" />
                 </div>
@@ -242,10 +242,10 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
                   <div className="text-sm text-muted-foreground">Real Estate & Construction</div>
                 </div>
               </div>
-              <p className="text-muted-foreground mb-4 max-w-md">
+              <p className={`text-muted-foreground mb-4 max-w-md ${isRTL ? 'text-right' : 'text-left'}`}>
                 {t.companyDescription}
               </p>
-              <div className="text-sm text-muted-foreground">
+              <div className={`text-sm text-muted-foreground ${isRTL ? 'text-right' : 'text-left'}`}>
                 <p>Muscat, Sultanate of Oman</p>
                 <p>Phone: +968 1234 5678</p>
                 <p>Email: info@creativeccs.om</p>
