@@ -246,7 +246,7 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                   <Label htmlFor="type">{t.type} *</Label>
                   <Select 
                     value={form.watch('type')} 
-                    onValueChange={(value: any) => form.setValue('type', value)}
+                    onValueChange={(value: string) => form.setValue('type', value)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder={t.type} />
@@ -263,7 +263,7 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                   <Label htmlFor="category">{t.category} *</Label>
                   <Select 
                     value={form.watch('category')} 
-                    onValueChange={(value: any) => form.setValue('category', value)}
+                    onValueChange={(value: string) => form.setValue('category', value)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder={t.category} />
@@ -282,7 +282,7 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                   <Label htmlFor="status">{t.status} *</Label>
                   <Select 
                     value={form.watch('status')} 
-                    onValueChange={(value: any) => form.setValue('status', value)}
+                    onValueChange={(value: string) => form.setValue('status', value)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder={t.status} />
@@ -307,7 +307,7 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                     />
                     <Select 
                       value={form.watch('currency')} 
-                      onValueChange={(value: any) => form.setValue('currency', value)}
+                      onValueChange={(value: string) => form.setValue('currency', value)}
                     >
                       <SelectTrigger className="w-24 rounded-l-none">
                         <SelectValue />
@@ -454,7 +454,7 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                   <Label htmlFor="furnished">{t.furnished}</Label>
                   <Select 
                     value={form.watch('furnished') || 'no'} 
-                    onValueChange={(value: any) => form.setValue('furnished', value)}
+                    onValueChange={(value: string) => form.setValue('furnished', value)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder={t.furnished} />
@@ -632,7 +632,7 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                     <Label>{label}</Label>
                     <Select 
                       value={form.watch(key as any) || 'no'} 
-                      onValueChange={(value: any) => form.setValue(key as any, value)}
+                      onValueChange={(value: string) => form.setValue(key as any, value)}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -656,7 +656,7 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                       <Label>Utilities Included</Label>
                       <Select 
                         value={form.watch('utilities_included') || 'no'} 
-                        onValueChange={(value: any) => form.setValue('utilities_included', value)}
+                        onValueChange={(value: string) => form.setValue('utilities_included', value)}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -673,7 +673,7 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                       <Label>Internet Included</Label>
                       <Select 
                         value={form.watch('internet_included') || 'no'} 
-                        onValueChange={(value: any) => form.setValue('internet_included', value)}
+                        onValueChange={(value: string) => form.setValue('internet_included', value)}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -689,7 +689,7 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                       <Label>Maintenance Included</Label>
                       <Select 
                         value={form.watch('maintenance_included') || 'no'} 
-                        onValueChange={(value: any) => form.setValue('maintenance_included', value)}
+                        onValueChange={(value: string) => form.setValue('maintenance_included', value)}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -705,7 +705,7 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                       <Label>Pets Allowed</Label>
                       <Select 
                         value={form.watch('pets_allowed') || 'no'} 
-                        onValueChange={(value: any) => form.setValue('pets_allowed', value)}
+                        onValueChange={(value: string) => form.setValue('pets_allowed', value)}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -721,7 +721,7 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                       <Label>Smoking Allowed</Label>
                       <Select 
                         value={form.watch('smoking_allowed') || 'no'} 
-                        onValueChange={(value: any) => form.setValue('smoking_allowed', value)}
+                        onValueChange={(value: string) => form.setValue('smoking_allowed', value)}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -737,7 +737,7 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                       <Label>Gender Preference</Label>
                       <Select 
                         value={form.watch('gender_preference') || 'any'} 
-                        onValueChange={(value: any) => form.setValue('gender_preference', value)}
+                        onValueChange={(value: string) => form.setValue('gender_preference', value)}
                       >
                         <SelectTrigger>
                           <SelectValue />

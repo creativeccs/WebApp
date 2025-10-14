@@ -6,7 +6,6 @@ import { useI18n } from '@/contexts/I18nContext';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useTheme } from '@/hooks/useTheme';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
-import { LoginArea } from '@/components/auth/LoginArea';
 import { 
   Menu, 
   Home, 
@@ -15,8 +14,7 @@ import {
   MessageCircle, 
   Settings,
   Sun,
-  Moon,
-  LogIn
+  Moon
 } from 'lucide-react';
 
 interface NavigationLayoutProps {
@@ -57,18 +55,22 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
             {/* Logo */}
             <div className={`flex items-center ${isRTL ? 'space-x-reverse space-x-4' : 'space-x-4'}`}>
               <Link to="/" className={`flex items-center ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
-                <div className="bg-primary text-primary-foreground rounded-lg p-2">
-                  <Building className="h-6 w-6" />
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg overflow-hidden bg-white/5 backdrop-blur-sm border border-border/10">
+                  <img 
+                    src="/logo.png" 
+                    alt="CCS Logo" 
+                    className="w-8 h-8 object-contain"
+                  />
                 </div>
-                <div className="hidden sm:block">
-                  <div className="font-bold text-lg">CCS</div>
-                  <div className="text-xs text-muted-foreground">Creative Construction</div>
+                <div className="block">
+                  <div className="font-bold text-base sm:text-lg whitespace-nowrap">{t.companyName}</div>
+                  <div className="text-xs text-muted-foreground whitespace-nowrap">Real Estate & Construction</div>
                 </div>
               </Link>
             </div>
 
             {/* Desktop Navigation */}
-            <nav className={`hidden md:flex items-center ${isRTL ? 'space-x-reverse space-x-1' : 'space-x-1'}`}>
+            <nav className={`hidden lg:flex items-center ${isRTL ? 'space-x-reverse space-x-1' : 'space-x-1'}`}>
               {navigationItems.map((item) => {
                 const IconComponent = item.icon;
                 return (
@@ -83,6 +85,53 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
                   </Link>
                 );
               })}
+            </nav>
+
+            {/* Medium Screen Navigation - Icons Only */}
+            <nav className={`hidden md:flex lg:hidden items-center ${isRTL ? 'space-x-reverse space-x-1' : 'space-x-1'}`}>
+              {navigationItems.slice(0, 3).map((item) => {
+                const IconComponent = item.icon;
+                return (
+                  <Link key={item.path} to={item.path}>
+                    <Button 
+                      variant={isActive(item.path) ? "default" : "ghost"}
+                      size="sm"
+                      className="px-3"
+                    >
+                      <IconComponent className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                );
+              })}
+              
+              {/* More Menu for remaining items */}
+              {navigationItems.length > 3 && (
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="ghost" size="sm" className="px-3">
+                      <Menu className="h-4 w-4" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side={isRTL ? "left" : "right"} className="w-64">
+                    <div className="flex flex-col space-y-2 py-6">
+                      {navigationItems.slice(3).map((item) => {
+                        const IconComponent = item.icon;
+                        return (
+                          <Link key={item.path} to={item.path}>
+                            <Button 
+                              variant={isActive(item.path) ? "default" : "ghost"}
+                              className={`w-full justify-start gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}
+                            >
+                              <IconComponent className="h-4 w-4" />
+                              {item.label}
+                            </Button>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              )}
             </nav>
 
             {/* Right Side Actions */}
@@ -106,20 +155,13 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
                 <LanguageSwitcher />
               </div>
 
-              {/* Login Area */}
-              <div className="hidden sm:block">
-                <LoginArea />
-              </div>
-
-              {/* Admin Link */}
-              {user && (
-                <Link to="/admin" className="hidden sm:block">
-                  <Button variant="outline" size="sm" className="gap-2">
-                    <Settings className="h-4 w-4" />
-                    {t.admin}
-                  </Button>
-                </Link>
-              )}
+              {/* Admin Link - Always visible */}
+              <Link to="/admin" className="hidden sm:block">
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Settings className="h-4 w-4" />
+                  {t.admin}
+                </Button>
+              </Link>
 
               {/* Mobile Menu */}
               <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -132,8 +174,12 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
                   <div className="flex flex-col h-full">
                     {/* Mobile Logo */}
                     <div className={`flex items-center pb-4 border-b ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
-                      <div className="bg-primary text-primary-foreground rounded-lg p-2">
-                        <Building className="h-6 w-6" />
+                      <div className="flex items-center justify-center w-12 h-12 rounded-lg overflow-hidden bg-white/5 backdrop-blur-sm border border-border/10">
+                        <img 
+                          src="/logo.png" 
+                          alt="CCS Logo" 
+                          className="w-10 h-10 object-contain"
+                        />
                       </div>
                       <div>
                         <div className="font-bold text-lg">{t.companyName}</div>
@@ -201,18 +247,13 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
                         <LanguageSwitcher />
                       </div>
 
-                      {/* Login/User Info */}
-                      {user ? (
-                        <div className="px-2">
-                          <div className="text-sm text-muted-foreground mb-2">Logged in as:</div>
-                          <div className="font-medium">{user.pubkey.slice(0, 8)}...</div>
-                        </div>
-                      ) : (
+                      {/* Admin Link */}
+                      <Link to="/admin" className="w-full">
                         <Button variant="outline" className="w-full justify-start gap-3">
-                          <LogIn className="h-5 w-5" />
-                          {t.login}
+                          <Settings className="h-5 w-5" />
+                          {t.admin}
                         </Button>
-                      )}
+                      </Link>
                     </div>
                   </div>
                 </SheetContent>
@@ -234,8 +275,12 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
             {/* Company Info */}
             <div className="md:col-span-2">
               <div className={`flex items-center mb-4 ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
-                <div className="bg-primary text-primary-foreground rounded-lg p-2">
-                  <Building className="h-6 w-6" />
+                <div className="flex items-center justify-center w-12 h-12 rounded-lg overflow-hidden bg-white/5 backdrop-blur-sm border border-border/10">
+                  <img 
+                    src="/logo.png" 
+                    alt="CCS Logo" 
+                    className="w-10 h-10 object-contain"
+                  />
                 </div>
                 <div>
                   <div className="font-bold text-lg">{t.companyName}</div>

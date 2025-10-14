@@ -1,12 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay, EffectFade, Parallax, Keyboard, Mousewheel } from 'swiper/modules';
 import type { Swiper as SwiperType } from 'swiper';
+import type { SlideImage } from '@/hooks/useSlideshowImages';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -14,8 +10,9 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
 import 'swiper/css/parallax';
+
 interface SlideshowProps {
-  images: string[];
+  images: SlideImage[];
   autoPlay?: boolean;
   autoPlayInterval?: number;
   height?: string;
@@ -25,7 +22,7 @@ interface SlideshowProps {
   className?: string;
 }
 
-export function Slideshow({ 
+export function AdvancedSlideshow({ 
   images, 
   autoPlay = true, 
   autoPlayInterval = 5000,
@@ -39,14 +36,20 @@ export function Slideshow({
 
   if (images.length === 0) {
     return (
-      <div className={`relative w-full bg-muted rounded-lg flex items-center justify-center ${className}`} style={{ height }}>
+      <div 
+        className={`relative w-full bg-muted rounded-lg flex items-center justify-center ${className}`}
+        style={{ height }}
+      >
         <p className="text-muted-foreground">No images available</p>
       </div>
     );
   }
 
   return (
-    <div className={`relative w-full rounded-lg overflow-hidden group ${className}`} style={{ height }}>
+    <div 
+      className={`relative w-full rounded-lg overflow-hidden group ${className}`}
+      style={{ height }}
+    >
       <Swiper
         modules={[Navigation, Pagination, Autoplay, EffectFade, Parallax, Keyboard, Mousewheel]}
         spaceBetween={0}
@@ -89,8 +92,8 @@ export function Slideshow({
               data-swiper-parallax="-300"
             >
               <img
-                src={image}
-                alt={`Slide ${index + 1}`}
+                src={image.src}
+                alt={image.alt || `Slide ${index + 1}`}
                 className="w-full h-full object-cover"
                 loading={index === 0 ? 'eager' : 'lazy'}
               />
@@ -107,12 +110,16 @@ export function Slideshow({
                 data-swiper-parallax-opacity="0"
                 data-swiper-parallax-duration="1000"
               >
-                <h3 className="text-2xl md:text-4xl font-bold mb-2 drop-shadow-lg">
-                  Professional Real Estate
-                </h3>
-                <p className="text-lg md:text-xl text-white/90 drop-shadow-md">
-                  Discover premium properties in Muscat, Oman
-                </p>
+                {image.title && (
+                  <h3 className="text-2xl md:text-4xl font-bold mb-2 drop-shadow-lg">
+                    {image.title}
+                  </h3>
+                )}
+                {image.description && (
+                  <p className="text-lg md:text-xl text-white/90 drop-shadow-md">
+                    {image.description}
+                  </p>
+                )}
               </div>
             </div>
           </SwiperSlide>
@@ -144,13 +151,6 @@ export function Slideshow({
           <span className="swiper-counter">1</span> / {images.length}
         </div>
       </Swiper>
-
-      <style jsx>{`
-        .swiper-pagination-custom .swiper-pagination-bullet-active {
-          background: white !important;
-          transform: scale(1.2);
-        }
-      `}</style>
     </div>
   );
 }

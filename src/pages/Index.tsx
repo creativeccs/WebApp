@@ -2,7 +2,7 @@ import { useSeoMeta } from '@unhead/react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Slideshow } from '@/components/Slideshow';
+import { AdvancedSlideshow } from '@/components/AdvancedSlideshow';
 import { useSlideshowImages } from '@/hooks/useSlideshowImages';
 import { useFeaturedProperties } from '@/hooks/useProperties';
 import { useI18n } from '@/contexts/I18nContext';
@@ -59,11 +59,15 @@ const Index = () => {
     <div className="min-h-screen">
       {/* Hero Section with Slideshow */}
       <section className="relative">
-        <Slideshow 
+        <AdvancedSlideshow 
           images={slideshowImages} 
-          className="h-[60vh] md:h-[70vh]"
+          height="calc(100vh - 65px)"
           autoPlay={true}
           autoPlayInterval={6000}
+          effect="fade"
+          showNavigation={true}
+          showPagination={true}
+          className=""
         />
         
         {/* Hero Content Overlay */}
