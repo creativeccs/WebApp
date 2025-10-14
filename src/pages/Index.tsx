@@ -1,4 +1,5 @@
 import { useSeoMeta } from '@unhead/react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +9,34 @@ import { useFeaturedProperties } from '@/hooks/useProperties';
 import { useI18n } from '@/contexts/I18nContext';
 import { Building, Users, Award, TrendingUp, ArrowRight, MapPin, Bed, Bath, Square } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+// Animation Variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 60 },
+  visible: { 
+    opacity: 1, 
+    y: 0
+  }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.1
+    }
+  }
+};
+
+const scaleIn = {
+  hidden: { scale: 0.8, opacity: 0 },
+  visible: { 
+    scale: 1, 
+    opacity: 1
+  }
+};
 
 const Index = () => {
   const { t } = useI18n();
@@ -61,10 +90,8 @@ const Index = () => {
       <section className="relative">
         <AdvancedSlideshow 
           images={slideshowImages} 
-          height="calc(100vh - 65px)"
           autoPlay={true}
           autoPlayInterval={6000}
-          effect="fade"
           showNavigation={true}
           showPagination={true}
           className=""
@@ -72,56 +99,102 @@ const Index = () => {
         
         {/* Hero Content Overlay */}
         <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-          <div className="text-center text-white px-4 max-w-4xl">
-            <h1 className="text-3xl md:text-6xl font-bold mb-4">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
+            className="text-center text-white px-4 max-w-4xl"
+          >
+            <motion.h1 
+              variants={fadeInUp}
+              className="text-3xl md:text-6xl font-bold mb-4"
+            >
               {t.welcomeTo}
-            </h1>
-            <h2 className="text-xl md:text-3xl font-semibold mb-6 opacity-90">
+            </motion.h1>
+            <motion.h2 
+              variants={fadeInUp}
+              className="text-xl md:text-3xl font-semibold mb-6 opacity-90"
+            >
               {t.companyName}
-            </h2>
-            <p className="text-lg md:text-xl mb-8 opacity-80 max-w-2xl mx-auto">
+            </motion.h2>
+            <motion.p 
+              variants={fadeInUp}
+              className="text-lg md:text-xl mb-8 opacity-80 max-w-2xl mx-auto"
+            >
               {t.leadingCompany}
-            </p>
-            <Link to="/properties">
-              <Button size="lg" className="bg-primary hover:bg-primary/90">
-                {t.viewProjects}
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
+            </motion.p>
+            <motion.div variants={fadeInUp}>
+              <Link to="/properties">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button size="lg" className="bg-primary hover:bg-primary/90 shadow-2xl">
+                    {t.viewProjects}
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </motion.div>
+              </Link>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
       {/* Services Section */}
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeInUp}
+            className="text-center mb-16"
+          >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">{t.realEstateServices}</h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
               {t.companyDescription}
             </p>
-          </div>
+          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
             {services.map((service, index) => {
               const IconComponent = service.icon;
               return (
-                <Card key={index} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                  <CardHeader>
-                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                      <IconComponent className="h-6 w-6 text-primary" />
-                    </div>
-                    <CardTitle className="text-xl">{service.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-base leading-relaxed">
-                      {service.description}
-                    </CardDescription>
-                  </CardContent>
-                </Card>
+                <motion.div key={index} variants={scaleIn}>
+                  <motion.div
+                    whileHover={{ 
+                      y: -10,
+                      transition: { type: 'spring', stiffness: 300 }
+                    }}
+                  >
+                    <Card className="h-full hover:shadow-2xl transition-shadow duration-300 border-2">
+                      <CardHeader>
+                        <motion.div 
+                          className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4"
+                          whileHover={{ rotate: 360 }}
+                          transition={{ duration: 0.6 }}
+                        >
+                          <IconComponent className="h-6 w-6 text-primary" />
+                        </motion.div>
+                        <CardTitle className="text-xl">{service.title}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <CardDescription className="text-base leading-relaxed">
+                          {service.description}
+                        </CardDescription>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -298,23 +371,6 @@ const Index = () => {
           <h2 className="text-3xl md:text-4xl font-bold mb-4">{t.supportingVision}</h2>
           <p className="text-lg opacity-90 max-w-3xl mx-auto">
             Our objectives align with the vision of Oman to meet the modern renaissance requirements.
-          </p>
-        </div>
-      </section>
-
-      {/* Footer Credit */}
-      <section className="py-8 bg-background border-t">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-sm text-muted-foreground">
-            Vibed with{' '}
-            <a 
-              href="https://soapbox.pub/mkstack" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-primary hover:underline font-medium"
-            >
-              MKStack
-            </a>
           </p>
         </div>
       </section>

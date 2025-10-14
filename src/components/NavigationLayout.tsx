@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useI18n } from '@/contexts/I18nContext';
@@ -70,22 +71,39 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
             </div>
 
             {/* Desktop Navigation */}
-            <nav className={`hidden lg:flex items-center ${isRTL ? 'space-x-reverse space-x-1' : 'space-x-1'}`}>
-              {navigationItems.map((item) => {
+            <motion.nav
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className={`hidden lg:flex items-center ${isRTL ? 'space-x-reverse space-x-1' : 'space-x-1'}`}
+            >
+              {navigationItems.map((item, index) => {
                 const IconComponent = item.icon;
                 return (
-                  <Link key={item.path} to={item.path}>
-                    <Button 
-                      variant={isActive(item.path) ? "default" : "ghost"}
-                      className={`gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}
-                    >
-                      <IconComponent className="h-4 w-4" />
-                      {item.label}
-                    </Button>
-                  </Link>
+                  <motion.div
+                    key={item.path}
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 + index * 0.1, duration: 0.3 }}
+                  >
+                    <Link to={item.path}>
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Button
+                          variant={isActive(item.path) ? "default" : "ghost"}
+                          className={`gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}
+                        >
+                          <IconComponent className="h-4 w-4" />
+                          {item.label}
+                        </Button>
+                      </motion.div>
+                    </Link>
+                  </motion.div>
                 );
               })}
-            </nav>
+            </motion.nav>
 
             {/* Medium Screen Navigation - Icons Only */}
             <nav className={`hidden md:flex lg:hidden items-center ${isRTL ? 'space-x-reverse space-x-1' : 'space-x-1'}`}>
@@ -171,7 +189,12 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
                   </Button>
                 </SheetTrigger>
                 <SheetContent side={isRTL ? "left" : "right"} className="w-72">
-                  <div className="flex flex-col h-full">
+                  <motion.div
+                    initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex flex-col h-full"
+                  >
                     {/* Mobile Logo */}
                     <div className={`flex items-center pb-4 border-b ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
                       <div className="flex items-center justify-center w-12 h-12 rounded-lg overflow-hidden bg-white/5 backdrop-blur-sm border border-border/10">
@@ -188,41 +211,73 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
                     </div>
 
                     {/* Mobile Navigation */}
-                    <nav className="flex flex-col space-y-2 py-6 flex-1">
-                      {navigationItems.map((item) => {
+                    <motion.nav
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.2, duration: 0.3 }}
+                      className="flex flex-col space-y-2 py-6 flex-1"
+                    >
+                      {navigationItems.map((item, index) => {
                         const IconComponent = item.icon;
                         return (
-                          <Link 
-                            key={item.path} 
-                            to={item.path}
-                            onClick={() => setIsMobileMenuOpen(false)}
+                          <motion.div
+                            key={item.path}
+                            initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.3 + index * 0.1, duration: 0.3 }}
                           >
-                            <Button 
-                              variant={isActive(item.path) ? "default" : "ghost"}
-                              className={`w-full gap-3 ${isRTL ? 'justify-end flex-row-reverse' : 'justify-start'}`}
+                            <Link
+                              to={item.path}
+                              onClick={() => setIsMobileMenuOpen(false)}
                             >
-                              <IconComponent className="h-5 w-5" />
-                              {item.label}
-                            </Button>
-                          </Link>
+                              <motion.div
+                                whileHover={{ scale: 1.02, x: isRTL ? 5 : -5 }}
+                                whileTap={{ scale: 0.98 }}
+                              >
+                                <Button
+                                  variant={isActive(item.path) ? "default" : "ghost"}
+                                  className={`w-full gap-3 ${isRTL ? 'justify-end flex-row-reverse' : 'justify-start'}`}
+                                >
+                                  <IconComponent className="h-5 w-5" />
+                                  {item.label}
+                                </Button>
+                              </motion.div>
+                            </Link>
+                          </motion.div>
                         );
                       })}
-                      
+
                       {user && (
-                        <Link 
-                          to="/admin"
-                          onClick={() => setIsMobileMenuOpen(false)}
+                        <motion.div
+                          initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.5, duration: 0.3 }}
                         >
-                          <Button variant="outline" className="w-full justify-start gap-3">
-                            <Settings className="h-5 w-5" />
-                            {t.admin}
-                          </Button>
-                        </Link>
+                          <Link
+                            to="/admin"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            <motion.div
+                              whileHover={{ scale: 1.02, x: isRTL ? 5 : -5 }}
+                              whileTap={{ scale: 0.98 }}
+                            >
+                              <Button variant="outline" className="w-full justify-start gap-3">
+                                <Settings className="h-5 w-5" />
+                                {t.admin}
+                              </Button>
+                            </motion.div>
+                          </Link>
+                        </motion.div>
                       )}
-                    </nav>
+                    </motion.nav>
 
                     {/* Mobile Footer Actions */}
-                    <div className="border-t pt-4 space-y-4">
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6, duration: 0.3 }}
+                      className="border-t pt-4 space-y-4"
+                    >
                       {/* Theme Toggle */}
                       <Button
                         variant="ghost"
@@ -254,8 +309,8 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
                           {t.admin}
                         </Button>
                       </Link>
-                    </div>
-                  </div>
+                    </motion.div>
+                  </motion.div>
                 </SheetContent>
               </Sheet>
             </div>
