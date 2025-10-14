@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogDescription } from "@/compon
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useLoginActions } from '@/hooks/useLoginActions';
+import { useI18n } from '@/contexts/I18nContext';
 import { cn } from '@/lib/utils';
 
 interface LoginDialogProps {
@@ -26,6 +27,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ isOpen, onClose, onLogin }) =
     extension?: string;
   }>({});
   const login = useLoginActions();
+  const { t } = useI18n();
 
   // Reset state when dialog opens
   useEffect(() => {
@@ -46,7 +48,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ isOpen, onClose, onLogin }) =
       onClose();
       setNsec('');
     } catch {
-      setErrors({ nsec: 'Failed to login. Please check your secret key.' });
+      setErrors({ nsec: t.loginFailed });
     } finally {
       setIsLoading(false);
     }
@@ -61,7 +63,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ isOpen, onClose, onLogin }) =
       onLogin();
       onClose();
     } catch {
-      setErrors({ extension: 'Extension login failed. Please make sure you have a Nostr extension installed and enabled.' });
+      setErrors({ extension: t.extensionLoginFailed });
     } finally {
       setIsLoading(false);
     }
@@ -69,12 +71,12 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ isOpen, onClose, onLogin }) =
 
   const handleKeyLogin = () => {
     if (!nsec.trim()) {
-      setErrors(prev => ({ ...prev, nsec: 'Please enter your secret key' }));
+      setErrors(prev => ({ ...prev, nsec: t.pleaseEnterSecretKey }));
       return;
     }
 
     if (!validateNsec(nsec)) {
-      setErrors(prev => ({ ...prev, nsec: 'Invalid secret key format. Must be a valid nsec starting with nsec1.' }));
+      setErrors(prev => ({ ...prev, nsec: t.invalidSecretKeyFormat }));
       return;
     }
     executeLogin(nsec);
@@ -87,7 +89,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ isOpen, onClose, onLogin }) =
       <DialogContent className={cn("max-w-sm max-h-[80vh] p-0 overflow-hidden rounded-lg flex flex-col")}>
         <DialogHeader className="px-4 pt-4 pb-3 border-b flex-shrink-0">
           <DialogDescription className="text-center text-sm">
-            Admin Login
+            {t.adminLogin}
           </DialogDescription>
         </DialogHeader>
         
@@ -95,10 +97,10 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ isOpen, onClose, onLogin }) =
           <Tabs defaultValue={defaultTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2 bg-muted/50 rounded-md mb-3">
               <TabsTrigger value="extension" className="text-sm">
-                Extension
+                {t.extension}
               </TabsTrigger>
               <TabsTrigger value="key" className="text-sm">
-                Secret Key
+                {t.secretKey}
               </TabsTrigger>
             </TabsList>
 
@@ -111,14 +113,14 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ isOpen, onClose, onLogin }) =
               )}
               <div className="text-center p-3 rounded-md bg-muted/50">
                 <p className="text-sm text-muted-foreground mb-3">
-                  Login with browser extension
+                  {t.loginWithBrowserExtension}
                 </p>
                 <Button
                   className="w-full"
                   onClick={handleExtensionLogin}
                   disabled={isLoading}
                 >
-                  {isLoading ? 'Logging in...' : 'Login with Extension'}
+                  {isLoading ? t.loggingIn : t.loginWithExtension}
                 </Button>
               </div>
             </TabsContent>
@@ -133,7 +135,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ isOpen, onClose, onLogin }) =
                     if (errors.nsec) setErrors(prev => ({ ...prev, nsec: undefined }));
                   }}
                   className={errors.nsec ? 'border-destructive' : ''}
-                  placeholder="Enter secret key (nsec1...)"
+                  placeholder={t.enterSecretKey}
                   autoComplete="off"
                 />
                 {errors.nsec && (
@@ -147,7 +149,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ isOpen, onClose, onLogin }) =
                   onClick={handleKeyLogin}
                   disabled={isLoading || !nsec.trim()}
                 >
-                  {isLoading ? 'Logging in...' : 'Login'}
+                  {isLoading ? t.loggingIn : t.login}
                 </Button>
               </div>
             </TabsContent>

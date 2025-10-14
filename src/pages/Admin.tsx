@@ -7,6 +7,21 @@ import { LoginArea } from '@/components/auth/LoginArea';
 import { PropertyForm } from '@/components/PropertyForm';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useI18n } from '@/contexts/I18nContext';
+import { useProperties } from '@/hooks/useProperties';
+import { useContactMessages } from '@/hooks/useAdmin';
+import { useDeleteProperty } from '@/hooks/usePropertyManagement';
+import { Skeleton } from '@/components/ui/skeleton';
+import type { ContactMessage, Property } from '@/lib/types/property';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { 
   Settings, 
   MessageCircle, 
@@ -18,7 +33,9 @@ import {
   Search,
   Filter,
   TrendingUp,
-  Eye
+  Eye,
+  Pencil,
+  Trash2
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
@@ -41,35 +58,43 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: 'spring',
-      stiffness: 100
-    }
-  }
+  visible: { opacity: 1, y: 0 }
 };
 
 const cardHoverVariants = {
   rest: { scale: 1 },
-  hover: {
-    scale: 1.02,
-    transition: {
-      type: 'spring',
-      stiffness: 400,
-      damping: 10
-    }
-  }
+  hover: { scale: 1.02 }
 };
 
 export default function Admin() {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const { user } = useCurrentUser();
   const [activeTab, setActiveTab] = useState('properties');
   const [showAddProperty, setShowAddProperty] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [propertyToEdit, setPropertyToEdit] = useState<Property | null>(null);
+  const [propertyToDelete, setPropertyToDelete] = useState<Property | null>(null);
+
+  // Helper function to get localized text
+  const getLocalizedText = (property: Property, field: 'title' | 'description') => {
+    if (language === 'fa') {
+      return field === 'title' ? (property.title_fa || property.title) : (property.description_fa || property.description);
+    } else if (language === 'ar') {
+      return field === 'title' ? (property.title_ar || property.title) : (property.description_ar || property.description);
+    }
+    return field === 'title' ? (property.title_en || property.title) : (property.description_en || property.description);
+  };
+
+  // Fetch properties
+  const { data: properties = [], isLoading: isLoadingProperties } = useProperties({});
+
+  // Fetch contact messages
+  const { data: messages = [], isLoading: isLoadingMessages } = useContactMessages();
+
+  // Delete property mutation
+  const { mutate: deleteProperty, isPending: isDeleting } = useDeleteProperty();
 
   useSeoMeta({
     title: `${t.admin} - ${t.companyName}`,
@@ -100,7 +125,7 @@ export default function Admin() {
                   {t.admin}
                 </CardTitle>
                 <CardDescription className="text-base">
-                  Access the admin panel to manage properties, messages, and system settings
+                  {t.accessAdminPanel}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -112,7 +137,7 @@ export default function Admin() {
                 >
                   <div className="text-center">
                     <p className="text-sm text-muted-foreground mb-4">
-                      Please log in to access the admin panel
+                      {t.pleaseLoginToAccess}
                     </p>
                   </div>
                   
@@ -121,7 +146,7 @@ export default function Admin() {
                   </div>
 
                   <div className="text-xs text-center text-muted-foreground">
-                    Only authorized administrators can access this panel
+                    {t.onlyAuthorizedAdministrators}
                   </div>
                 </motion.div>
               </CardContent>
@@ -132,11 +157,21 @@ export default function Admin() {
     );
   }
 
+  // Calculate real stats from properties
+  const totalProperties = properties.length;
+  const activeListings = properties.filter(p => p.status === 'available').length;
+  const soldProperties = properties.filter(p => p.status === 'sold').length;
+  const rentedProperties = properties.filter(p => p.status === 'rented').length;
+  const totalMessages = messages.length;
+
+  // Calculate percentages
+  const activePercentage = totalProperties > 0 ? Math.round((activeListings / totalProperties) * 100) : 0;
+
   const stats = [
-    { label: 'Total Properties', value: '12', icon: Building, change: '+2 this month', trend: 'up' },
-    { label: 'Active Listings', value: '8', icon: TrendingUp, change: '66% active', trend: 'up' },
-    { label: 'New Messages', value: '5', icon: MessageCircle, change: '2 unread', trend: 'up' },
-    { label: 'Total Views', value: '1.2k', icon: Eye, change: '+15% this week', trend: 'up' },
+    { label: t.totalProperties, value: isLoadingProperties ? '...' : totalProperties.toString(), icon: Building, change: `${activeListings} available`, trend: 'up' },
+    { label: t.activeListings, value: isLoadingProperties ? '...' : activeListings.toString(), icon: TrendingUp, change: `${activePercentage}% of total`, trend: 'up' },
+    { label: 'Sold Properties', value: isLoadingProperties ? '...' : soldProperties.toString(), icon: Building, change: `${rentedProperties} rented`, trend: 'up' },
+    { label: t.newMessages, value: isLoadingMessages ? '...' : totalMessages.toString(), icon: MessageCircle, change: totalMessages > 0 ? `${totalMessages} unread` : 'No messages', trend: 'up' },
   ];
 
   return (
@@ -150,15 +185,15 @@ export default function Admin() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                Admin Dashboard
+                {t.adminDashboard}
               </h1>
-              <p className="text-muted-foreground mt-1">Manage your real estate business</p>
+              <p className="text-muted-foreground mt-1">{t.manageRealEstateBusiness}</p>
             </div>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full">
               <Button
                 onClick={() => setShowAddProperty(!showAddProperty)}
                 size="lg"
-                className="gap-2 shadow-lg"
+                className="gap-2 shadow-lg w-full"
               >
                 <Plus className="w-5 h-5" />
                 Add Property
@@ -213,8 +248,8 @@ export default function Admin() {
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div>
-                      <CardTitle className="text-2xl">Add New Property</CardTitle>
-                      <CardDescription>Fill in the details to list a new property</CardDescription>
+                      <CardTitle className="text-2xl">{t.addNewProperty}</CardTitle>
+                      <CardDescription>{t.fillDetailsToList}</CardDescription>
                     </div>
                     <Button
                       variant="ghost"
@@ -233,6 +268,73 @@ export default function Admin() {
           )}
         </AnimatePresence>
 
+        {/* Edit Property Dialog */}
+        <AnimatePresence>
+          {propertyToEdit && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="mb-8"
+            >
+              <Card className="border-2 shadow-xl">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-2xl">Edit Property</CardTitle>
+                      <CardDescription>Update property details</CardDescription>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setPropertyToEdit(null)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <PropertyForm 
+                    property={propertyToEdit}
+                    onSuccess={() => setPropertyToEdit(null)}
+                  />
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Delete Property Confirmation Dialog */}
+        <AlertDialog open={!!propertyToDelete} onOpenChange={(open) => !open && setPropertyToDelete(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Property</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete "{propertyToDelete?.title}"? This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                disabled={isDeleting}
+                onClick={() => {
+                  if (propertyToDelete) {
+                    deleteProperty(propertyToDelete.d, {
+                      onSuccess: () => {
+                        setPropertyToDelete(null);
+                      },
+                    });
+                  }
+                }}
+              >
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
         <div className="space-y-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -241,10 +343,10 @@ export default function Admin() {
           >
             <div className="flex flex-wrap gap-2 p-1 bg-muted/50 rounded-lg border">
               {[
-                { id: 'properties', label: 'Properties', icon: Building },
-                { id: 'messages', label: 'Messages', icon: MessageCircle },
-                { id: 'users', label: 'Users', icon: Users },
-                { id: 'settings', label: 'Settings', icon: Settings },
+                { id: 'properties', label: t.properties, icon: Building },
+                { id: 'messages', label: t.messages, icon: MessageCircle },
+                { id: 'users', label: t.users, icon: Users },
+                { id: 'settings', label: t.settings, icon: Settings },
               ].map((tab) => (
                 <motion.button
                   key={tab.id}
@@ -277,9 +379,9 @@ export default function Admin() {
                   <CardHeader>
                     <div className="flex items-center justify-between flex-wrap gap-4">
                       <div>
-                        <CardTitle className="text-2xl">Property Management</CardTitle>
+                        <CardTitle className="text-2xl">{t.propertyManagement}</CardTitle>
                         <CardDescription>
-                          View, edit, and manage your property listings
+                          {t.viewEditManage}
                         </CardDescription>
                       </div>
                       <div className="flex items-center gap-2">
@@ -312,35 +414,178 @@ export default function Admin() {
                           className="pl-9"
                         />
                       </div>
-                      <Select defaultValue="all">
+                      <Select 
+                        value={statusFilter} 
+                        onValueChange={setStatusFilter}
+                      >
                         <SelectTrigger className="w-[180px]">
                           <Filter className="w-4 h-4 mr-2" />
                           <SelectValue placeholder="Filter" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="all">All Properties</SelectItem>
-                          <SelectItem value="sale">For Sale</SelectItem>
-                          <SelectItem value="rent">For Rent</SelectItem>
+                          <SelectItem value="available">Available</SelectItem>
+                          <SelectItem value="pending">Pending</SelectItem>
                           <SelectItem value="sold">Sold</SelectItem>
+                          <SelectItem value="rented">Rented</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-center py-12">
-                      <Building className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                      <h3 className="text-lg font-semibold mb-2">No Properties Yet</h3>
-                      <p className="text-muted-foreground mb-4">
-                        Get started by adding your first property listing
-                      </p>
-                      <Button
-                        onClick={() => setShowAddProperty(true)}
-                        className="gap-2"
-                      >
-                        <Plus className="w-4 h-4" />
-                        Add Your First Property
-                      </Button>
-                    </div>
+                    {isLoadingProperties ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {[1, 2, 3].map((i) => (
+                          <Card key={i} className="overflow-hidden">
+                            <Skeleton className="h-48 w-full" />
+                            <CardContent className="p-4 space-y-2">
+                              <Skeleton className="h-6 w-3/4" />
+                              <Skeleton className="h-4 w-full" />
+                              <Skeleton className="h-4 w-2/3" />
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    ) : properties.length === 0 ? (
+                      <div className="text-center py-12">
+                        <Building className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+                        <h3 className="text-lg font-semibold mb-2">{t.noPropertiesYet}</h3>
+                        <p className="text-muted-foreground mb-4">
+                          {t.getStartedByAdding}
+                        </p>
+                        <Button
+                          onClick={() => setShowAddProperty(true)}
+                          className="gap-2"
+                        >
+                          <Plus className="w-4 h-4" />
+                          {t.addYourFirstProperty}
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className={viewMode === 'grid' 
+                        ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' 
+                        : 'space-y-4'
+                      }>
+                        {properties
+                          .filter(property => {
+                            // Get localized text for search
+                            const localizedTitle = getLocalizedText(property, 'title');
+                            const localizedDescription = getLocalizedText(property, 'description');
+                            
+                            // Filter by search query
+                            const matchesSearch = !searchQuery || 
+                              localizedTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                              localizedDescription.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                              property.location.toLowerCase().includes(searchQuery.toLowerCase());
+                            
+                            // Filter by status
+                            const matchesStatus = statusFilter === 'all' || property.status === statusFilter;
+                            
+                            return matchesSearch && matchesStatus;
+                          })
+                          .map((property) => {
+                            const localizedTitle = getLocalizedText(property, 'title');
+                            const localizedDescription = getLocalizedText(property, 'description');
+                            
+                            return (
+                            <motion.div
+                              key={property.id}
+                              initial={{ opacity: 0, scale: 0.95 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              whileHover={{ y: -4 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                                {property.images && property.images.length > 0 && (
+                                  <div className="relative h-48 overflow-hidden">
+                                    <img
+                                      src={property.images[0].url}
+                                      alt={property.title}
+                                      className="w-full h-full object-cover"
+                                    />
+                                    <div className="absolute top-2 right-2 flex gap-2">
+                                      <span className={`px-2 py-1 text-xs font-semibold rounded ${
+                                        property.status === 'available' ? 'bg-green-500' :
+                                        property.status === 'pending' ? 'bg-yellow-500' :
+                                        property.status === 'sold' ? 'bg-red-500' :
+                                        'bg-blue-500'
+                                      } text-white`}>
+                                        {property.status.toUpperCase()}
+                                      </span>
+                                      <span className="px-2 py-1 text-xs font-semibold rounded bg-primary text-primary-foreground">
+                                        {property.type.toUpperCase()}
+                                      </span>
+                                    </div>
+                                  </div>
+                                )}
+                                <CardContent className="p-4">
+                                  <h3 className="text-lg font-bold mb-2 line-clamp-1">
+                                    {localizedTitle}
+                                  </h3>
+                                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                                    {localizedDescription}
+                                  </p>
+                                  <div className="space-y-2 text-sm">
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-muted-foreground">Price:</span>
+                                      <span className="font-bold text-lg">
+                                        {property.price} {property.currency}
+                                      </span>
+                                    </div>
+                                    {property.area && (
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-muted-foreground">Area:</span>
+                                        <span className="font-medium">{property.area} m²</span>
+                                      </div>
+                                    )}
+                                    {(property.bedrooms || property.bathrooms) && (
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-muted-foreground">Bed/Bath:</span>
+                                        <span className="font-medium">
+                                          {property.bedrooms || '?'} / {property.bathrooms || '?'}
+                                        </span>
+                                      </div>
+                                    )}
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-muted-foreground">Location:</span>
+                                      <span className="font-medium line-clamp-1">{property.location}</span>
+                                    </div>
+                                  </div>
+                                  <div className="flex gap-2 mt-4">
+                                    <Button 
+                                      variant="outline" 
+                                      size="sm" 
+                                      className="flex-1"
+                                      onClick={() => window.open(`/property/${property.d}`, '_blank')}
+                                    >
+                                      <Eye className="w-4 h-4 mr-1" />
+                                      View
+                                    </Button>
+                                    <Button 
+                                      variant="outline" 
+                                      size="sm" 
+                                      className="flex-1"
+                                      onClick={() => setPropertyToEdit(property)}
+                                    >
+                                      <Pencil className="w-4 h-4 mr-1" />
+                                      Edit
+                                    </Button>
+                                    <Button 
+                                      variant="outline" 
+                                      size="sm"
+                                      className="text-destructive hover:text-destructive"
+                                      onClick={() => setPropertyToDelete(property)}
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            </motion.div>
+                            );
+                          })}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </motion.div>
@@ -356,19 +601,94 @@ export default function Admin() {
               >
                 <Card className="border-2">
                   <CardHeader>
-                    <CardTitle className="text-2xl">Messages & Inquiries</CardTitle>
+                    <CardTitle className="text-2xl">{t.messages}</CardTitle>
                     <CardDescription>
-                      View and respond to customer inquiries
+                      {t.respondToInquiries}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-center py-12">
-                      <MessageCircle className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                      <h3 className="text-lg font-semibold mb-2">Message Center</h3>
-                      <p className="text-muted-foreground">
-                        Message management features will be available soon
-                      </p>
-                    </div>
+                    {isLoadingMessages ? (
+                      <div className="space-y-4">
+                        {[1, 2, 3].map((i) => (
+                          <Card key={i} className="p-4">
+                            <div className="space-y-2">
+                              <div className="flex justify-between">
+                                <Skeleton className="h-5 w-32" />
+                                <Skeleton className="h-4 w-24" />
+                              </div>
+                              <Skeleton className="h-4 w-full" />
+                              <Skeleton className="h-4 w-3/4" />
+                            </div>
+                          </Card>
+                        ))}
+                      </div>
+                    ) : messages.length === 0 ? (
+                      <div className="text-center py-12">
+                        <MessageCircle className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+                        <h3 className="text-lg font-semibold mb-2">{t.messageCenter}</h3>
+                        <p className="text-muted-foreground">
+                          No messages received yet
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {messages.map((message: ContactMessage) => {
+                          const date = new Date(message.created_at * 1000);
+                          const formattedDate = date.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          });
+
+                          return (
+                            <motion.div
+                              key={message.id}
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              whileHover={{ scale: 1.01 }}
+                            >
+                              <Card className="overflow-hidden hover:shadow-md transition-shadow">
+                                <CardHeader className="pb-3">
+                                  <div className="flex justify-between items-start">
+                                    <div className="space-y-1">
+                                      <CardTitle className="text-lg">
+                                        {message.name}
+                                      </CardTitle>
+                                      <CardDescription className="text-sm">
+                                        {message.email}
+                                      </CardDescription>
+                                    </div>
+                                    <span className="text-xs text-muted-foreground">
+                                      {formattedDate}
+                                    </span>
+                                  </div>
+                                </CardHeader>
+                                <CardContent className="space-y-3">
+                                  <div>
+                                    <p className="text-sm font-semibold text-primary mb-1">
+                                      {message.subject}
+                                    </p>
+                                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                                      {message.message}
+                                    </p>
+                                  </div>
+                                  <div className="flex gap-2 pt-2">
+                                    <Button variant="outline" size="sm">
+                                      Reply
+                                    </Button>
+                                    <Button variant="ghost" size="sm">
+                                      Archive
+                                    </Button>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </motion.div>
@@ -384,17 +704,17 @@ export default function Admin() {
               >
                 <Card className="border-2">
                   <CardHeader>
-                    <CardTitle className="text-2xl">User Management</CardTitle>
+                    <CardTitle className="text-2xl">{t.userManagement}</CardTitle>
                     <CardDescription>
-                      Manage admin users and permissions
+                      {t.manageAdminUsers}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="text-center py-12">
                       <Users className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                      <h3 className="text-lg font-semibold mb-2">User Management</h3>
+                      <h3 className="text-lg font-semibold mb-2">{t.userManagement}</h3>
                       <p className="text-muted-foreground">
-                        User management features will be available soon
+                        {t.featuresAvailableSoon}
                       </p>
                     </div>
                   </CardContent>
@@ -412,24 +732,24 @@ export default function Admin() {
               >
                 <Card className="border-2">
                   <CardHeader>
-                    <CardTitle className="text-2xl">System Settings</CardTitle>
+                    <CardTitle className="text-2xl">{t.settings}</CardTitle>
                     <CardDescription>
-                      Configure system preferences and settings
+                      {t.configurePreferences}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-6">
                       <div className="text-center py-8">
                         <Settings className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                        <h3 className="text-lg font-semibold mb-2">System Configuration</h3>
+                        <h3 className="text-lg font-semibold mb-2">{t.systemConfiguration}</h3>
                         <p className="text-muted-foreground">
-                          System settings will be available soon
+                          {t.featuresAvailableSoon}
                         </p>
                       </div>
 
                       <div className="pt-6 border-t">
                         <div className="text-sm text-muted-foreground">
-                          <p><strong>Logged in as:</strong> {user.pubkey.slice(0, 16)}...</p>
+                          <p><strong>{t.loggedInAs}:</strong> {user.pubkey.slice(0, 16)}...</p>
                         </div>
                       </div>
                     </div>

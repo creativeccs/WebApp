@@ -22,21 +22,9 @@ export function useProperties(filters?: PropertyFilter) {
         '#t': ['property']
       };
 
-      // Apply additional filters
-      if (filters) {
-        if (filters.type?.length) {
-          baseFilter['#type'] = filters.type;
-        }
-        if (filters.category?.length) {
-          baseFilter['#category'] = filters.category;
-        }
-        if (filters.status?.length) {
-          baseFilter['#status'] = filters.status;
-        }
-        if (filters.city?.length) {
-          baseFilter['#city'] = filters.city;
-        }
-      }
+      // Note: We don't add type, category, status filters to the query
+      // because Nostr relays only index single-letter tags
+      // We'll filter these on the client side
 
       const events = await nostr.query([baseFilter], { 
         signal: new AbortController().signal 
@@ -49,6 +37,30 @@ export function useProperties(filters?: PropertyFilter) {
 
       // Apply client-side filters
       let filteredProperties = properties;
+
+      if (filters?.type?.length) {
+        filteredProperties = filteredProperties.filter(property =>
+          filters.type!.includes(property.type)
+        );
+      }
+
+      if (filters?.category?.length) {
+        filteredProperties = filteredProperties.filter(property =>
+          filters.category!.includes(property.category)
+        );
+      }
+
+      if (filters?.status?.length) {
+        filteredProperties = filteredProperties.filter(property =>
+          filters.status!.includes(property.status)
+        );
+      }
+
+      if (filters?.city?.length) {
+        filteredProperties = filteredProperties.filter(property =>
+          property.city && filters.city!.includes(property.city)
+        );
+      }
 
       if (filters?.search) {
         const searchLower = filters.search.toLowerCase();

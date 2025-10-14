@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNostrPublish } from '@/hooks/useNostrPublish';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
-import { useUploadFile } from '@/hooks/useUploadFile';
 import { useIsAdmin } from '@/hooks/useAdmin';
 import type { PropertyFormData } from '@/lib/types/property';
 
@@ -9,7 +8,6 @@ export function useCreateProperty() {
   const { user } = useCurrentUser();
   const isAdmin = useIsAdmin();
   const { mutateAsync: publishEvent } = useNostrPublish();
-  const { mutateAsync: uploadFile } = useUploadFile();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -21,13 +19,11 @@ export function useCreateProperty() {
       // Generate unique property ID
       const propertyId = crypto.randomUUID();
 
-      // Upload images if any
+      // Images are already uploaded URLs, just add them as tags
       const imageMetaTags: string[][] = [];
       if (formData.images && formData.images.length > 0) {
-        for (const image of formData.images) {
-          const uploadTags = await uploadFile(image);
-          // Add all upload tags (includes imeta and url tags)
-          imageMetaTags.push(...uploadTags);
+        for (const imageUrl of formData.images) {
+          imageMetaTags.push(['image', imageUrl]);
         }
       }
 
@@ -92,7 +88,6 @@ export function useUpdateProperty() {
   const { user } = useCurrentUser();
   const isAdmin = useIsAdmin();
   const { mutateAsync: publishEvent } = useNostrPublish();
-  const { mutateAsync: uploadFile } = useUploadFile();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -101,13 +96,11 @@ export function useUpdateProperty() {
         throw new Error('Admin access required');
       }
 
-      // Upload new images if any
+      // Images are already uploaded URLs, just add them as tags
       const imageMetaTags: string[][] = [];
       if (formData.images && formData.images.length > 0) {
-        for (const image of formData.images) {
-          const uploadTags = await uploadFile(image);
-          // Add all upload tags (includes imeta and url tags)
-          imageMetaTags.push(...uploadTags);
+        for (const imageUrl of formData.images) {
+          imageMetaTags.push(['image', imageUrl]);
         }
       }
 
@@ -129,7 +122,7 @@ export function useUpdateProperty() {
         ...imageMetaTags
       ];
 
-      // Add optional fields (same logic as create)
+      // Add optional fields
       const optionalFields: (keyof PropertyFormData)[] = [
         'area', 'bedrooms', 'bathrooms', 'furnished', 'year_built', 'floor', 'total_floors',
         'address', 'city', 'region', 'country', 'lat', 'lon',
@@ -149,20 +142,19 @@ export function useUpdateProperty() {
         }
       });
 
-      // Create and publish updated property event
+      // Create and publish property event
       const event = {
-        kind: 30403, // Same addressable event kind
-        content: '',
+        kind: 30403, // Addressable event kind for properties
+        content: '', // Content is empty, all data in tags
         tags
       };
 
       await publishEvent(event);
       return { propertyId, event };
     },
-    onSuccess: (_data, { propertyId }) => {
+    onSuccess: () => {
       // Invalidate related queries
       queryClient.invalidateQueries({ queryKey: ['properties'] });
-      queryClient.invalidateQueries({ queryKey: ['property', propertyId] });
       queryClient.invalidateQueries({ queryKey: ['featuredProperties'] });
       queryClient.invalidateQueries({ queryKey: ['adminStats'] });
     },

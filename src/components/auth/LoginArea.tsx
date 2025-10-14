@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button.tsx';
 import LoginDialog from './LoginDialog';
 import { useLoggedInAccounts } from '@/hooks/useLoggedInAccounts';
 import { AccountSwitcher } from './AccountSwitcher';
+import { useI18n } from '@/contexts/I18nContext';
 import { cn } from '@/lib/utils';
 
 export interface LoginAreaProps {
@@ -15,6 +16,7 @@ export interface LoginAreaProps {
 
 export function LoginArea({ className }: LoginAreaProps) {
   const { currentUser } = useLoggedInAccounts();
+  const { t } = useI18n();
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
 
   const handleLogin = () => {
@@ -32,7 +34,7 @@ export function LoginArea({ className }: LoginAreaProps) {
           className="flex items-center gap-2 px-3 py-2 text-sm"
         >
           <User className="w-4 h-4" />
-          <span>Admin Login</span>
+          <span>{t.login}</span>
         </Button>
       )}
 

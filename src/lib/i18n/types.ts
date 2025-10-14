@@ -110,6 +110,37 @@ export interface Translation {
   manageProperties: string;
   viewMessages: string;
   propertyManagement: string;
+  adminDashboard: string;
+  manageRealEstateBusiness: string;
+  addNewProperty: string;
+  fillDetailsToList: string;
+  totalProperties: string;
+  activeListings: string;
+  newMessages: string;
+  totalViews: string;
+  thisMonth: string;
+  active: string;
+  unread: string;
+  thisWeek: string;
+  messages: string;
+  users: string;
+  settings: string;
+  viewEditManage: string;
+  respondToInquiries: string;
+  manageAdminUsers: string;
+  configurePreferences: string;
+  loggedInAs: string;
+  noPropertiesYet: string;
+  getStartedByAdding: string;
+  addYourFirstProperty: string;
+  messageCenter: string;
+  featuresAvailableSoon: string;
+  userManagement: string;
+  systemConfiguration: string;
+  accessAdminPanel: string;
+  managePropertiesMessages: string;
+  pleaseLoginToAccess: string;
+  onlyAuthorizedAdministrators: string;
   
   // Messages
   noPropertiesFound: string;
@@ -119,6 +150,21 @@ export interface Translation {
   messagesSentSuccess: string;
   loginRequired: string;
   adminOnly: string;
+  
+  // Login Dialog
+  adminLogin: string;
+  extension: string;
+  secretKey: string;
+  enterSecretKey: string;
+  loginWithExtension: string;
+  loginWithBrowserExtension: string;
+  loggingIn: string;
+  extensionLoginFailed: string;
+  loginFailed: string;
+  checkSecretKey: string;
+  pleaseEnterSecretKey: string;
+  invalidSecretKeyFormat: string;
+  validNsecRequired: string;
   
   // Homepage
   welcomeTo: string;

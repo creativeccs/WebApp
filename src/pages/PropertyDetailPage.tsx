@@ -32,21 +32,41 @@ import {
 
 function PropertyDetailPage() {
   const { propertyId } = useParams<{ propertyId: string }>();
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const navigate = useNavigate();
   const isAdmin = useIsAdmin();
   const [showEditForm, setShowEditForm] = useState(false);
   
   const { data: property, isLoading, error } = useProperty(propertyId || '');
 
+  // Helper function to get localized text
+  const getLocalizedTitle = () => {
+    if (!property) return '';
+    if (language === 'fa') return property.title_fa || property.title;
+    if (language === 'ar') return property.title_ar || property.title;
+    return property.title_en || property.title;
+  };
+
+  const getLocalizedDescription = () => {
+    if (!property) return '';
+    if (language === 'fa') return property.description_fa || property.description;
+    if (language === 'ar') return property.description_ar || property.description;
+    return property.description_en || property.description;
+  };
+
   // Set page title
   useEffect(() => {
     if (property) {
-      document.title = `${property.title} - ${t.companyName}`;
+      const localizedTitle = language === 'fa' 
+        ? (property.title_fa || property.title)
+        : language === 'ar'
+        ? (property.title_ar || property.title)
+        : (property.title_en || property.title);
+      document.title = `${localizedTitle} - ${t.companyName}`;
     } else {
       document.title = `${t.propertyDetails} - ${t.companyName}`;
     }
-  }, [property, t.companyName, t.propertyDetails]);
+  }, [property, t.companyName, t.propertyDetails, language]);
 
   if (!propertyId) {
     return (
@@ -170,6 +190,13 @@ function PropertyDetailPage() {
           </div>
         </div>
 
+
+        {/* Main Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Property Details */}
+          <div className="lg:col-span-2 space-y-6">
+
+
         {/* Image Gallery */}
         {property.images && property.images.length > 0 && (
           <div className="mb-8">
@@ -211,15 +238,13 @@ function PropertyDetailPage() {
           </div>
         )}
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Property Details */}
-          <div className="lg:col-span-2 space-y-6">
+
+
             {/* Title and Basic Info */}
             <div>
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h1 className="text-3xl font-bold mb-2">{property.title}</h1>
+                  <h1 className="text-3xl font-bold mb-2">{getLocalizedTitle()}</h1>
                   <div className="flex items-center text-muted-foreground mb-4">
                     <MapPin className="h-5 w-5 mr-2" />
                     <span className="text-lg">{property.location}</span>
@@ -288,7 +313,7 @@ function PropertyDetailPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                  {property.description}
+                  {getLocalizedDescription()}
                 </p>
               </CardContent>
             </Card>

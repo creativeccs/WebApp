@@ -14,6 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { AlertCircle, Upload, X } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useI18n } from '@/contexts/I18nContext';
+import { useUploadFile } from '@/hooks/useUploadFile';
 import { useCreateProperty, useUpdateProperty } from '@/hooks/usePropertyManagement';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useIsAdmin } from '@/hooks/useAdmin';
@@ -28,10 +29,17 @@ import type {
   GenderPreference 
 } from '@/lib/types/property';
 
-// Validation schema
+// Validation schema with multilingual support
 const propertySchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  description: z.string().optional(),
+  // Multilingual fields
+  title_en: z.string().min(1, 'English title is required'),
+  title_fa: z.string().min(1, 'Persian title is required'),
+  title_ar: z.string().min(1, 'Arabic title is required'),
+  description_en: z.string().optional(),
+  description_fa: z.string().optional(),
+  description_ar: z.string().optional(),
+
+  // Basic property info
   type: z.enum(['sale', 'rent', 'both']),
   category: z.enum(['villa', 'apartment', 'commercial', 'land', 'other']),
   status: z.enum(['available', 'sold', 'rented', 'pending']),
@@ -106,10 +114,12 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
   const { t, language } = useI18n();
   const { user } = useCurrentUser();
   const isAdmin = useIsAdmin();
-  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [uploadingImages, setUploadingImages] = useState<Set<number>>(new Set());
   
   const createProperty = useCreateProperty();
   const updateProperty = useUpdateProperty();
+  const uploadFile = useUploadFile();
   
   const isEditing = !!property;
   const isLoading = createProperty.isPending || updateProperty.isPending;
@@ -117,8 +127,15 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
   const form = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema),
     defaultValues: {
-      title: property?.title || '',
-      description: property?.description || '',
+      // Multilingual titles
+      title_en: property?.title_en || '',
+      title_fa: property?.title_fa || '',
+      title_ar: property?.title_ar || '',
+      description_en: property?.description_en || '',
+      description_fa: property?.description_fa || '',
+      description_ar: property?.description_ar || '',
+
+      // Basic property info
       type: property?.type || 'sale',
       category: property?.category || 'apartment',
       status: property?.status || 'available',
@@ -185,8 +202,12 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
 
   const onSubmit = async (data: PropertyFormData) => {
     try {
+      // Map multilingual fields to legacy fields for backward compatibility
       const formData = {
         ...data,
+        // Use current language title/description as primary fields
+        title: data[`title_${language}` as keyof PropertyFormData] as string || data.title_en,
+        description: data[`description_${language}` as keyof PropertyFormData] as string || data.description_en || '',
         images: selectedImages,
         language
       };
@@ -206,10 +227,38 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
     }
   };
 
-  const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     const imageFiles = files.filter(file => file.type.startsWith('image/'));
-    setSelectedImages(prev => [...prev, ...imageFiles]);
+
+    if (imageFiles.length === 0) return;
+
+    // Upload each image to Primal servers
+    for (let i = 0; i < imageFiles.length; i++) {
+      const file = imageFiles[i];
+      setUploadingImages(prev => new Set(prev).add(selectedImages.length + i));
+
+      try {
+        const tags = await uploadFile.mutateAsync(file);
+        // Extract URL from NIP-94 tags (first tag contains the URL)
+        const url = tags[0]?.[1];
+        if (url) {
+          setSelectedImages(prev => [...prev, url]);
+        }
+      } catch (error) {
+        console.error('Failed to upload image:', error);
+        // You might want to show a toast notification here
+      } finally {
+        setUploadingImages(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(selectedImages.length + i);
+          return newSet;
+        });
+      }
+    }
+
+    // Clear the input
+    event.target.value = '';
   };
 
   const removeImage = (index: number) => {
@@ -217,7 +266,7 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
   };
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
+    <Card className="w-full mx-auto">
       <CardHeader>
         <CardTitle>
           {isEditing ? t.editProperty : t.addProperty}
@@ -225,14 +274,120 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
       </CardHeader>
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <Tabs defaultValue="basic" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
-              <TabsTrigger value="basic">Basic</TabsTrigger>
+          <Tabs defaultValue="multilingual" className="w-full">
+            <TabsList className="grid w-full grid-cols-6">
+              <TabsTrigger value="multilingual">🌐 Languages</TabsTrigger>
+              <TabsTrigger value="basic">Basic Info</TabsTrigger>
               <TabsTrigger value="details">Details</TabsTrigger>
+              <TabsTrigger value="gallery">📸 Gallery</TabsTrigger>
               <TabsTrigger value="location">Location</TabsTrigger>
-              <TabsTrigger value="amenities">Amenities</TabsTrigger>
               <TabsTrigger value="contact">Contact</TabsTrigger>
             </TabsList>
+
+            {/* Multilingual Content */}
+            <TabsContent value="multilingual" className="space-y-6">
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Property Title</h3>
+                  <div className="grid grid-cols-1 gap-4">
+                    <div>
+                      <Label htmlFor="title_en" className="flex items-center gap-2">
+                        🇺🇸 English Title *
+                      </Label>
+                      <Input 
+                        id="title_en"
+                        {...form.register('title_en')}
+                        placeholder="Modern 3BR Apartment in Muscat"
+                        className="mt-1"
+                      />
+                      {form.formState.errors.title_en && (
+                        <p className="text-sm text-red-500 mt-1">
+                          {form.formState.errors.title_en.message}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Label htmlFor="title_fa" className="flex items-center gap-2">
+                        🇮🇷 Persian Title *
+                      </Label>
+                      <Input 
+                        id="title_fa"
+                        {...form.register('title_fa')}
+                        placeholder="آپارتمان مدرن ۳ خوابه در مسقط"
+                        className="mt-1"
+                        dir="rtl"
+                      />
+                      {form.formState.errors.title_fa && (
+                        <p className="text-sm text-red-500 mt-1">
+                          {form.formState.errors.title_fa.message}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Label htmlFor="title_ar" className="flex items-center gap-2">
+                        🇸🇦 Arabic Title *
+                      </Label>
+                      <Input 
+                        id="title_ar"
+                        {...form.register('title_ar')}
+                        placeholder="شقة حديثة 3 غرف نوم في مسقط"
+                        className="mt-1"
+                        dir="rtl"
+                      />
+                      {form.formState.errors.title_ar && (
+                        <p className="text-sm text-red-500 mt-1">
+                          {form.formState.errors.title_ar.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Property Description</h3>
+                  <div className="grid grid-cols-1 gap-4">
+                    <div>
+                      <Label htmlFor="description_en" className="flex items-center gap-2">
+                        🇺🇸 English Description
+                      </Label>
+                      <Textarea 
+                        id="description_en"
+                        {...form.register('description_en')}
+                        placeholder="Detailed description of the property in English..."
+                        rows={4}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="description_fa" className="flex items-center gap-2">
+                        🇮🇷 Persian Description
+                      </Label>
+                      <Textarea 
+                        id="description_fa"
+                        {...form.register('description_fa')}
+                        placeholder="توضیحات详细 ملک به زبان فارسی..."
+                        rows={4}
+                        className="mt-1"
+                        dir="rtl"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="description_ar" className="flex items-center gap-2">
+                        🇸🇦 Arabic Description
+                      </Label>
+                      <Textarea 
+                        id="description_ar"
+                        {...form.register('description_ar')}
+                        placeholder="وصف مفصل للعقار باللغة العربية..."
+                        rows={4}
+                        className="mt-1"
+                        dir="rtl"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
 
             {/* Basic Information */}
             <TabsContent value="basic" className="space-y-4">
@@ -359,55 +514,111 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                   rows={4}
                 />
               </div>
+            </TabsContent>
 
-              {/* Images */}
+            {/* Image Gallery */}
+            <TabsContent value="gallery" className="space-y-6">
               <div>
-                <Label>{t.propertyImages}</Label>
-                <div className="mt-2">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="text-lg font-semibold">{t.propertyImages}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Upload high-quality images of your property (JPG, PNG, max 10MB each)
+                    </p>
+                  </div>
+                  <Badge variant="outline" className="text-xs">
+                    {selectedImages.length} images selected
+                  </Badge>
+                </div>
+
+                {/* Drag and Drop Upload Area */}
+                <div className="space-y-4">
                   <Label 
                     htmlFor="images" 
-                    className="flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-accent"
+                    className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-primary/20 rounded-xl cursor-pointer hover:border-primary/40 hover:bg-primary/5 transition-colors group"
                   >
-                    <div className="flex flex-col items-center justify-center">
-                      <Upload className="w-8 h-8 mb-2 text-muted-foreground" />
-                      <p className="text-sm text-muted-foreground">
-                        Click to upload images
+                    <div className="flex flex-col items-center justify-center p-6 text-center">
+                      <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                        <Upload className="w-8 h-8 text-primary" />
+                      </div>
+                      <h4 className="text-lg font-medium mb-2">Upload Property Images</h4>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Drag and drop images here, or click to browse
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Supports: JPG, PNG, WebP • Max 10MB per image • Up to 20 images
                       </p>
                     </div>
                     <input
                       id="images"
                       type="file"
-                      title={t.propertyImages}
-                      placeholder={t.propertyImages}
-                      aria-label={t.propertyImages}
                       multiple
                       accept="image/*"
+                      title="Upload property images"
+                      aria-label="Upload property images"
                       className="hidden"
                       onChange={handleImageSelect}
                     />
                   </Label>
-                </div>
-                
-                {selectedImages.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    {selectedImages.map((image, index) => (
-                      <div key={index} className="relative">
-                        <Badge variant="secondary" className="pr-8">
-                          {image.name}
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="absolute right-0 top-0 h-full w-6 p-0"
-                            onClick={() => removeImage(index)}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </Badge>
+
+                  {/* Image Preview Grid */}
+                  {selectedImages.length > 0 && (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-sm font-medium">Selected Images</h4>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setSelectedImages([])}
+                          className="text-xs"
+                        >
+                          Clear All
+                        </Button>
                       </div>
-                    ))}
-                  </div>
-                )}
+                      
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {selectedImages.map((imageUrl, index) => (
+                          <div key={index} className="relative group">
+                            <div className="aspect-square rounded-lg overflow-hidden border bg-muted">
+                              <img
+                                src={imageUrl}
+                                alt={`Property image ${index + 1}`}
+                                className="w-full h-full object-cover"
+                              />
+                              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
+                              
+                              {/* Remove button */}
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="sm"
+                                className="absolute top-2 right-2 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => removeImage(index)}
+                                disabled={uploadingImages.has(index)}
+                              >
+                                <X className="h-3 w-3" />
+                              </Button>
+                              
+                              {/* Upload indicator */}
+                              {uploadingImages.has(index) && (
+                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                                  <div className="text-white text-sm">Uploading...</div>
+                                </div>
+                              )}
+                              
+                              {/* Image info overlay */}
+                              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <p className="text-xs text-white truncate">Image {index + 1}</p>
+                                <p className="text-xs text-white/80">Uploaded to Primal</p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </TabsContent>
 

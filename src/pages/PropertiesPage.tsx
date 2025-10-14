@@ -10,6 +10,7 @@ import { useProperties, usePropertyFilterOptions } from '@/hooks/useProperties';
 import { useIsAdmin } from '@/hooks/useAdmin';
 import { PropertyForm } from '@/components/PropertyForm';
 import type { PropertyFilter } from '@/lib/types/property';
+import type { Property } from '@/lib/types/property';
 import { 
   Search, 
   Plus, 
@@ -27,7 +28,7 @@ import { Link } from 'react-router-dom';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 function PropertiesPage() {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const isAdmin = useIsAdmin();
   const [showAddForm, setShowAddForm] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -38,6 +39,16 @@ function PropertiesPage() {
 
   // Set page title
   document.title = `${t.properties} - ${t.companyName}`;
+
+  // Helper function to get localized text
+  const getLocalizedText = (property: Property, field: 'title' | 'description') => {
+    if (language === 'fa') {
+      return field === 'title' ? (property.title_fa || property.title) : (property.description_fa || property.description);
+    } else if (language === 'ar') {
+      return field === 'title' ? (property.title_ar || property.title) : (property.description_ar || property.description);
+    }
+    return field === 'title' ? (property.title_en || property.title) : (property.description_en || property.description);
+  };
 
   const handleFilterChange = (key: keyof PropertyFilter, value: string | number | boolean | PropertyFilter['amenities'] | string[] | undefined) => {
     setFilters(prev => ({
@@ -345,7 +356,11 @@ function PropertiesPage() {
 
             {/* Properties Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {properties.map((property) => (
+              {properties.map((property) => {
+              const localizedTitle = getLocalizedText(property, 'title');
+              const localizedDescription = getLocalizedText(property, 'description');
+              
+              return (
                 <Card key={property.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                   {property.images && property.images.length > 0 && (
                     <div className="relative aspect-[4/3] overflow-hidden">
@@ -385,7 +400,7 @@ function PropertiesPage() {
                     </div>
                   )}
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-xl line-clamp-1">{property.title}</CardTitle>
+                    <CardTitle className="text-xl line-clamp-1">{localizedTitle}</CardTitle>
                     <div className="flex items-center text-muted-foreground">
                       <MapPin className="h-4 w-4 mr-1" />
                       <span className="text-sm line-clamp-1">{property.location}</span>
@@ -427,7 +442,8 @@ function PropertiesPage() {
                     </Link>
                   </CardContent>
                 </Card>
-              ))}
+              );
+            })}
             </div>
           </>
         )}

@@ -15,10 +15,16 @@ export interface Property {
   pubkey: string; // event.pubkey
   created_at: number; // event.created_at
   
-  // Required fields
+  // Required fields - Multilingual
   d: string; // unique property identifier
   title: string;
+  title_en: string;
+  title_fa: string;
+  title_ar: string;
   description: string;
+  description_en: string;
+  description_fa: string;
+  description_ar: string;
   type: PropertyType;
   category: PropertyCategory;
   price: string;
@@ -102,9 +108,18 @@ export interface PropertyImage {
 
 // Property Form Data Interface
 export interface PropertyFormData {
-  // Basic Information
+  // Multilingual Basic Information
+  title_en: string;
+  title_fa: string;
+  title_ar: string;
+  description_en?: string;
+  description_fa?: string;
+  description_ar?: string;
+
+  // Legacy fields for backward compatibility
   title: string;
   description: string;
+
   type: PropertyType;
   category: PropertyCategory;
   status: PropertyStatus;
@@ -168,8 +183,8 @@ export interface PropertyFormData {
   hospitals_nearby?: string;
   shopping_nearby?: string;
   
-  // Images
-  images?: File[];
+  // Images (URLs after upload to Primal servers)
+  images?: string[];
   
   // System
   language?: string;
@@ -242,10 +257,16 @@ export function validateProperty(event: NostrEvent): Property | null {
       pubkey: event.pubkey,
       created_at: event.created_at,
       
-      // Required fields
+      // Required fields - Multilingual
       d: getTag('d')!,
       title: getTag('title')!,
+      title_en: getTag('title_en') || getTag('title')!,
+      title_fa: getTag('title_fa') || getTag('title')!,
+      title_ar: getTag('title_ar') || getTag('title')!,
       description: getTag('description') || '',
+      description_en: getTag('description_en') || getTag('description') || '',
+      description_fa: getTag('description_fa') || getTag('description') || '',
+      description_ar: getTag('description_ar') || getTag('description') || '',
       type: getTag('type')! as PropertyType,
       category: getTag('category')! as PropertyCategory,
       price: getTag('price')!,
@@ -314,57 +335,19 @@ export function validateProperty(event: NostrEvent): Property | null {
       // System
       language: getTag('language'),
       
-      // Parse images from imeta tags
+      // Parse images from image tags (simple URL tags)
       images: event.tags
-        .filter(tag => tag[0] === 'imeta')
-        .map(tag => parseImageMeta(tag[1]))
-        .filter(Boolean) as PropertyImage[]
+        .filter(tag => tag[0] === 'image')
+        .map(tag => ({
+          url: tag[1],
+          alt: `Property image`,
+        }))
+        .filter(img => img.url) as PropertyImage[]
     };
     
     return property;
   } catch (error) {
     console.error('Error validating property:', error);
-    return null;
-  }
-}
-
-function parseImageMeta(imeta: string): PropertyImage | null {
-  try {
-    const parts = imeta.split(' ');
-    const image: PropertyImage = { url: '' };
-    
-    for (let i = 0; i < parts.length; i += 2) {
-      const key = parts[i];
-      const value = parts[i + 1];
-      
-      switch (key) {
-        case 'url':
-          image.url = value;
-          break;
-        case 'alt':
-          image.alt = value;
-          break;
-        case 'blurhash':
-          image.blurhash = value;
-          break;
-        case 'dim':
-          image.dimensions = value;
-          break;
-        case 'size':
-          image.size = value;
-          break;
-        case 'm':
-          image.mimeType = value;
-          break;
-        case 'x':
-          image.hash = value;
-          break;
-      }
-    }
-    
-    return image.url ? image : null;
-  } catch (error) {
-    console.error('Error parsing image meta:', error);
     return null;
   }
 }
