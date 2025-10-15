@@ -89,7 +89,7 @@ function PropertiesPage() {
             <div>
               <h1 className="text-4xl md:text-5xl font-bold mb-4">{t.properties}</h1>
               <p className="text-lg opacity-90 max-w-2xl">
-                Discover premium real estate opportunities in Oman. From luxury villas to commercial spaces.
+                {t.discoverPremium}. {t.fromLuxuryVillas}.
               </p>
             </div>
             {isAdmin && (
@@ -350,7 +350,7 @@ function PropertiesPage() {
             {/* Results Header */}
             <div className="flex items-center justify-between mb-6">
               <p className="text-muted-foreground">
-                {properties.length} {properties.length === 1 ? 'property' : 'properties'} found
+                {properties.length} {properties.length === 1 ? t.property : t.propertiesFound}
               </p>
             </div>
 
@@ -358,7 +358,6 @@ function PropertiesPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {properties.map((property) => {
               const localizedTitle = getLocalizedText(property, 'title');
-              const localizedDescription = getLocalizedText(property, 'description');
               
               return (
                 <Card key={property.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">

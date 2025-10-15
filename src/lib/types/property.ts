@@ -21,10 +21,12 @@ export interface Property {
   title_en: string;
   title_fa: string;
   title_ar: string;
+  title_ru?: string;
   description: string;
   description_en: string;
   description_fa: string;
   description_ar: string;
+  description_ru?: string;
   type: PropertyType;
   category: PropertyCategory;
   price: string;
@@ -112,9 +114,11 @@ export interface PropertyFormData {
   title_en: string;
   title_fa: string;
   title_ar: string;
+  title_ru?: string;
   description_en?: string;
   description_fa?: string;
   description_ar?: string;
+  description_ru?: string;
 
   // Legacy fields for backward compatibility
   title: string;

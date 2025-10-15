@@ -45,8 +45,10 @@ export function useCreateProperty() {
         ...imageMetaTags
       ];
 
-      // Add optional fields
+      // Add optional fields including multilingual
       const optionalFields: (keyof PropertyFormData)[] = [
+        'title_en', 'title_fa', 'title_ar', 'title_ru',
+        'description_en', 'description_fa', 'description_ar', 'description_ru',
         'area', 'bedrooms', 'bathrooms', 'furnished', 'year_built', 'floor', 'total_floors',
         'address', 'city', 'region', 'country', 'lat', 'lon',
         'parking', 'garden', 'pool', 'elevator', 'balcony', 'storage', 'security', 'gym',
@@ -122,8 +124,10 @@ export function useUpdateProperty() {
         ...imageMetaTags
       ];
 
-      // Add optional fields
+      // Add optional fields including multilingual
       const optionalFields: (keyof PropertyFormData)[] = [
+        'title_en', 'title_fa', 'title_ar', 'title_ru',
+        'description_en', 'description_fa', 'description_ar', 'description_ru',
         'area', 'bedrooms', 'bathrooms', 'furnished', 'year_built', 'floor', 'total_floors',
         'address', 'city', 'region', 'country', 'lat', 'lon',
         'parking', 'garden', 'pool', 'elevator', 'balcony', 'storage', 'security', 'gym',

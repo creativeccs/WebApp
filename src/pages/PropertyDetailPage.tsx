@@ -175,7 +175,7 @@ function PropertyDetailPage() {
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={handleShare}>
               <Share2 className="h-4 w-4 mr-2" />
-              Share
+              {t.share}
             </Button>
             {isAdmin && (
               <Button 
@@ -309,7 +309,7 @@ function PropertyDetailPage() {
             {/* Description */}
             <Card>
               <CardHeader>
-                <CardTitle>Description</CardTitle>
+                <CardTitle>{t.description}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
@@ -321,7 +321,7 @@ function PropertyDetailPage() {
             {/* Amenities */}
             <Card>
               <CardHeader>
-                <CardTitle>Amenities & Features</CardTitle>
+                <CardTitle>{t.amenities}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -356,24 +356,24 @@ function PropertyDetailPage() {
             {(property.year_built || property.floor || property.total_floors) && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Additional Information</CardTitle>
+                  <CardTitle>{t.additionalDetails}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {property.year_built && (
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Year Built:</span>
+                      <span className="text-muted-foreground">{t.yearBuilt}:</span>
                       <span className="font-medium">{property.year_built}</span>
                     </div>
                   )}
                   {property.floor && (
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Floor:</span>
+                      <span className="text-muted-foreground">{t.floor}:</span>
                       <span className="font-medium">{property.floor}</span>
                     </div>
                   )}
                   {property.total_floors && (
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Total Floors:</span>
+                      <span className="text-muted-foreground">{t.totalFloors}:</span>
                       <span className="font-medium">{property.total_floors}</span>
                     </div>
                   )}
@@ -385,11 +385,11 @@ function PropertyDetailPage() {
             {property.city && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Location Details</CardTitle>
+                  <CardTitle>{t.locationDetails}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">City:</span>
+                    <span className="text-muted-foreground">{t.city}:</span>
                     <span className="font-medium">{property.city}</span>
                   </div>
                 </CardContent>
@@ -447,7 +447,7 @@ function PropertyDetailPage() {
             {/* Property Info Summary */}
             <Card>
               <CardHeader>
-                <CardTitle>Property Summary</CardTitle>
+                <CardTitle>{t.propertyDetails}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between">
@@ -473,17 +473,17 @@ function PropertyDetailPage() {
             {/* Quick Actions */}
             <Card>
               <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
+                <CardTitle>{t.quickActions}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button variant="outline" className="w-full justify-start gap-2">
+                <Button variant="outline" className="w-full justify-start gap-2" onClick={handleShare}>
                   <Share2 className="h-4 w-4" />
-                  Share Property
+                  {t.share} {t.property}
                 </Button>
                 <Link to="/properties" className="block">
                   <Button variant="outline" className="w-full justify-start gap-2">
                     <ArrowLeft className="h-4 w-4" />
-                    Browse More Properties
+                    {t.viewAllProperties}
                   </Button>
                 </Link>
               </CardContent>

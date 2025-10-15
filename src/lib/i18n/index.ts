@@ -1,20 +1,23 @@
 import { en } from './en';
 import { ar } from './ar';
 import { fa } from './fa';
+import { ru } from './ru';
 import type { Translation } from './types';
 
-export type Language = 'en' | 'ar' | 'fa';
+export type Language = 'en' | 'ar' | 'fa' | 'ru';
 
 export const translations: Record<Language, Translation> = {
   en,
   ar,
-  fa
+  fa,
+  ru
 };
 
 export const languageNames: Record<Language, string> = {
   en: 'English',
   ar: 'العربية',
-  fa: 'فارسی'
+  fa: 'فارسی',
+  ru: 'Русский'
 };
 
 export const isRTL = (language: Language): boolean => {

@@ -24,83 +24,83 @@ function AboutPage() {
   document.title = `${t.about} - ${t.companyName}`;
 
   const stats = [
-    { icon: Building, value: '500+', label: 'Projects Completed' },
-    { icon: Users, value: '1000+', label: 'Happy Clients' },
-    { icon: Award, value: '15+', label: 'Years Experience' },
-    { icon: MapPin, value: '50+', label: 'Locations Served' }
+    { icon: Building, value: '500+', label: t.projectsCompleted },
+    { icon: Users, value: '1000+', label: t.happyClients },
+    { icon: Award, value: '15+', label: t.yearsExperience },
+    { icon: MapPin, value: '50+', label: t.locationsServed }
   ];
 
   const services = [
     {
       icon: Building,
-      title: 'Real Estate Development',
-      description: 'Comprehensive property development from concept to completion, specializing in residential and commercial projects.'
+      title: t.realEstateDevelopment,
+      description: t.realEstateDevelopmentDesc
     },
     {
       icon: Shield,
-      title: 'Construction Services',
-      description: 'Full-service construction including design, planning, and execution with the highest quality standards.'
+      title: t.constructionServicesTitle,
+      description: t.constructionServicesDesc
     },
     {
       icon: Zap,
-      title: 'Property Management',
-      description: 'Professional property management services ensuring optimal returns and maintenance for property owners.'
+      title: t.propertyManagementTitle,
+      description: t.propertyManagementDesc
     },
     {
       icon: Target,
-      title: 'Investment Consulting',
-      description: 'Expert guidance on real estate investments, market analysis, and strategic planning for maximum ROI.'
+      title: t.investmentConsulting,
+      description: t.investmentConsultingDesc
     }
   ];
 
   const values = [
     {
       icon: Shield,
-      title: 'Integrity',
-      description: 'We conduct business with honesty, transparency, and ethical practices in all our dealings.'
+      title: t.integrity,
+      description: t.integrityDesc
     },
     {
       icon: Award,
-      title: 'Excellence',
-      description: 'We strive for perfection in every project, delivering superior quality and exceptional results.'
+      title: t.excellence,
+      description: t.excellenceDesc
     },
     {
       icon: Users,
-      title: 'Collaboration',
-      description: 'We work closely with clients, partners, and communities to achieve shared goals and success.'
+      title: t.collaboration,
+      description: t.collaborationDesc
     },
     {
       icon: Zap,
-      title: 'Innovation',
-      description: 'We embrace cutting-edge technologies and modern construction methods to stay ahead.'
+      title: t.innovation,
+      description: t.innovationDesc
     }
   ];
 
   const timeline = [
     {
       year: '2008',
-      title: 'Company Founded',
-      description: 'Creative Construction Solution was established with a vision to transform Oman\'s construction landscape.'
+      title: t.companyFounded,
+      description: t.companyFoundedDesc
     },
     {
       year: '2012',
-      title: 'Major Expansion',
-      description: 'Expanded operations to include comprehensive real estate development and property management services.'
+      title: t.majorExpansion,
+      description: t.majorExpansionDesc
     },
     {
       year: '2016',
-      title: 'Award Recognition',
-      description: 'Received industry recognition for outstanding contribution to sustainable construction practices.'
+      title: t.awardRecognition,
+      description: t.awardRecognitionDesc
     },
     {
       year: '2020',
-      title: 'Digital Transformation',
-      description: 'Launched digital platforms and modern technologies to enhance client experience and service delivery.'
+      title: t.digitalTransformation,
+      description: t.digitalTransformationDesc
     },
     {
       year: '2024',
-      title: 'Vision 2040 Alignment',
-      description: 'Fully aligned our services with Oman Vision 2040, focusing on smart cities and sustainable development.'
+      title: t.vision2040Alignment,
+      description: t.vision2040AlignmentDesc
     }
   ];
 
@@ -117,11 +117,11 @@ function AboutPage() {
             <div className="flex flex-wrap gap-4">
               <Badge variant="secondary" className="text-lg px-4 py-2">
                 <Calendar className="h-4 w-4 mr-2" />
-                Est. 2008
+                {t.est2008}
               </Badge>
               <Badge variant="secondary" className="text-lg px-4 py-2">
                 <MapPin className="h-4 w-4 mr-2" />
-                Muscat, Oman
+                {t.muscatOman}
               </Badge>
             </div>
           </div>
@@ -185,9 +185,9 @@ function AboutPage() {
         {/* Services */}
         <div className="mb-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Our Services</h2>
+            <h2 className="text-3xl font-bold mb-4">{t.ourServices}</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Comprehensive solutions for all your construction and real estate needs in Oman.
+              {t.comprehensiveSolutions}
             </p>
           </div>
 
@@ -218,9 +218,9 @@ function AboutPage() {
         {/* Values */}
         <div className="mb-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Our Values</h2>
+            <h2 className="text-3xl font-bold mb-4">{t.ourValues}</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              The principles that guide our work and define our commitment to excellence.
+              {t.principlesGuide}
             </p>
           </div>
 
@@ -247,9 +247,9 @@ function AboutPage() {
         {/* Timeline */}
         <div className="mb-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Our Journey</h2>
+            <h2 className="text-3xl font-bold mb-4">{t.ourJourney}</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Key milestones in our company's growth and development over the years.
+              {t.keyMilestones}
             </p>
           </div>
 
@@ -278,9 +278,9 @@ function AboutPage() {
         {/* Team Section */}
         <div className="mb-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Leadership Team</h2>
+            <h2 className="text-3xl font-bold mb-4">{t.leadershipTeam}</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Meet the experienced professionals leading Creative Construction Solution.
+              {t.meetProfessionals}
             </p>
           </div>
 
@@ -291,9 +291,9 @@ function AboutPage() {
                   <Users className="h-12 w-12 text-muted-foreground" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Ahmed Al-Rashid</h3>
-                <p className="text-primary font-medium mb-2">Chief Executive Officer</p>
+                <p className="text-primary font-medium mb-2">{t.founderCEO}</p>
                 <p className="text-muted-foreground text-sm">
-                  15+ years in construction industry with expertise in large-scale development projects.
+                  {t.founderCEODesc}
                 </p>
               </CardContent>
             </Card>
@@ -304,9 +304,9 @@ function AboutPage() {
                   <Users className="h-12 w-12 text-muted-foreground" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Sarah Mohammed</h3>
-                <p className="text-primary font-medium mb-2">Head of Operations</p>
+                <p className="text-primary font-medium mb-2">{t.chiefOperationsOfficer}</p>
                 <p className="text-muted-foreground text-sm">
-                  Expert in project management and operational efficiency with 12+ years experience.
+                  {t.chiefOperationsOfficerDesc}
                 </p>
               </CardContent>
             </Card>
@@ -317,9 +317,9 @@ function AboutPage() {
                   <Users className="h-12 w-12 text-muted-foreground" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Khalid Al-Balushi</h3>
-                <p className="text-primary font-medium mb-2">Chief Technical Officer</p>
+                <p className="text-primary font-medium mb-2">{t.headConstruction}</p>
                 <p className="text-muted-foreground text-sm">
-                  Leading engineer with specialization in sustainable construction and smart building technologies.
+                  {t.headConstructionDesc}
                 </p>
               </CardContent>
             </Card>
@@ -331,9 +331,9 @@ function AboutPage() {
           <Card className="bg-primary text-primary-foreground">
             <CardContent className="py-12">
               <Heart className="h-16 w-16 mx-auto mb-6 opacity-80" />
-              <h2 className="text-3xl font-bold mb-4">Ready to Build Your Future?</h2>
+              <h2 className="text-3xl font-bold mb-4">{t.readyToBuildYourFuture}</h2>
               <p className="text-lg opacity-90 mb-8 max-w-2xl mx-auto">
-                Whether you're looking to buy, sell, or develop property, our expert team is here to guide you every step of the way.
+                {t.buyingSelling}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/contact">
@@ -345,7 +345,7 @@ function AboutPage() {
                 <Link to="/properties">
                   <Button size="lg" variant="outline" className="gap-2 text-primary-foreground border-primary-foreground hover:bg-primary-foreground hover:text-primary">
                     <Building className="h-4 w-4" />
-                    View {t.properties}
+                    {t.viewProperties}
                   </Button>
                 </Link>
               </div>

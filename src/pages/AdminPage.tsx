@@ -5,11 +5,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
 import { useI18n } from '@/contexts/I18nContext';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useIsAdmin } from '@/hooks/useAdmin';
 import { useProperties } from '@/hooks/useProperties';
+import { useAuthor } from '@/hooks/useAuthor';
+import { useLoginActions } from '@/hooks/useLoginActions';
 import { PropertyForm } from '@/components/PropertyForm';
+import { EditProfileForm } from '@/components/EditProfileForm';
 import { 
   Building, 
   MessageCircle, 
@@ -22,7 +28,13 @@ import {
   AlertTriangle,
   CheckCircle,
   Calendar,
-  ArrowLeft
+  ArrowLeft,
+  LogOut,
+  Settings,
+  User,
+  Bell,
+  Shield,
+  Activity
 } from 'lucide-react';
 
 function AdminPage() {
@@ -30,6 +42,8 @@ function AdminPage() {
   const navigate = useNavigate();
   const { user } = useCurrentUser();
   const isAdmin = useIsAdmin();
+  const { logout } = useLoginActions();
+  const author = useAuthor(user?.pubkey || '');
   const [showAddProperty, setShowAddProperty] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
 
@@ -45,13 +59,13 @@ function AdminPage() {
         <Card className="max-w-md">
           <CardContent className="flex flex-col items-center text-center py-8">
             <AlertTriangle className="h-16 w-16 text-yellow-500 mb-4" />
-            <h2 className="text-2xl font-bold mb-2">Access Denied</h2>
+            <h2 className="text-2xl font-bold mb-2">{t.accessDenied}</h2>
             <p className="text-muted-foreground mb-6">
-              You don't have permission to access the admin dashboard.
+              {t.noPermission}
             </p>
             <Button onClick={() => navigate('/')}>
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Home
+              {t.backToHome}
             </Button>
           </CardContent>
         </Card>
@@ -66,13 +80,13 @@ function AdminPage() {
         <Card className="max-w-md">
           <CardContent className="flex flex-col items-center text-center py-8">
             <Users className="h-16 w-16 text-blue-500 mb-4" />
-            <h2 className="text-2xl font-bold mb-2">Login Required</h2>
+            <h2 className="text-2xl font-bold mb-2">{t.loginRequired2}</h2>
             <p className="text-muted-foreground mb-6">
-              Please login with your admin account to access the dashboard.
+              {t.pleaseLoginAdmin}
             </p>
             <Button onClick={() => navigate('/')}>
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Home
+              {t.backToHome}
             </Button>
           </CardContent>
         </Card>
@@ -106,21 +120,45 @@ function AdminPage() {
       <div className="bg-primary text-primary-foreground py-8">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">{t.adminPanel}</h1>
-              <p className="opacity-90">
-                Welcome back! Manage your properties and monitor system activity.
-              </p>
+            <div className="flex items-center gap-4">
+              <Avatar className="h-16 w-16 border-2 border-primary-foreground/20">
+                <AvatarImage src={author.data?.metadata?.picture} alt={author.data?.metadata?.name || 'Admin'} />
+                <AvatarFallback>
+                  {author.data?.metadata?.name?.[0]?.toUpperCase() || 'A'}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <h1 className="text-3xl font-bold mb-1">{t.adminPanel}</h1>
+                <p className="opacity-90">
+                  {t.welcomeBack}, {author.data?.metadata?.name || author.data?.metadata?.display_name || 'Admin'}
+                </p>
+              </div>
             </div>
-            <Button
-              onClick={() => setShowAddProperty(true)}
-              size="lg"
-              variant="secondary"
-              className="gap-2"
-            >
-              <Plus className="h-5 w-5" />
-              {t.addProperty}
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={() => setShowAddProperty(true)}
+                size="lg"
+                variant="secondary"
+                className="gap-2"
+              >
+                <Plus className="h-5 w-5" />
+                {t.addProperty}
+              </Button>
+              <Button
+                onClick={() => {
+                  if (window.confirm(`${t.logout}?`)) {
+                    logout();
+                    navigate('/');
+                  }
+                }}
+                size="lg"
+                variant="outline"
+                className="gap-2 bg-white/10 hover:bg-white/20 border-white/20 text-white hover:text-white"
+              >
+                <LogOut className="h-5 w-5" />
+                {t.logout}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -135,7 +173,7 @@ function AdminPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.totalProperties}</p>
-                <p className="text-sm text-muted-foreground">Total Properties</p>
+                <p className="text-sm text-muted-foreground">{t.totalPropertiesLabel}</p>
               </div>
             </CardContent>
           </Card>
@@ -147,7 +185,7 @@ function AdminPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.availableProperties}</p>
-                <p className="text-sm text-muted-foreground">Available</p>
+                <p className="text-sm text-muted-foreground">{t.available}</p>
               </div>
             </CardContent>
           </Card>
@@ -159,7 +197,7 @@ function AdminPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.soldRentedProperties}</p>
-                <p className="text-sm text-muted-foreground">Sold/Rented</p>
+                <p className="text-sm text-muted-foreground">{t.soldRented}</p>
               </div>
             </CardContent>
           </Card>
@@ -171,7 +209,7 @@ function AdminPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.pendingProperties}</p>
-                <p className="text-sm text-muted-foreground">Pending</p>
+                <p className="text-sm text-muted-foreground">{t.pending}</p>
               </div>
             </CardContent>
           </Card>
@@ -179,18 +217,22 @@ function AdminPage() {
 
         {/* Main Dashboard */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:grid-cols-none lg:inline-flex">
+          <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:grid-cols-none lg:inline-flex">
             <TabsTrigger value="overview" className="gap-2">
               <BarChart3 className="h-4 w-4" />
-              Overview
+              {t.overview}
             </TabsTrigger>
             <TabsTrigger value="properties" className="gap-2">
               <Building className="h-4 w-4" />
-              Properties
+              {t.properties}
             </TabsTrigger>
             <TabsTrigger value="messages" className="gap-2">
               <MessageCircle className="h-4 w-4" />
-              Messages
+              {t.messages}
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="gap-2">
+              <Settings className="h-4 w-4" />
+              {t.settings}
             </TabsTrigger>
           </TabsList>
 
@@ -199,7 +241,7 @@ function AdminPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Recent Activity</CardTitle>
+                  <CardTitle>{t.recentActivity}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -208,8 +250,8 @@ function AdminPage() {
                         <Plus className="h-4 w-4 text-green-500" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-medium">New property added</p>
-                        <p className="text-xs text-muted-foreground">2 hours ago</p>
+                        <p className="text-sm font-medium">{t.newPropertyAdded}</p>
+                        <p className="text-xs text-muted-foreground">{t.hoursAgo}</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
@@ -217,8 +259,8 @@ function AdminPage() {
                         <MessageCircle className="h-4 w-4 text-blue-500" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-medium">New contact message</p>
-                        <p className="text-xs text-muted-foreground">4 hours ago</p>
+                        <p className="text-sm font-medium">{t.newContactMessage}</p>
+                        <p className="text-xs text-muted-foreground">4 {t.hoursAgo}</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
@@ -226,8 +268,8 @@ function AdminPage() {
                         <Edit className="h-4 w-4 text-purple-500" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-medium">Property updated</p>
-                        <p className="text-xs text-muted-foreground">1 day ago</p>
+                        <p className="text-sm font-medium">{t.propertyUpdated}</p>
+                        <p className="text-xs text-muted-foreground">{t.dayAgo}</p>
                       </div>
                     </div>
                   </div>
@@ -236,7 +278,7 @@ function AdminPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Quick Actions</CardTitle>
+                  <CardTitle>{t.quickActions}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <Button 
@@ -244,7 +286,7 @@ function AdminPage() {
                     onClick={() => setShowAddProperty(true)}
                   >
                     <Plus className="h-4 w-4" />
-                    Add New Property
+                    {t.addNewProperty}
                   </Button>
                   <Button 
                     variant="outline" 
@@ -252,7 +294,7 @@ function AdminPage() {
                     onClick={() => setActiveTab('properties')}
                   >
                     <Building className="h-4 w-4" />
-                    Manage Properties
+                    {t.manageProperties}
                   </Button>
                   <Button 
                     variant="outline" 
@@ -260,7 +302,7 @@ function AdminPage() {
                     onClick={() => setActiveTab('messages')}
                   >
                     <MessageCircle className="h-4 w-4" />
-                    View Messages
+                    {t.viewMessages}
                   </Button>
                   <Button 
                     variant="outline" 
@@ -268,7 +310,7 @@ function AdminPage() {
                     onClick={() => navigate('/properties')}
                   >
                     <Eye className="h-4 w-4" />
-                    View Public Site
+                    {t.viewPublicSite}
                   </Button>
                 </CardContent>
               </Card>
@@ -278,10 +320,10 @@ function AdminPage() {
           {/* Properties Tab */}
           <TabsContent value="properties" className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold">Property Management</h2>
+              <h2 className="text-2xl font-bold">{t.propertyManagement}</h2>
               <Button onClick={() => setShowAddProperty(true)} className="gap-2">
                 <Plus className="h-4 w-4" />
-                Add Property
+                {t.addProperty}
               </Button>
             </div>
 
@@ -301,10 +343,10 @@ function AdminPage() {
               <Card className="border-dashed">
                 <CardContent className="flex flex-col items-center justify-center py-16">
                   <Building className="h-16 w-16 text-muted-foreground mb-4" />
-                  <p className="text-lg font-medium mb-4">No properties found</p>
+                  <p className="text-lg font-medium mb-4">{t.noPropertiesFound}</p>
                   <Button onClick={() => setShowAddProperty(true)} className="gap-2">
                     <Plus className="h-4 w-4" />
-                    Add Your First Property
+                    {t.addYourFirstProperty}
                   </Button>
                 </CardContent>
               </Card>
@@ -341,11 +383,11 @@ function AdminPage() {
                       <div className="flex gap-2">
                         <Button size="sm" variant="outline" className="flex-1 gap-1">
                           <Eye className="h-3 w-3" />
-                          View
+                          {t.view}
                         </Button>
                         <Button size="sm" variant="outline" className="flex-1 gap-1">
                           <Edit className="h-3 w-3" />
-                          Edit
+                          {t.edit}
                         </Button>
                         <Button size="sm" variant="outline" className="text-destructive hover:text-destructive">
                           <Trash2 className="h-3 w-3" />
@@ -361,25 +403,167 @@ function AdminPage() {
           {/* Messages Tab */}
           <TabsContent value="messages" className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold">Contact Messages</h2>
+              <h2 className="text-2xl font-bold">{t.contactMessages}</h2>
             </div>
 
             <Alert>
               <MessageCircle className="h-4 w-4" />
               <AlertDescription>
-                Contact messages from the website will appear here once the messaging system is fully integrated.
+                {t.contactMessagesWillAppear}
               </AlertDescription>
             </Alert>
 
             <Card className="border-dashed">
               <CardContent className="flex flex-col items-center justify-center py-16">
                 <MessageCircle className="h-16 w-16 text-muted-foreground mb-4" />
-                <p className="text-lg font-medium mb-2">No messages yet</p>
+                <p className="text-lg font-medium mb-2">{t.noMessagesYet}</p>
                 <p className="text-muted-foreground text-center max-w-md">
-                  When visitors send messages through the contact form, they will appear here for you to review and respond.
+                  {t.whenVisitorsSend}
                 </p>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Settings Tab */}
+          <TabsContent value="settings" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Profile Settings */}
+              <div className="lg:col-span-2 space-y-6">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center gap-2">
+                      <User className="h-5 w-5" />
+                      <CardTitle>{t.profileSettings || 'Profile Settings'}</CardTitle>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <EditProfileForm />
+                  </CardContent>
+                </Card>
+
+                {/* System Settings */}
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center gap-2">
+                      <Settings className="h-5 w-5" />
+                      <CardTitle>{t.systemSettings || 'System Settings'}</CardTitle>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="notifications">{t.notifications || 'Notifications'}</Label>
+                      <div className="flex items-center justify-between p-3 border rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <Bell className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">{t.emailNotifications || 'Email Notifications'}</span>
+                        </div>
+                        <Badge variant="outline">{t.enabled || 'Enabled'}</Badge>
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    <div className="space-y-2">
+                      <Label>{t.security || 'Security'}</Label>
+                      <div className="flex items-center justify-between p-3 border rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <Shield className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">{t.twoFactorAuth || 'Two-Factor Authentication'}</span>
+                        </div>
+                        <Badge variant="secondary">{t.notConfigured || 'Not Configured'}</Badge>
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    <div className="space-y-2">
+                      <Label>{t.dataManagement || 'Data Management'}</Label>
+                      <div className="space-y-2">
+                        <Button variant="outline" className="w-full justify-start gap-2">
+                          <Activity className="h-4 w-4" />
+                          {t.exportData || 'Export All Data'}
+                        </Button>
+                        <Button variant="outline" className="w-full justify-start gap-2 text-destructive hover:text-destructive">
+                          <Trash2 className="h-4 w-4" />
+                          {t.deleteAccount || 'Delete Account'}
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Admin Info Sidebar */}
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>{t.adminInfo || 'Admin Information'}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex flex-col items-center text-center space-y-3">
+                      <Avatar className="h-24 w-24">
+                        <AvatarImage src={author.data?.metadata?.picture} alt={author.data?.metadata?.name || 'Admin'} />
+                        <AvatarFallback className="text-2xl">
+                          {author.data?.metadata?.name?.[0]?.toUpperCase() || 'A'}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <h3 className="font-semibold text-lg">
+                          {author.data?.metadata?.name || author.data?.metadata?.display_name || 'Administrator'}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {author.data?.metadata?.nip05 || user?.pubkey.slice(0, 8) + '...'}
+                        </p>
+                      </div>
+                      <Badge variant="default" className="gap-1">
+                        <Shield className="h-3 w-3" />
+                        {t.admin}
+                      </Badge>
+                    </div>
+
+                    <Separator />
+
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">{t.role || 'Role'}:</span>
+                        <span className="font-medium">{t.admin}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">{t.propertiesManaged || 'Properties'}:</span>
+                        <span className="font-medium">{stats.totalProperties}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">{t.status}:</span>
+                        <Badge variant="default" className="h-5 text-xs">
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          {t.active || 'Active'}
+                        </Badge>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>{t.quickStats || 'Quick Stats'}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">{t.totalViews || 'Total Views'}</span>
+                      <span className="font-semibold">-</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">{t.thisWeek || 'This Week'}</span>
+                      <span className="font-semibold">-</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">{t.inquiries || 'Inquiries'}</span>
+                      <span className="font-semibold">0</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
       </div>

@@ -168,10 +168,10 @@ export default function Admin() {
   const activePercentage = totalProperties > 0 ? Math.round((activeListings / totalProperties) * 100) : 0;
 
   const stats = [
-    { label: t.totalProperties, value: isLoadingProperties ? '...' : totalProperties.toString(), icon: Building, change: `${activeListings} available`, trend: 'up' },
-    { label: t.activeListings, value: isLoadingProperties ? '...' : activeListings.toString(), icon: TrendingUp, change: `${activePercentage}% of total`, trend: 'up' },
-    { label: 'Sold Properties', value: isLoadingProperties ? '...' : soldProperties.toString(), icon: Building, change: `${rentedProperties} rented`, trend: 'up' },
-    { label: t.newMessages, value: isLoadingMessages ? '...' : totalMessages.toString(), icon: MessageCircle, change: totalMessages > 0 ? `${totalMessages} unread` : 'No messages', trend: 'up' },
+    { label: t.totalProperties, value: isLoadingProperties ? '...' : totalProperties.toString(), icon: Building, change: `${activeListings} ${t.available}`, trend: 'up' },
+    { label: t.activeListings, value: isLoadingProperties ? '...' : activeListings.toString(), icon: TrendingUp, change: `${activePercentage}% ${t.ofTotal}`, trend: 'up' },
+    { label: t.soldProperties, value: isLoadingProperties ? '...' : soldProperties.toString(), icon: Building, change: `${rentedProperties} ${t.rented}`, trend: 'up' },
+    { label: t.newMessages, value: isLoadingMessages ? '...' : totalMessages.toString(), icon: MessageCircle, change: totalMessages > 0 ? `${totalMessages} ${t.unread}` : t.noMessages, trend: 'up' },
   ];
 
   return (
@@ -189,14 +189,14 @@ export default function Admin() {
               </h1>
               <p className="text-muted-foreground mt-1">{t.manageRealEstateBusiness}</p>
             </div>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 onClick={() => setShowAddProperty(!showAddProperty)}
                 size="lg"
-                className="gap-2 shadow-lg w-full"
+                className="gap-2 shadow-lg"
               >
                 <Plus className="w-5 h-5" />
-                Add Property
+                {t.addProperty}
               </Button>
             </motion.div>
           </div>
@@ -559,7 +559,7 @@ export default function Admin() {
                                       onClick={() => window.open(`/property/${property.d}`, '_blank')}
                                     >
                                       <Eye className="w-4 h-4 mr-1" />
-                                      View
+                                      {t.view}
                                     </Button>
                                     <Button 
                                       variant="outline" 
@@ -568,7 +568,7 @@ export default function Admin() {
                                       onClick={() => setPropertyToEdit(property)}
                                     >
                                       <Pencil className="w-4 h-4 mr-1" />
-                                      Edit
+                                      {t.edit}
                                     </Button>
                                     <Button 
                                       variant="outline" 
@@ -676,10 +676,10 @@ export default function Admin() {
                                   </div>
                                   <div className="flex gap-2 pt-2">
                                     <Button variant="outline" size="sm">
-                                      Reply
+                                      {t.reply}
                                     </Button>
                                     <Button variant="ghost" size="sm">
-                                      Archive
+                                      {t.archive}
                                     </Button>
                                   </div>
                                 </CardContent>

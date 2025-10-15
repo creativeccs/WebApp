@@ -35,9 +35,11 @@ const propertySchema = z.object({
   title_en: z.string().min(1, 'English title is required'),
   title_fa: z.string().min(1, 'Persian title is required'),
   title_ar: z.string().min(1, 'Arabic title is required'),
+  title_ru: z.string().min(1, 'Russian title is required'),
   description_en: z.string().optional(),
   description_fa: z.string().optional(),
   description_ar: z.string().optional(),
+  description_ru: z.string().optional(),
 
   // Basic property info
   type: z.enum(['sale', 'rent', 'both']),
@@ -131,9 +133,11 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
       title_en: property?.title_en || '',
       title_fa: property?.title_fa || '',
       title_ar: property?.title_ar || '',
+      title_ru: property?.title_ru || '',
       description_en: property?.description_en || '',
       description_fa: property?.description_fa || '',
       description_ar: property?.description_ar || '',
+      description_ru: property?.description_ru || '',
 
       // Basic property info
       type: property?.type || 'sale',
@@ -340,6 +344,22 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                         </p>
                       )}
                     </div>
+                    <div>
+                      <Label htmlFor="title_ru" className="flex items-center gap-2">
+                        🇷🇺 Russian Title
+                      </Label>
+                      <Input 
+                        id="title_ru"
+                        {...form.register('title_ru')}
+                        placeholder="Современная 3-комнатная квартира в Маскате"
+                        className="mt-1"
+                      />
+                      {form.formState.errors.title_ru && (
+                        <p className="text-sm text-red-500 mt-1">
+                          {form.formState.errors.title_ru.message}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -382,6 +402,18 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                         rows={4}
                         className="mt-1"
                         dir="rtl"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="description_ru" className="flex items-center gap-2">
+                        🇷🇺 Russian Description
+                      </Label>
+                      <Textarea 
+                        id="description_ru"
+                        {...form.register('description_ru')}
+                        placeholder="Подробное описание объекта на русском..."
+                        rows={4}
+                        className="mt-1"
                       />
                     </div>
                   </div>

@@ -205,7 +205,7 @@ const Index = () => {
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">{t.properties}</h2>
               <p className="text-lg text-muted-foreground">
-                Discover our latest property offerings
+                {t.discover} {t.premium} {t.opportunities}
               </p>
             </div>
 
@@ -275,7 +275,7 @@ const Index = () => {
             <div className="text-center">
               <Link to="/properties">
                 <Button size="lg" variant="outline">
-                  View All Properties
+                  {t.viewAllProperties}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
