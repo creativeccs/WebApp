@@ -202,7 +202,6 @@ export default function Admin() {
                 >
                   <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span className="hidden sm:inline">{t.addProperty}</span>
-                  <span className="sm:hidden">{t.addProperty.split(' ')[0]}</span>
                 </Button>
               </motion.div>
               <motion.div 
@@ -222,7 +221,7 @@ export default function Admin() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8"
         >
           {stats.map((stat, index) => (
             <motion.div key={index} variants={itemVariants}>
@@ -232,15 +231,15 @@ export default function Admin() {
                 whileHover="hover"
               >
                 <Card className="relative overflow-hidden border-2">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16" />
-                  <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">
+                  <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-primary/5 rounded-full -mr-12 sm:-mr-16 -mt-12 sm:-mt-16" />
+                  <CardHeader className="flex flex-row items-center justify-between pb-2 p-4 sm:p-6">
+                    <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">
                       {stat.label}
                     </CardTitle>
-                    <stat.icon className="h-4 w-4 text-muted-foreground" />
+                    <stat.icon className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
                   </CardHeader>
-                  <CardContent>
-                    <div className="text-3xl font-bold">{stat.value}</div>
+                  <CardContent className="p-4 sm:p-6 pt-0">
+                    <div className="text-2xl sm:text-3xl font-bold">{stat.value}</div>
                     <p className="text-xs text-muted-foreground mt-1">
                       {stat.change}
                     </p>
@@ -351,13 +350,13 @@ export default function Admin() {
           </AlertDialogContent>
         </AlertDialog>
 
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <div className="flex flex-wrap gap-2 p-1 bg-muted/50 rounded-lg border">
+            <div className="grid grid-cols-2 sm:flex gap-2 p-1 bg-muted/50 rounded-lg border">
               {[
                 { id: 'properties', label: t.properties, icon: Building },
                 { id: 'messages', label: t.messages, icon: MessageCircle },
@@ -367,7 +366,7 @@ export default function Admin() {
                 <motion.button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all ${
+                  className={`flex items-center justify-center sm:justify-start gap-2 px-3 sm:px-4 py-2 rounded-md transition-all whitespace-nowrap ${
                     activeTab === tab.id
                       ? 'bg-background shadow-md text-primary'
                       : 'text-muted-foreground hover:text-foreground'
@@ -376,7 +375,7 @@ export default function Admin() {
                   whileTap={{ scale: 0.98 }}
                 >
                   <tab.icon className="w-4 h-4" />
-                  <span className="font-medium">{tab.label}</span>
+                  <span className="font-medium text-sm sm:text-base">{tab.label}</span>
                 </motion.button>
               ))}
             </div>
@@ -393,10 +392,10 @@ export default function Admin() {
               >
                 <Card className="border-2">
                   <CardHeader>
-                    <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div>
-                        <CardTitle className="text-2xl">{t.propertyManagement}</CardTitle>
-                        <CardDescription>
+                        <CardTitle className="text-xl sm:text-2xl">{t.propertyManagement}</CardTitle>
+                        <CardDescription className="text-sm">
                           {t.viewEditManage}
                         </CardDescription>
                       </div>
@@ -420,7 +419,7 @@ export default function Admin() {
                       </div>
                     </div>
 
-                    <div className="flex gap-4 mt-4">
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4">
                       <div className="flex-1 relative">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <Input
@@ -434,7 +433,7 @@ export default function Admin() {
                         value={statusFilter} 
                         onValueChange={setStatusFilter}
                       >
-                        <SelectTrigger className="w-[180px]">
+                        <SelectTrigger className="w-full sm:w-[180px]">
                           <Filter className="w-4 h-4 mr-2" />
                           <SelectValue placeholder="Filter" />
                         </SelectTrigger>
@@ -450,12 +449,12 @@ export default function Admin() {
                   </CardHeader>
                   <CardContent>
                     {isLoadingProperties ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                         {[1, 2, 3].map((i) => (
                           <Card key={i} className="overflow-hidden">
-                            <Skeleton className="h-48 w-full" />
-                            <CardContent className="p-4 space-y-2">
-                              <Skeleton className="h-6 w-3/4" />
+                            <Skeleton className="h-40 sm:h-48 w-full" />
+                            <CardContent className="p-3 sm:p-4 space-y-2">
+                              <Skeleton className="h-5 sm:h-6 w-3/4" />
                               <Skeleton className="h-4 w-full" />
                               <Skeleton className="h-4 w-2/3" />
                             </CardContent>
@@ -463,10 +462,10 @@ export default function Admin() {
                         ))}
                       </div>
                     ) : properties.length === 0 ? (
-                      <div className="text-center py-12">
-                        <Building className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                        <h3 className="text-lg font-semibold mb-2">{t.noPropertiesYet}</h3>
-                        <p className="text-muted-foreground mb-4">
+                      <div className="text-center py-8 sm:py-12 px-4">
+                        <Building className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-muted-foreground mb-4" />
+                        <h3 className="text-base sm:text-lg font-semibold mb-2">{t.noPropertiesYet}</h3>
+                        <p className="text-sm text-muted-foreground mb-4">
                           {t.getStartedByAdding}
                         </p>
                         <Button
@@ -479,7 +478,7 @@ export default function Admin() {
                       </div>
                     ) : (
                       <div className={viewMode === 'grid' 
-                        ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' 
+                        ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6' 
                         : 'space-y-4'
                       }>
                         {properties
@@ -513,13 +512,13 @@ export default function Admin() {
                             >
                               <Card className="overflow-hidden hover:shadow-lg transition-shadow">
                                 {property.images && property.images.length > 0 && (
-                                  <div className="relative h-48 overflow-hidden">
+                                  <div className="relative h-40 sm:h-48 overflow-hidden">
                                     <img
                                       src={property.images[0].url}
                                       alt={property.title}
                                       className="w-full h-full object-cover"
                                     />
-                                    <div className="absolute top-2 right-2 flex gap-2">
+                                    <div className="absolute top-2 right-2 flex flex-col sm:flex-row gap-2">
                                       <span className={`px-2 py-1 text-xs font-semibold rounded ${
                                         property.status === 'available' ? 'bg-green-500' :
                                         property.status === 'pending' ? 'bg-yellow-500' :
@@ -534,17 +533,17 @@ export default function Admin() {
                                     </div>
                                   </div>
                                 )}
-                                <CardContent className="p-4">
-                                  <h3 className="text-lg font-bold mb-2 line-clamp-1">
+                                <CardContent className="p-3 sm:p-4">
+                                  <h3 className="text-base sm:text-lg font-bold mb-2 line-clamp-1">
                                     {localizedTitle}
                                   </h3>
-                                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                                  <p className="text-xs sm:text-sm text-muted-foreground mb-3 line-clamp-2">
                                     {localizedDescription}
                                   </p>
-                                  <div className="space-y-2 text-sm">
+                                  <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
                                     <div className="flex items-center justify-between">
                                       <span className="text-muted-foreground">Price:</span>
-                                      <span className="font-bold text-lg">
+                                      <span className="font-bold text-base sm:text-lg">
                                         {property.price} {property.currency}
                                       </span>
                                     </div>
@@ -567,32 +566,32 @@ export default function Admin() {
                                       <span className="font-medium line-clamp-1">{property.location}</span>
                                     </div>
                                   </div>
-                                  <div className="flex gap-2 mt-4">
+                                  <div className="flex gap-2 mt-3 sm:mt-4">
                                     <Button 
                                       variant="outline" 
                                       size="sm" 
-                                      className="flex-1"
+                                      className="flex-1 text-xs sm:text-sm h-8 sm:h-9"
                                       onClick={() => window.open(`/property/${property.d}`, '_blank')}
                                     >
-                                      <Eye className="w-4 h-4 mr-1" />
-                                      {t.view}
+                                      <Eye className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
+                                      <span className="hidden sm:inline">{t.view}</span>
                                     </Button>
                                     <Button 
                                       variant="outline" 
                                       size="sm" 
-                                      className="flex-1"
+                                      className="flex-1 text-xs sm:text-sm h-8 sm:h-9"
                                       onClick={() => setPropertyToEdit(property)}
                                     >
-                                      <Pencil className="w-4 h-4 mr-1" />
-                                      {t.edit}
+                                      <Pencil className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
+                                      <span className="hidden sm:inline">{t.edit}</span>
                                     </Button>
                                     <Button 
                                       variant="outline" 
                                       size="sm"
-                                      className="text-destructive hover:text-destructive"
+                                      className="text-destructive hover:text-destructive h-8 sm:h-9 px-2 sm:px-3"
                                       onClick={() => setPropertyToDelete(property)}
                                     >
-                                      <Trash2 className="w-4 h-4" />
+                                      <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                                     </Button>
                                   </div>
                                 </CardContent>
@@ -617,8 +616,8 @@ export default function Admin() {
               >
                 <Card className="border-2">
                   <CardHeader>
-                    <CardTitle className="text-2xl">{t.messages}</CardTitle>
-                    <CardDescription>
+                    <CardTitle className="text-xl sm:text-2xl">{t.messages}</CardTitle>
+                    <CardDescription className="text-sm">
                       {t.respondToInquiries}
                     </CardDescription>
                   </CardHeader>
@@ -626,11 +625,11 @@ export default function Admin() {
                     {isLoadingMessages ? (
                       <div className="space-y-4">
                         {[1, 2, 3].map((i) => (
-                          <Card key={i} className="p-4">
+                          <Card key={i} className="p-3 sm:p-4">
                             <div className="space-y-2">
                               <div className="flex justify-between">
-                                <Skeleton className="h-5 w-32" />
-                                <Skeleton className="h-4 w-24" />
+                                <Skeleton className="h-4 sm:h-5 w-24 sm:w-32" />
+                                <Skeleton className="h-3 sm:h-4 w-16 sm:w-24" />
                               </div>
                               <Skeleton className="h-4 w-full" />
                               <Skeleton className="h-4 w-3/4" />
@@ -639,10 +638,10 @@ export default function Admin() {
                         ))}
                       </div>
                     ) : messages.length === 0 ? (
-                      <div className="text-center py-12">
-                        <MessageCircle className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                        <h3 className="text-lg font-semibold mb-2">{t.messageCenter}</h3>
-                        <p className="text-muted-foreground">
+                      <div className="text-center py-8 sm:py-12 px-4">
+                        <MessageCircle className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-muted-foreground mb-4" />
+                        <h3 className="text-base sm:text-lg font-semibold mb-2">{t.messageCenter}</h3>
+                        <p className="text-sm text-muted-foreground">
                           No messages received yet
                         </p>
                       </div>
@@ -666,35 +665,35 @@ export default function Admin() {
                               whileHover={{ scale: 1.01 }}
                             >
                               <Card className="overflow-hidden hover:shadow-md transition-shadow">
-                                <CardHeader className="pb-3">
-                                  <div className="flex justify-between items-start">
+                                <CardHeader className="pb-2 sm:pb-3 p-3 sm:p-6">
+                                  <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-2">
                                     <div className="space-y-1">
-                                      <CardTitle className="text-lg">
+                                      <CardTitle className="text-base sm:text-lg">
                                         {message.name}
                                       </CardTitle>
-                                      <CardDescription className="text-sm">
+                                      <CardDescription className="text-xs sm:text-sm break-all">
                                         {message.email}
                                       </CardDescription>
                                     </div>
-                                    <span className="text-xs text-muted-foreground">
+                                    <span className="text-xs text-muted-foreground whitespace-nowrap">
                                       {formattedDate}
                                     </span>
                                   </div>
                                 </CardHeader>
-                                <CardContent className="space-y-3">
+                                <CardContent className="space-y-3 p-3 sm:p-6 pt-0">
                                   <div>
-                                    <p className="text-sm font-semibold text-primary mb-1">
+                                    <p className="text-xs sm:text-sm font-semibold text-primary mb-1">
                                       {message.subject}
                                     </p>
-                                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                                    <p className="text-xs sm:text-sm text-muted-foreground whitespace-pre-wrap">
                                       {message.message}
                                     </p>
                                   </div>
                                   <div className="flex gap-2 pt-2">
-                                    <Button variant="outline" size="sm">
+                                    <Button variant="outline" size="sm" className="text-xs sm:text-sm h-8 sm:h-9">
                                       {t.reply}
                                     </Button>
-                                    <Button variant="ghost" size="sm">
+                                    <Button variant="ghost" size="sm" className="text-xs sm:text-sm h-8 sm:h-9">
                                       {t.archive}
                                     </Button>
                                   </div>
@@ -720,16 +719,16 @@ export default function Admin() {
               >
                 <Card className="border-2">
                   <CardHeader>
-                    <CardTitle className="text-2xl">{t.userManagement}</CardTitle>
-                    <CardDescription>
+                    <CardTitle className="text-xl sm:text-2xl">{t.userManagement}</CardTitle>
+                    <CardDescription className="text-sm">
                       {t.manageAdminUsers}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-center py-12">
-                      <Users className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                      <h3 className="text-lg font-semibold mb-2">{t.userManagement}</h3>
-                      <p className="text-muted-foreground">
+                    <div className="text-center py-8 sm:py-12 px-4">
+                      <Users className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-muted-foreground mb-4" />
+                      <h3 className="text-base sm:text-lg font-semibold mb-2">{t.userManagement}</h3>
+                      <p className="text-sm text-muted-foreground">
                         {t.featuresAvailableSoon}
                       </p>
                     </div>
@@ -748,23 +747,23 @@ export default function Admin() {
               >
                 <Card className="border-2">
                   <CardHeader>
-                    <CardTitle className="text-2xl">{t.settings}</CardTitle>
-                    <CardDescription>
+                    <CardTitle className="text-xl sm:text-2xl">{t.settings}</CardTitle>
+                    <CardDescription className="text-sm">
                       {t.configurePreferences}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-6">
-                      <div className="text-center py-8">
-                        <Settings className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                        <h3 className="text-lg font-semibold mb-2">{t.systemConfiguration}</h3>
-                        <p className="text-muted-foreground">
+                      <div className="text-center py-8 px-4">
+                        <Settings className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-muted-foreground mb-4" />
+                        <h3 className="text-base sm:text-lg font-semibold mb-2">{t.systemConfiguration}</h3>
+                        <p className="text-sm text-muted-foreground">
                           {t.featuresAvailableSoon}
                         </p>
                       </div>
 
                       <div className="pt-6 border-t">
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-xs sm:text-sm text-muted-foreground break-all">
                           <p><strong>{t.loggedInAs}:</strong> {user.pubkey.slice(0, 16)}...</p>
                         </div>
                       </div>
