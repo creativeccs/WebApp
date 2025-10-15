@@ -182,23 +182,39 @@ export default function Admin() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
                 {t.adminDashboard}
               </h1>
-              <p className="text-muted-foreground mt-1">{t.manageRealEstateBusiness}</p>
+              <p className="text-muted-foreground mt-1 text-sm sm:text-base">{t.manageRealEstateBusiness}</p>
             </div>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                onClick={() => setShowAddProperty(!showAddProperty)}
-                size="lg"
-                className="gap-2 shadow-lg"
+            <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+              <motion.div 
+                whileHover={{ scale: 1.05 }} 
+                whileTap={{ scale: 0.95 }}
+                className="flex-1 sm:flex-none"
               >
-                <Plus className="w-5 h-5" />
-                {t.addProperty}
-              </Button>
-            </motion.div>
+                <Button
+                  onClick={() => setShowAddProperty(!showAddProperty)}
+                  size="lg"
+                  className="gap-2 shadow-lg w-full sm:w-auto"
+                >
+                  <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden sm:inline">{t.addProperty}</span>
+                  <span className="sm:hidden">{t.addProperty.split(' ')[0]}</span>
+                </Button>
+              </motion.div>
+              <motion.div 
+                whileHover={{ scale: 1.05 }} 
+                whileTap={{ scale: 0.95 }}
+                className="flex-1 sm:flex-none min-w-0"
+              >
+                <div className="[&_button]:w-full [&_button]:h-11 [&_button]:shadow-lg [&_button]:border [&_button]:border-input [&_button]:bg-background [&_button]:hover:bg-accent [&_button]:hover:text-accent-foreground [&_button]:px-4 [&_button]:py-2 [&_button]:rounded-md [&_button]:text-sm [&_button]:font-medium [&_button]:transition-colors">
+                  <LoginArea className="w-full sm:max-w-60" />
+                </div>
+              </motion.div>
+            </div>
           </div>
         </motion.div>
 
