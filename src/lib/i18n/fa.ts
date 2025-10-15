@@ -257,6 +257,8 @@ export const fa: Translation = {
   propertiesManaged: 'املاک مدیریت شده',
   quickStats: 'آمار سریع',
   inquiries: 'استعلام‌ها',
+  editProfile: 'ویرایش پروفایل',
+  confirmLogoutMessage: 'آیا مطمئن هستید که می‌خواهید خارج شوید؟',
   
   // About Page
   est2008: 'تأسیس 2008',

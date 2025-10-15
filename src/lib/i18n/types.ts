@@ -255,6 +255,8 @@ export interface Translation {
   propertiesManaged: string;
   quickStats: string;
   inquiries: string;
+  editProfile: string;
+  confirmLogoutMessage: string;
   
   // About Page
   est2008: string;

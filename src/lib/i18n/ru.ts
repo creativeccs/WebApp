@@ -257,6 +257,8 @@ export const ru: Translation = {
   propertiesManaged: 'Управляемые объекты',
   quickStats: 'Быстрая статистика',
   inquiries: 'Запросы',
+  editProfile: 'Редактировать профиль',
+  confirmLogoutMessage: 'Вы уверены, что хотите выйти?',
   
   // About Page
   est2008: 'Осн. 2008',

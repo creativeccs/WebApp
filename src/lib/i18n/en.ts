@@ -257,6 +257,8 @@ export const en: Translation = {
   propertiesManaged: 'Properties Managed',
   quickStats: 'Quick Stats',
   inquiries: 'Inquiries',
+  editProfile: 'Edit Profile',
+  confirmLogoutMessage: 'Are you sure you want to logout?',
   
   // About Page
   est2008: 'Est. 2008',

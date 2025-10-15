@@ -257,6 +257,8 @@ export const ar: Translation = {
   propertiesManaged: 'العقارات المُدارة',
   quickStats: 'إحصائيات سريعة',
   inquiries: 'الاستفسارات',
+  editProfile: 'تعديل الملف الشخصي',
+  confirmLogoutMessage: 'هل أنت متأكد أنك تريد تسجيل الخروج؟',
   
   // About Page
   est2008: 'تأسست 2008',

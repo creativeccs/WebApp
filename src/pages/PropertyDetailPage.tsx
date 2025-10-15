@@ -196,47 +196,74 @@ function PropertyDetailPage() {
           {/* Property Details */}
           <div className="lg:col-span-2 space-y-6">
 
+            {/* Professional Image Gallery with Internal Controls */}
+            {property.images && property.images.length > 0 && (
+              <div className="space-y-4">
+                <Carousel className="w-full relative group">
+                  <CarouselContent>
+                    {property.images.map((image, index) => (
+                      <CarouselItem key={index}>
+                        <div className="relative aspect-[16/9] overflow-hidden rounded-xl bg-black">
+                          <img
+                            src={image.url}
+                            alt={image.alt || `${property.title} - Image ${index + 1}`}
+                            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                          />
+                          {/* Image Counter Badge */}
+                          <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium">
+                            {index + 1} / {property.images?.length || 0}
+                          </div>
+                          {/* Property Status Badge */}
+                          <div className="absolute top-4 left-4">
+                            <Badge 
+                              variant={property.status === 'available' ? 'default' : 'secondary'}
+                              className="text-sm px-3 py-1"
+                            >
+                              {property.status === 'available' ? t.available : 
+                               property.status === 'sold' ? t.sold : 
+                               property.status === 'rented' ? t.rented : t.pending}
+                            </Badge>
+                          </div>
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  
+                  {/* Professional Internal Navigation Controls */}
+                  {property.images.length > 1 && (
+                    <>
+                      <CarouselPrevious 
+                        className="absolute left-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/90 hover:bg-white border-2 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
+                      />
+                      <CarouselNext 
+                        className="absolute right-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/90 hover:bg-white border-2 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
+                      />
+                    </>
+                  )}
+                </Carousel>
 
-        {/* Image Gallery */}
-        {property.images && property.images.length > 0 && (
-          <div className="mb-8">
-            <Carousel className="w-full">
-              <CarouselContent>
-                {property.images.map((image, index) => (
-                  <CarouselItem key={index}>
-                    <div className="aspect-[16/9] overflow-hidden rounded-lg">
+                {/* Thumbnail Gallery */}
+                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-background">
+                  {property.images.map((image, index) => (
+                    <button
+                      key={index}
+                      className="relative flex-shrink-0 w-24 h-16 rounded-lg border-2 border-muted overflow-hidden cursor-pointer hover:border-primary transition-all duration-200 hover:shadow-md group"
+                      onClick={() => {
+                        // This would need carousel API to jump to specific slide
+                        // For now it's just a visual element
+                      }}
+                    >
                       <img
                         src={image.url}
-                        alt={image.alt || `${property.title} - Image ${index + 1}`}
-                        className="w-full h-full object-cover"
+                        alt={`Thumbnail ${index + 1}`}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-200"
                       />
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              {property.images.length > 1 && (
-                <>
-                  <CarouselPrevious />
-                  <CarouselNext />
-                </>
-              )}
-            </Carousel>
-            <div className="flex justify-center mt-4 gap-2">
-              {property.images.map((_, index) => (
-                <div 
-                  key={index} 
-                  className="w-16 h-12 rounded border-2 border-muted overflow-hidden cursor-pointer hover:border-primary transition-colors"
-                >
-                  <img
-                    src={property.images![index].url}
-                    alt={`Thumbnail ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200" />
+                    </button>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
+              </div>
+            )}
 
 
 

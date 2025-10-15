@@ -427,13 +427,105 @@ function AdminPage() {
           {/* Settings Tab */}
           <TabsContent value="settings" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Profile Settings */}
+              {/* Left Column - Profile & System Settings */}
               <div className="lg:col-span-2 space-y-6">
+                {/* Admin Profile Card */}
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <User className="h-5 w-5" />
+                        <CardTitle>{t.adminInfo || 'Admin Profile'}</CardTitle>
+                      </div>
+                      <Badge variant="default" className="gap-1">
+                        <Shield className="h-3 w-3" />
+                        {t.admin}
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-start gap-6 mb-6">
+                      <Avatar className="h-24 w-24 border-2 border-primary/20">
+                        <AvatarImage src={author.data?.metadata?.picture} alt={author.data?.metadata?.name || 'Admin'} />
+                        <AvatarFallback className="text-3xl">
+                          {author.data?.metadata?.name?.[0]?.toUpperCase() || 'A'}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 space-y-3">
+                        <div>
+                          <h3 className="text-2xl font-bold">
+                            {author.data?.metadata?.name || author.data?.metadata?.display_name || 'Administrator'}
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            {author.data?.metadata?.nip05 || 'Nostr Administrator'}
+                          </p>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          <Badge variant="outline" className="gap-1">
+                            <Building className="h-3 w-3" />
+                            {stats.totalProperties} {t.properties}
+                          </Badge>
+                          <Badge variant="outline" className="gap-1">
+                            <CheckCircle className="h-3 w-3" />
+                            {t.active || 'Active'}
+                          </Badge>
+                        </div>
+                        <div className="pt-2">
+                          <p className="text-xs text-muted-foreground mb-2">
+                            Nostr Public Key:
+                          </p>
+                          <code className="text-xs bg-muted px-2 py-1 rounded block overflow-x-auto">
+                            {user?.pubkey}
+                          </code>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <Separator className="my-4" />
+                    
+                    {author.data?.metadata?.about && (
+                      <div className="mb-4">
+                        <Label className="text-sm font-medium">{t.about || 'About'}</Label>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {author.data.metadata.about}
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="flex gap-3">
+                      <Button 
+                        variant="outline" 
+                        className="flex-1 gap-2"
+                        onClick={() => {
+                          // Open profile edit in EditProfileForm
+                        }}
+                      >
+                        <Edit className="h-4 w-4" />
+                        {t.editProfile || 'Edit Profile'}
+                      </Button>
+                      <Button 
+                        variant="destructive" 
+                        className="gap-2"
+                        onClick={() => {
+                          if (window.confirm(`${t.logout}? ${t.confirmLogoutMessage || 'Are you sure you want to logout?'}`)) {
+                            logout();
+                            navigate('/');
+                          }
+                        }}
+                      >
+                        <LogOut className="h-4 w-4" />
+                        {t.logout}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Edit Profile Form */}
                 <Card>
                   <CardHeader>
                     <div className="flex items-center gap-2">
-                      <User className="h-5 w-5" />
-                      <CardTitle>{t.profileSettings || 'Profile Settings'}</CardTitle>
+                      <Edit className="h-5 w-5" />
+                      <CardTitle>{t.editProfile || 'Edit Profile'}</CardTitle>
                     </div>
                   </CardHeader>
                   <CardContent>
