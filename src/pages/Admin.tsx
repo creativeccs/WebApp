@@ -201,7 +201,7 @@ export default function Admin() {
                   className="gap-2 shadow-lg w-full sm:w-auto"
                 >
                   <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="hidden sm:inline">{t.addProperty}</span>
+                  <span className="text-xs sm:text-sm">{t.addProperty}</span>
                 </Button>
               </motion.div>
               <motion.div 
@@ -209,7 +209,7 @@ export default function Admin() {
                 whileTap={{ scale: 0.95 }}
                 className="flex-1 sm:flex-none min-w-0"
               >
-                <div className="[&_button]:w-full [&_button]:h-11 [&_button]:shadow-lg [&_button]:border [&_button]:border-input [&_button]:bg-background [&_button]:hover:bg-accent [&_button]:hover:text-accent-foreground [&_button]:px-4 [&_button]:py-2 [&_button]:rounded-md [&_button]:text-sm [&_button]:font-medium [&_button]:transition-colors">
+                <div className="[&_button]:w-full [&_button]:h-11 [&_button]:shadow-lg [&_button]:border [&_button]:border-input [&_button]:bg-background [&_button]:hover:bg-accent [&_button]:hover:text-accent-foreground [&_button]:px-4 [&_button]:py-2 [&_button]:rounded-md [&_button]:text-sm [&_button]:font-medium [&_button]:transition-colors [&_button_img]:w-6 [&_button_img]:h-6 [&_.w-10]:!w-6 [&_.h-10]:!h-6">
                   <LoginArea className="w-full sm:max-w-60" />
                 </div>
               </motion.div>

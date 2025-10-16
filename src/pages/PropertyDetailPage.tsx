@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/ui/carousel';
 import { useI18n } from '@/contexts/I18nContext';
 import { useProperty } from '@/hooks/useProperties';
 import { useIsAdmin } from '@/hooks/useAdmin';
@@ -35,7 +35,19 @@ function PropertyDetailPage() {
   const { t, language } = useI18n();
   const navigate = useNavigate();
   const isAdmin = useIsAdmin();
+  const [api, setApi] = useState<CarouselApi>();
   const [showEditForm, setShowEditForm] = useState(false);
+
+  useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    // Optional: Listen to API changes
+    // api.on("select", () => {
+    //   console.log("current slide", api.selectedScrollSnap());
+    // });
+  }, [api]);
   
   const { data: property, isLoading, error } = useProperty(propertyId || '');
 
@@ -199,11 +211,11 @@ function PropertyDetailPage() {
             {/* Professional Image Gallery with Internal Controls */}
             {property.images && property.images.length > 0 && (
               <div className="space-y-4">
-                <Carousel className="w-full relative group">
+                <Carousel setApi={setApi} className="w-full relative group">
                   <CarouselContent>
                     {property.images.map((image, index) => (
                       <CarouselItem key={index}>
-                        <div className="relative aspect-[16/9] overflow-hidden rounded-xl bg-black">
+                        <div className="relative aspect-[16/9] overflow-hidden rounded-xl bg-black group">
                           <img
                             src={image.url}
                             alt={image.alt || `${property.title} - Image ${index + 1}`}
@@ -224,22 +236,33 @@ function PropertyDetailPage() {
                                property.status === 'rented' ? t.rented : t.pending}
                             </Badge>
                           </div>
+                          {/* Navigation Arrows on Image */}
+                          {property.images && property.images.length > 1 && (
+                            <>
+                              <button
+                                onClick={() => api?.scrollPrev()}
+                                className="absolute left-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110 flex items-center justify-center"
+                                title="Previous image"
+                              >
+                                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                </svg>
+                              </button>
+                              <button
+                                onClick={() => api?.scrollNext()}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110 flex items-center justify-center"
+                                title="Next image"
+                              >
+                                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                              </button>
+                            </>
+                          )}
                         </div>
                       </CarouselItem>
                     ))}
                   </CarouselContent>
-                  
-                  {/* Professional Internal Navigation Controls */}
-                  {property.images.length > 1 && (
-                    <>
-                      <CarouselPrevious 
-                        className="absolute left-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/90 hover:bg-white border-2 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
-                      />
-                      <CarouselNext 
-                        className="absolute right-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/90 hover:bg-white border-2 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
-                      />
-                    </>
-                  )}
                 </Carousel>
 
                 {/* Thumbnail Gallery */}
@@ -249,8 +272,7 @@ function PropertyDetailPage() {
                       key={index}
                       className="relative flex-shrink-0 w-24 h-16 rounded-lg border-2 border-muted overflow-hidden cursor-pointer hover:border-primary transition-all duration-200 hover:shadow-md group"
                       onClick={() => {
-                        // This would need carousel API to jump to specific slide
-                        // For now it's just a visual element
+                        api?.scrollTo(index);
                       }}
                     >
                       <img
