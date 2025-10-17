@@ -385,9 +385,9 @@ export default function Admin() {
             {activeTab === 'properties' && (
               <motion.div
                 key="properties"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
                 <Card className="border-2">
@@ -502,6 +502,114 @@ export default function Admin() {
                             const localizedTitle = getLocalizedText(property, 'title');
                             const localizedDescription = getLocalizedText(property, 'description');
                             
+                            // List View
+                            if (viewMode === 'list') {
+                              return (
+                                <motion.div
+                                  key={property.id}
+                                  initial={{ opacity: 0, x: -20 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ duration: 0.2 }}
+                                >
+                                  <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                                    <div className="flex flex-col sm:flex-row">
+                                      {/* Image */}
+                                      {property.images && property.images.length > 0 && (
+                                        <div className="relative w-full sm:w-48 h-32 sm:h-auto overflow-hidden flex-shrink-0">
+                                          <img
+                                            src={property.images[0].url}
+                                            alt={property.title}
+                                            className="w-full h-full object-cover"
+                                          />
+                                        </div>
+                                      )}
+                                      {/* Content */}
+                                      <div className="flex-1 p-4 flex flex-col sm:flex-row gap-4">
+                                        <div className="flex-1">
+                                          <div className="flex items-start justify-between mb-2">
+                                            <h3 className="text-lg font-bold line-clamp-1">
+                                              {localizedTitle}
+                                            </h3>
+                                            <div className="flex gap-2 ml-2 flex-shrink-0">
+                                              <span className={`px-2 py-1 text-xs font-semibold rounded ${
+                                                property.status === 'available' ? 'bg-green-500' :
+                                                property.status === 'pending' ? 'bg-yellow-500' :
+                                                property.status === 'sold' ? 'bg-red-500' :
+                                                'bg-blue-500'
+                                              } text-white`}>
+                                                {property.status.toUpperCase()}
+                                              </span>
+                                              <span className="px-2 py-1 text-xs font-semibold rounded bg-primary text-primary-foreground">
+                                                {property.type.toUpperCase()}
+                                              </span>
+                                            </div>
+                                          </div>
+                                          <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                                            {localizedDescription}
+                                          </p>
+                                          <div className="flex flex-wrap gap-4 text-sm">
+                                            <div className="flex items-center gap-1">
+                                              <span className="text-muted-foreground">Price:</span>
+                                              <span className="font-bold">
+                                                {property.price} {property.currency}
+                                              </span>
+                                            </div>
+                                            {property.area && (
+                                              <div className="flex items-center gap-1">
+                                                <span className="text-muted-foreground">Area:</span>
+                                                <span className="font-medium">{property.area} m²</span>
+                                              </div>
+                                            )}
+                                            {(property.bedrooms || property.bathrooms) && (
+                                              <div className="flex items-center gap-1">
+                                                <span className="text-muted-foreground">Bed/Bath:</span>
+                                                <span className="font-medium">
+                                                  {property.bedrooms || '?'} / {property.bathrooms || '?'}
+                                                </span>
+                                              </div>
+                                            )}
+                                            <div className="flex items-center gap-1">
+                                              <span className="text-muted-foreground">Location:</span>
+                                              <span className="font-medium">{property.location}</span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="flex sm:flex-col gap-2 sm:justify-center">
+                                          <Button 
+                                            variant="outline" 
+                                            size="sm" 
+                                            className="flex-1 sm:flex-none"
+                                            onClick={() => window.open(`/property/${property.d}`, '_blank')}
+                                          >
+                                            <Eye className="w-4 h-4 mr-1" />
+                                            {t.view}
+                                          </Button>
+                                          <Button 
+                                            variant="outline" 
+                                            size="sm" 
+                                            className="flex-1 sm:flex-none"
+                                            onClick={() => setPropertyToEdit(property)}
+                                          >
+                                            <Pencil className="w-4 h-4 mr-1" />
+                                            {t.edit}
+                                          </Button>
+                                          <Button 
+                                            variant="outline" 
+                                            size="sm"
+                                            className="text-destructive hover:text-destructive"
+                                            onClick={() => setPropertyToDelete(property)}
+                                          >
+                                            <Trash2 className="w-4 h-4" />
+                                          </Button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </Card>
+                                </motion.div>
+                              );
+                            }
+                            
+                            // Grid View
                             return (
                             <motion.div
                               key={property.id}
@@ -609,9 +717,9 @@ export default function Admin() {
             {activeTab === 'messages' && (
               <motion.div
                 key="messages"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
                 <Card className="border-2">
@@ -712,9 +820,9 @@ export default function Admin() {
             {activeTab === 'users' && (
               <motion.div
                 key="users"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
                 <Card className="border-2">
@@ -740,9 +848,9 @@ export default function Admin() {
             {activeTab === 'settings' && (
               <motion.div
                 key="settings"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
                 <Card className="border-2">
