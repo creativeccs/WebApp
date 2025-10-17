@@ -10,6 +10,7 @@ import { useI18n } from '@/contexts/I18nContext';
 import { useProperty } from '@/hooks/useProperties';
 import { useIsAdmin } from '@/hooks/useAdmin';
 import { PropertyForm } from '@/components/PropertyForm';
+import { ShareDialog } from '@/components/ShareDialog';
 import { 
   MapPin, 
   Bed, 
@@ -37,6 +38,7 @@ function PropertyDetailPage() {
   const isAdmin = useIsAdmin();
   const [api, setApi] = useState<CarouselApi>();
   const [showEditForm, setShowEditForm] = useState(false);
+  const [showShareDialog, setShowShareDialog] = useState(false);
 
   useEffect(() => {
     if (!api) {
@@ -149,17 +151,8 @@ function PropertyDetailPage() {
     );
   }
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: property.title,
-        text: property.description,
-        url: window.location.href
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      // You might want to show a toast here
-    }
+  const handleShare = async () => {
+    setShowShareDialog(true);
   };
 
   const amenityIcons = {
@@ -211,10 +204,10 @@ function PropertyDetailPage() {
             {/* Professional Image Gallery with Internal Controls */}
             {property.images && property.images.length > 0 && (
               <div className="space-y-4">
-                <Carousel setApi={setApi} className="w-full relative group">
-                  <CarouselContent>
+                <Carousel setApi={setApi} className="w-full relative group overflow-hidden rounded-xl">
+                  <CarouselContent className="rounded-xl">
                     {property.images.map((image, index) => (
-                      <CarouselItem key={index}>
+                      <CarouselItem key={index} className="rounded-xl">
                         <div className="relative aspect-[16/9] overflow-hidden rounded-xl bg-black group">
                           <img
                             src={image.url}
@@ -501,7 +494,9 @@ function PropertyDetailPage() {
               <CardContent className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Property ID:</span>
-                  <span className="font-mono text-sm">{property.d}</span>
+                  <span className="font-mono text-sm">
+                    {property.d.slice(0, 8).toUpperCase()}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Listed:</span>
@@ -540,6 +535,15 @@ function PropertyDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Share Dialog */}
+      <ShareDialog
+        open={showShareDialog}
+        onOpenChange={setShowShareDialog}
+        title={getLocalizedTitle()}
+        description={getLocalizedDescription()}
+        url={window.location.href}
+      />
     </div>
   );
 }
