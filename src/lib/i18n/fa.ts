@@ -30,12 +30,16 @@ export const fa: Translation = {
   // Theme
   lightMode: 'حالت روشن',
   darkMode: 'حالت تاریک',
+  themePreference: 'تنظیمات تم',
+  chooseTheme: 'تم رنگی مورد نظر خود را انتخاب کنید',
   
   // Language
   english: 'English',
   arabic: 'العربية',
   persian: 'فارسی',
   russian: 'Русский',
+  languagePreference: 'تنظیمات زبان',
+  chooseLanguage: 'زبان مورد نظر خود را انتخاب کنید',
   
   // Property Types
   type: 'نوع ملک',
@@ -177,6 +181,10 @@ export const fa: Translation = {
   loginWithExtension: 'ورود با افزونه',
   loginWithBrowserExtension: 'ورود با افزونه مرورگر',
   loggingIn: 'در حال ورود...',
+  unauthorizedMessage: 'دسترسی غیرمجاز',
+  yourPubkeyLabel: 'کلید شما:',
+  adminPubkeyLabel: 'کلید مدیر:',
+  onlyAdminNotice: 'فقط مدیر مجاز می‌تواند به این بخش دسترسی داشته باشد.',
   extensionLoginFailed: 'ورود با افزونه ناموفق بود. لطفاً اطمینان حاصل کنید که افزونه Nostr نصب و فعال است.',
   loginFailed: 'ورود ناموفق بود. لطفاً کلید خصوصی خود را بررسی کنید.',
   checkSecretKey: 'لطفاً کلید خصوصی خود را بررسی کنید.',

@@ -30,12 +30,16 @@ export const en: Translation = {
   // Theme
   lightMode: 'Light Mode',
   darkMode: 'Dark Mode',
+  themePreference: 'Theme Preference',
+  chooseTheme: 'Choose your preferred color theme',
   
   // Language
   english: 'English',
   arabic: 'العربية',
   persian: 'فارسی',
   russian: 'Русский',
+  languagePreference: 'Language Preference',
+  chooseLanguage: 'Choose your preferred language',
   
   // Property Types
   type: 'Property Type',
@@ -228,6 +232,10 @@ export const en: Translation = {
   accessDenied: 'Access Denied',
   noPermission: "You don't have permission to access the admin dashboard",
   backToHome: 'Back to Home',
+  unauthorizedMessage: 'Unauthorized access',
+  yourPubkeyLabel: 'Your pubkey:',
+  adminPubkeyLabel: 'Admin pubkey:',
+  onlyAdminNotice: 'Only the authorized admin can access this section.',
   loginRequired2: 'Login Required',
   pleaseLoginAdmin: 'Please login with your admin account to access the dashboard',
   welcomeBack: 'Welcome back! Manage your properties and monitor system activity',

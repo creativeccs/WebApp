@@ -30,12 +30,16 @@ export const ar: Translation = {
   // Theme
   lightMode: 'الوضع الفاتح',
   darkMode: 'الوضع المظلم',
+  themePreference: 'تفضيلات المظهر',
+  chooseTheme: 'اختر المظهر اللوني المفضل لديك',
   
   // Language
   english: 'English',
   arabic: 'العربية',
   persian: 'فارسی',
   russian: 'Русский',
+  languagePreference: 'تفضيلات اللغة',
+  chooseLanguage: 'اختر اللغة المفضلة لديك',
   
   // Property Types
   type: 'نوع العقار',
@@ -371,6 +375,10 @@ export const ar: Translation = {
   deleteMessage: 'حذف الرسالة',
   deleteMessageConfirm: 'حذف الرسالة؟',
   deleteMessageDescription: 'سيتم إرسال طلب الحذف إلى المرحلات. قد تظل الرسالة موجودة في بعض المرحلات التي لا تحترم طلبات الحذف.',
+  unauthorizedMessage: 'وصول غير مصرح به',
+  yourPubkeyLabel: 'مفتاحك:',
+  adminPubkeyLabel: 'مفتاح المشرف:',
+  onlyAdminNotice: 'يمكن للمسؤول المصرح له فقط الوصول إلى هذا القسم.',
   hideMessage: 'إخفاء الرسالة',
   hideMessageConfirm: 'إخفاء الرسالة؟',
   hideMessageDescription: 'سيتم إخفاء الرسالة من عرضك. يمكنك إظهارها مرة أخرى لاحقًا إذا لزم الأمر.',

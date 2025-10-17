@@ -8,7 +8,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useI18n } from '@/contexts/I18nContext';
 import { useAnonymousNostr } from '@/hooks/useAnonymousNostr';
 import { useSendEncryptedMessage } from '@/hooks/useSendEncryptedMessage';
-import { nip19 } from 'nostr-tools';
 import { 
   Mail, 
   Phone, 
@@ -30,18 +29,8 @@ function ContactPage() {
     message: ''
   });
 
-  // Admin pubkey - replace with actual admin public key
-  const ADMIN_NPUB = 'npub1xtscya34g58tk0z605fvr788k263gsu6cy9x0mhnm87echrgufzsevkk5s'; // Replace with real admin npub
-  
-  // Decode npub to hex pubkey
-  let ADMIN_PUBKEY: string;
-  try {
-    const decoded = nip19.decode(ADMIN_NPUB);
-    ADMIN_PUBKEY = decoded.data as string;
-  } catch {
-    // Fallback to default pubkey if decode fails
-    ADMIN_PUBKEY = '3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d';
-  }
+  // Admin pubkey from environment variable
+  const ADMIN_PUBKEY = import.meta.env.VITE_ADMIN_PUBKEY || 'dee2a5672a29eac19f816225f0dcd23a56770fd4be263a951bc24f6a1714c6a5';
 
   const { account, isLoading: isLoadingAccount, secretKey } = useAnonymousNostr();
   const sendMessageMutation = useSendEncryptedMessage();

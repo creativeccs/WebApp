@@ -28,12 +28,16 @@ export interface Translation {
   // Theme
   lightMode: string;
   darkMode: string;
+  themePreference: string;
+  chooseTheme: string;
   
   // Language
   english: string;
   arabic: string;
   persian: string;
   russian: string;
+  languagePreference: string;
+  chooseLanguage: string;
   
   // Property Types
   type: string;
@@ -375,4 +379,9 @@ export interface Translation {
   hide: string;
   hidden: string;
   showHidden: string;
+  // Admin unauthorized screen
+  unauthorizedMessage: string;
+  yourPubkeyLabel: string;
+  adminPubkeyLabel: string;
+  onlyAdminNotice: string;
 }

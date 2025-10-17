@@ -6,10 +6,13 @@ import { Button } from '@/components/ui/button';
 import { LoginArea } from '@/components/auth/LoginArea';
 import { PropertyForm } from '@/components/PropertyForm';
 import { EncryptedMessagesPanel } from '@/components/EncryptedMessagesPanel';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useI18n } from '@/contexts/I18nContext';
 import { useProperties } from '@/hooks/useProperties';
 import { useDeleteProperty } from '@/hooks/usePropertyManagement';
+import { useEncryptedMessages } from '@/hooks/useEncryptedMessages';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Property } from '@/lib/types/property';
 import {
@@ -35,8 +38,12 @@ import {
   TrendingUp,
   Eye,
   Pencil,
-  Trash2
+  Trash2,
+  Mail,
+  Globe,
+  Palette
 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -92,6 +99,9 @@ export default function Admin() {
   // Fetch properties
   const { data: properties = [], isLoading: isLoadingProperties } = useProperties({});
 
+  // Fetch encrypted messages
+  const { data: allMessages = [], isLoading: isLoadingMessages } = useEncryptedMessages();
+
   // Delete property mutation
   const { mutate: deleteProperty, isPending: isDeleting } = useDeleteProperty();
 
@@ -100,6 +110,10 @@ export default function Admin() {
     description: 'Admin panel for Creative Construction Services',
   });
 
+  // Get admin pubkey from environment
+  const ADMIN_PUBKEY = import.meta.env.VITE_ADMIN_PUBKEY || 'dee2a5672a29eac19f816225f0dcd23a56770fd4be263a951bc24f6a1714c6a5';
+
+  // Check if user is not logged in
   if (!user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
@@ -111,7 +125,7 @@ export default function Admin() {
             className="max-w-md mx-auto"
           >
             <Card className="border-2 shadow-xl">
-              <CardHeader className="text-center">
+                <CardHeader className="text-center">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -156,11 +170,94 @@ export default function Admin() {
     );
   }
 
+  // Check if logged-in user is the authorized admin
+  if (user.pubkey !== ADMIN_PUBKEY) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+        <div className="container mx-auto px-4 py-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="max-w-md mx-auto"
+          >
+            <Card className="border-2 border-destructive shadow-xl">
+              <CardHeader className="text-center">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
+                  className="mx-auto w-20 h-20 bg-destructive/10 rounded-2xl flex items-center justify-center mb-4"
+                >
+                  <Settings className="w-10 h-10 text-destructive" />
+                </motion.div>
+                <CardTitle className="text-3xl font-bold text-destructive">
+                  {t.accessDenied}
+                </CardTitle>
+                <CardDescription className="text-base">
+                  {t.unauthorizedMessage}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="space-y-6"
+                >
+                  <div className="text-center space-y-4">
+                    <p className="text-sm text-muted-foreground">
+                      {t.noPermission}
+                    </p>
+                    
+                    <div className="bg-muted/50 rounded-lg p-4 text-xs space-y-2">
+                      <div>
+                        <span className="font-semibold">{t.yourPubkeyLabel}</span>
+                        <code className="block mt-1 bg-background px-2 py-1 rounded break-all" dir="ltr">
+                          {user.pubkey}
+                        </code>
+                      </div>
+                      <div>
+                        <span className="font-semibold">{t.adminPubkeyLabel}</span>
+                        <code className="block mt-1 bg-background px-2 py-1 rounded break-all" dir="ltr">
+                          {ADMIN_PUBKEY}
+                        </code>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-muted-foreground">
+                      {t.onlyAdminNotice}
+                    </p>
+                  </div>
+                  
+                  <div className="flex flex-col gap-2">
+                    <Button
+                      onClick={() => window.location.href = '/'}
+                      variant="default"
+                      className="w-full"
+                    >
+                      {t.backToHome}
+                    </Button>
+                    <LoginArea className="w-full" />
+                  </div>
+                </motion.div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
   // Calculate real stats from properties
   const totalProperties = properties.length;
   const activeListings = properties.filter(p => p.status === 'available').length;
   const soldProperties = properties.filter(p => p.status === 'sold').length;
   const rentedProperties = properties.filter(p => p.status === 'rented').length;
+
+  // Calculate messages stats
+  const totalMessages = allMessages.length;
+  const successfullyDecrypted = allMessages.filter(m => m.decryptedContent).length;
 
   // Calculate percentages
   const activePercentage = totalProperties > 0 ? Math.round((activeListings / totalProperties) * 100) : 0;
@@ -169,6 +266,7 @@ export default function Admin() {
     { label: t.totalProperties, value: isLoadingProperties ? '...' : totalProperties.toString(), icon: Building, change: `${activeListings} ${t.available}`, trend: 'up' },
     { label: t.activeListings, value: isLoadingProperties ? '...' : activeListings.toString(), icon: TrendingUp, change: `${activePercentage}% ${t.ofTotal}`, trend: 'up' },
     { label: t.soldProperties, value: isLoadingProperties ? '...' : soldProperties.toString(), icon: Building, change: `${rentedProperties} ${t.rented}`, trend: 'up' },
+    { label: t.encryptedMessages, value: isLoadingMessages ? '...' : totalMessages.toString(), icon: MessageCircle, change: `${successfullyDecrypted} ${t.decrypted}`, trend: 'up' },
   ];
 
   return (
@@ -718,7 +816,38 @@ export default function Admin() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
+                className="space-y-4"
               >
+                {/* Debug Info Card */}
+                <Card className="border-dashed border-2 border-muted bg-muted/20">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm font-medium">Connection Info</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2 text-xs">
+                    <div>
+                      <span className="font-semibold">Your pubkey:</span>
+                      <code className="ms-2 bg-muted px-2 py-1 rounded text-[10px] block mt-1 break-all" dir="ltr">
+                        {user.pubkey}
+                      </code>
+                    </div>
+                    <div>
+                      <span className="font-semibold">Expected admin pubkey (from .env):</span>
+                      <code className="ms-2 bg-muted px-2 py-1 rounded text-[10px] block mt-1 break-all" dir="ltr">
+                        {import.meta.env.VITE_ADMIN_PUBKEY || 'dee2a5672a29eac19f816225f0dcd23a56770fd4be263a951bc24f6a1714c6a5'}
+                      </code>
+                    </div>
+                    {user.pubkey === (import.meta.env.VITE_ADMIN_PUBKEY || 'dee2a5672a29eac19f816225f0dcd23a56770fd4be263a951bc24f6a1714c6a5') ? (
+                      <div className="text-green-600 dark:text-green-400 font-semibold">
+                        ✓ Pubkeys match! You should receive messages.
+                      </div>
+                    ) : (
+                      <div className="text-destructive font-semibold">
+                        ✗ Pubkeys don't match! Messages are sent to the admin pubkey in .env, but you're logged in with a different account.
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
                 <EncryptedMessagesPanel />
               </motion.div>
             )}
@@ -733,19 +862,146 @@ export default function Admin() {
               >
                 <Card className="border-2">
                   <CardHeader>
-                    <CardTitle className="text-xl sm:text-2xl">{t.userManagement}</CardTitle>
+                    <CardTitle className="text-xl sm:text-2xl flex items-center gap-2">
+                      <Users className="h-6 w-6" />
+                      {t.userManagement}
+                      <Badge variant="secondary" className="ms-auto">
+                        {(() => {
+                          // Extract unique users from messages
+                          const uniqueUsers = new Map<string, {
+                            name: string;
+                            email?: string;
+                            phone?: string;
+                            messageCount: number;
+                            lastMessageDate: number;
+                          }>();
+                          
+                          allMessages.forEach(msg => {
+                            if (msg.decryptedContent) {
+                              const key = msg.decryptedContent.email || msg.decryptedContent.phone || msg.senderPubkey;
+                              const existing = uniqueUsers.get(key);
+                              
+                              if (existing) {
+                                existing.messageCount++;
+                                if (msg.createdAt > existing.lastMessageDate) {
+                                  existing.lastMessageDate = msg.createdAt;
+                                }
+                              } else {
+                                uniqueUsers.set(key, {
+                                  name: msg.decryptedContent.name || 'Unknown',
+                                  email: msg.decryptedContent.email,
+                                  phone: msg.decryptedContent.phone,
+                                  messageCount: 1,
+                                  lastMessageDate: msg.createdAt,
+                                });
+                              }
+                            }
+                          });
+                          
+                          return uniqueUsers.size;
+                        })()}
+                      </Badge>
+                    </CardTitle>
                     <CardDescription className="text-sm">
-                      {t.manageAdminUsers}
+                      {t.receivedMessages}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-center py-8 sm:py-12 px-4">
-                      <Users className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-muted-foreground mb-4" />
-                      <h3 className="text-base sm:text-lg font-semibold mb-2">{t.userManagement}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {t.featuresAvailableSoon}
-                      </p>
-                    </div>
+                    {isLoadingMessages ? (
+                      <div className="space-y-4">
+                        <Skeleton className="h-20 w-full" />
+                        <Skeleton className="h-20 w-full" />
+                        <Skeleton className="h-20 w-full" />
+                      </div>
+                    ) : (() => {
+                      // Extract unique users from messages
+                      const uniqueUsers = new Map<string, {
+                        name: string;
+                        email?: string;
+                        phone?: string;
+                        messageCount: number;
+                        lastMessageDate: number;
+                      }>();
+                      
+                      allMessages.forEach(msg => {
+                        if (msg.decryptedContent) {
+                          const key = msg.decryptedContent.email || msg.decryptedContent.phone || msg.senderPubkey;
+                          const existing = uniqueUsers.get(key);
+                          
+                          if (existing) {
+                            existing.messageCount++;
+                            if (msg.createdAt > existing.lastMessageDate) {
+                              existing.lastMessageDate = msg.createdAt;
+                            }
+                          } else {
+                            uniqueUsers.set(key, {
+                              name: msg.decryptedContent.name || 'Unknown',
+                              email: msg.decryptedContent.email,
+                              phone: msg.decryptedContent.phone,
+                              messageCount: 1,
+                              lastMessageDate: msg.createdAt,
+                            });
+                          }
+                        }
+                      });
+
+                      const usersArray = Array.from(uniqueUsers.values()).sort((a, b) => b.lastMessageDate - a.lastMessageDate);
+
+                      if (usersArray.length === 0) {
+                        return (
+                          <div className="text-center py-8 sm:py-12 px-4">
+                            <Users className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-muted-foreground mb-4" />
+                            <h3 className="text-base sm:text-lg font-semibold mb-2">{t.noMessagesYet}</h3>
+                            <p className="text-sm text-muted-foreground">
+                              {t.whenVisitorsSend}
+                            </p>
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <div className="space-y-4">
+                          {usersArray.map((user, index) => (
+                            <Card key={index} className="border">
+                              <CardHeader className="pb-3">
+                                <div className="flex items-start justify-between gap-4">
+                                  <div className="flex-1">
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                                        <Users className="h-5 w-5 text-primary" />
+                                      </div>
+                                      <div>
+                                        <div className="font-semibold text-base">{user.name}</div>
+                                        <div className="text-xs text-muted-foreground">
+                                          {new Date(user.lastMessageDate * 1000).toLocaleDateString()}
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="text-sm space-y-1 mt-2">
+                                      {user.email && (
+                                        <div className="flex items-center gap-2">
+                                          <Mail className="h-4 w-4 text-muted-foreground" />
+                                          <span dir="ltr">{user.email}</span>
+                                        </div>
+                                      )}
+                                      {user.phone && (
+                                        <div className="flex items-center gap-2">
+                                          <span className="text-muted-foreground">{t.phone}:</span>
+                                          <span dir="ltr">{user.phone}</span>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <Badge variant="secondary">
+                                    {user.messageCount} {user.messageCount === 1 ? t.message : t.messages}
+                                  </Badge>
+                                </div>
+                              </CardHeader>
+                            </Card>
+                          ))}
+                        </div>
+                      );
+                    })()}
                   </CardContent>
                 </Card>
               </motion.div>
@@ -767,15 +1023,36 @@ export default function Admin() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-6">
-                      <div className="text-center py-8 px-4">
-                        <Settings className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-muted-foreground mb-4" />
-                        <h3 className="text-base sm:text-lg font-semibold mb-2">{t.systemConfiguration}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {t.featuresAvailableSoon}
-                        </p>
+                    <div className="space-y-8">
+                      {/* Language Settings */}
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3 pb-2 border-b">
+                          <Globe className="w-5 h-5 text-primary" />
+                          <div>
+                            <h3 className="text-base sm:text-lg font-semibold">{t.languagePreference}</h3>
+                            <p className="text-xs sm:text-sm text-muted-foreground">{t.chooseLanguage}</p>
+                          </div>
+                        </div>
+                        <div className="pt-2">
+                          <LanguageSwitcher className="w-full max-w-xs" />
+                        </div>
                       </div>
 
+                      {/* Theme Settings */}
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3 pb-2 border-b">
+                          <Palette className="w-5 h-5 text-primary" />
+                          <div>
+                            <h3 className="text-base sm:text-lg font-semibold">{t.themePreference}</h3>
+                            <p className="text-xs sm:text-sm text-muted-foreground">{t.chooseTheme}</p>
+                          </div>
+                        </div>
+                        <div className="pt-2">
+                          <ThemeToggle />
+                        </div>
+                      </div>
+
+                      {/* Logged In User Info */}
                       <div className="pt-6 border-t">
                         <div className="text-xs sm:text-sm text-muted-foreground break-all">
                           <p><strong>{t.loggedInAs}:</strong> {user.pubkey.slice(0, 16)}...</p>

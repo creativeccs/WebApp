@@ -30,12 +30,16 @@ export const ru: Translation = {
   // Theme
   lightMode: 'Светлая тема',
   darkMode: 'Тёмная тема',
+  themePreference: 'Настройки темы',
+  chooseTheme: 'Выберите предпочитаемую цветовую тему',
   
   // Language
   english: 'English',
   arabic: 'العربية',
   persian: 'فارسی',
   russian: 'Русский',
+  languagePreference: 'Настройки языка',
+  chooseLanguage: 'Выберите предпочитаемый язык',
 
   // Property Types
   type: 'Тип недвижимости',
@@ -371,6 +375,10 @@ export const ru: Translation = {
   deleteMessage: 'Удалить сообщение',
   deleteMessageConfirm: 'Удалить сообщение?',
   deleteMessageDescription: 'Запрос на удаление будет отправлен на релеи. Сообщение может остаться на некоторых релеях, которые не поддерживают запросы на удаление.',
+  unauthorizedMessage: 'Несанкционированный доступ',
+  yourPubkeyLabel: 'Ваш pubkey:',
+  adminPubkeyLabel: 'Pubkey админа:',
+  onlyAdminNotice: 'Только авторизованный администратор может получить доступ к этому разделу.',
   hideMessage: 'Скрыть сообщение',
   hideMessageConfirm: 'Скрыть сообщение?',
   hideMessageDescription: 'Это скроет сообщение из вашего вида. Вы можете показать его снова позже, если нужно.',
