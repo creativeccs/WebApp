@@ -219,6 +219,7 @@ export const en: Translation = {
   yearBuilt: 'Year Built',
   floor: 'Floor',
   totalFloors: 'Total Floors',
+  maxOccupants: 'Max Occupants',
   locationDetails: 'Location Details',
   city: 'City',
   contactProperty: 'Contact About Property',

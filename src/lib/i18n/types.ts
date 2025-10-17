@@ -217,6 +217,7 @@ export interface Translation {
   yearBuilt: string;
   floor: string;
   totalFloors: string;
+  maxOccupants: string;
   locationDetails: string;
   city: string;
   contactProperty: string;

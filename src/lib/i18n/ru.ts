@@ -219,6 +219,7 @@ export const ru: Translation = {
   yearBuilt: 'Год постройки',
   floor: 'Этаж',
   totalFloors: 'Всего этажей',
+  maxOccupants: 'Макс. жильцов',
   locationDetails: 'Детали местоположения',
   city: 'Город',
   contactProperty: 'Связаться по поводу объекта',

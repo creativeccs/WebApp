@@ -219,6 +219,7 @@ export const ar: Translation = {
   yearBuilt: 'سنة البناء',
   floor: 'الطابق',
   totalFloors: 'إجمالي الطوابق',
+  maxOccupants: 'أقصى عدد من الساكنين',
   locationDetails: 'تفاصيل الموقع',
   city: 'المدينة',
   contactProperty: 'التواصل بشأن العقار',

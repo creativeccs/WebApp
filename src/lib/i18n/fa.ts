@@ -223,6 +223,7 @@ export const fa: Translation = {
   yearBuilt: 'سال ساخت',
   floor: 'طبقه',
   totalFloors: 'کل طبقات',
+  maxOccupants: 'حداکثر ساکنین',
   locationDetails: 'جزئیات موقعیت',
   city: 'شهر',
   contactProperty: 'تماس درباره ملک',
