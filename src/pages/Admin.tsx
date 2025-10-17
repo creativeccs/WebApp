@@ -5,13 +5,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { LoginArea } from '@/components/auth/LoginArea';
 import { PropertyForm } from '@/components/PropertyForm';
+import { EncryptedMessagesPanel } from '@/components/EncryptedMessagesPanel';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useI18n } from '@/contexts/I18nContext';
 import { useProperties } from '@/hooks/useProperties';
-import { useContactMessages } from '@/hooks/useAdmin';
 import { useDeleteProperty } from '@/hooks/usePropertyManagement';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { ContactMessage, Property } from '@/lib/types/property';
+import type { Property } from '@/lib/types/property';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -92,9 +92,6 @@ export default function Admin() {
   // Fetch properties
   const { data: properties = [], isLoading: isLoadingProperties } = useProperties({});
 
-  // Fetch contact messages
-  const { data: messages = [], isLoading: isLoadingMessages } = useContactMessages();
-
   // Delete property mutation
   const { mutate: deleteProperty, isPending: isDeleting } = useDeleteProperty();
 
@@ -164,7 +161,6 @@ export default function Admin() {
   const activeListings = properties.filter(p => p.status === 'available').length;
   const soldProperties = properties.filter(p => p.status === 'sold').length;
   const rentedProperties = properties.filter(p => p.status === 'rented').length;
-  const totalMessages = messages.length;
 
   // Calculate percentages
   const activePercentage = totalProperties > 0 ? Math.round((activeListings / totalProperties) * 100) : 0;
@@ -173,7 +169,6 @@ export default function Admin() {
     { label: t.totalProperties, value: isLoadingProperties ? '...' : totalProperties.toString(), icon: Building, change: `${activeListings} ${t.available}`, trend: 'up' },
     { label: t.activeListings, value: isLoadingProperties ? '...' : activeListings.toString(), icon: TrendingUp, change: `${activePercentage}% ${t.ofTotal}`, trend: 'up' },
     { label: t.soldProperties, value: isLoadingProperties ? '...' : soldProperties.toString(), icon: Building, change: `${rentedProperties} ${t.rented}`, trend: 'up' },
-    { label: t.newMessages, value: isLoadingMessages ? '...' : totalMessages.toString(), icon: MessageCircle, change: totalMessages > 0 ? `${totalMessages} ${t.unread}` : t.noMessages, trend: 'up' },
   ];
 
   return (
@@ -724,98 +719,7 @@ export default function Admin() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <Card className="border-2">
-                  <CardHeader>
-                    <CardTitle className="text-xl sm:text-2xl">{t.messages}</CardTitle>
-                    <CardDescription className="text-sm">
-                      {t.respondToInquiries}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {isLoadingMessages ? (
-                      <div className="space-y-4">
-                        {[1, 2, 3].map((i) => (
-                          <Card key={i} className="p-3 sm:p-4">
-                            <div className="space-y-2">
-                              <div className="flex justify-between">
-                                <Skeleton className="h-4 sm:h-5 w-24 sm:w-32" />
-                                <Skeleton className="h-3 sm:h-4 w-16 sm:w-24" />
-                              </div>
-                              <Skeleton className="h-4 w-full" />
-                              <Skeleton className="h-4 w-3/4" />
-                            </div>
-                          </Card>
-                        ))}
-                      </div>
-                    ) : messages.length === 0 ? (
-                      <div className="text-center py-8 sm:py-12 px-4">
-                        <MessageCircle className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-muted-foreground mb-4" />
-                        <h3 className="text-base sm:text-lg font-semibold mb-2">{t.messageCenter}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          No messages received yet
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        {messages.map((message: ContactMessage) => {
-                          const date = new Date(message.created_at * 1000);
-                          const formattedDate = date.toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          });
-
-                          return (
-                            <motion.div
-                              key={message.id}
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              whileHover={{ scale: 1.01 }}
-                            >
-                              <Card className="overflow-hidden hover:shadow-md transition-shadow">
-                                <CardHeader className="pb-2 sm:pb-3 p-3 sm:p-6">
-                                  <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-2">
-                                    <div className="space-y-1">
-                                      <CardTitle className="text-base sm:text-lg">
-                                        {message.name}
-                                      </CardTitle>
-                                      <CardDescription className="text-xs sm:text-sm break-all">
-                                        {message.email}
-                                      </CardDescription>
-                                    </div>
-                                    <span className="text-xs text-muted-foreground whitespace-nowrap">
-                                      {formattedDate}
-                                    </span>
-                                  </div>
-                                </CardHeader>
-                                <CardContent className="space-y-3 p-3 sm:p-6 pt-0">
-                                  <div>
-                                    <p className="text-xs sm:text-sm font-semibold text-primary mb-1">
-                                      {message.subject}
-                                    </p>
-                                    <p className="text-xs sm:text-sm text-muted-foreground whitespace-pre-wrap">
-                                      {message.message}
-                                    </p>
-                                  </div>
-                                  <div className="flex gap-2 pt-2">
-                                    <Button variant="outline" size="sm" className="text-xs sm:text-sm h-8 sm:h-9">
-                                      {t.reply}
-                                    </Button>
-                                    <Button variant="ghost" size="sm" className="text-xs sm:text-sm h-8 sm:h-9">
-                                      {t.archive}
-                                    </Button>
-                                  </div>
-                                </CardContent>
-                              </Card>
-                            </motion.div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                <EncryptedMessagesPanel />
               </motion.div>
             )}
 

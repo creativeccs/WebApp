@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -6,7 +6,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useI18n } from '@/contexts/I18nContext';
-import { useContactForm } from '@/hooks/useContactForm';
+import { useAnonymousNostr } from '@/hooks/useAnonymousNostr';
+import { useSendEncryptedMessage } from '@/hooks/useSendEncryptedMessage';
+import { nip19 } from 'nostr-tools';
 import { 
   Mail, 
   Phone, 
@@ -14,7 +16,8 @@ import {
   Clock,
   Send,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  ExternalLink
 } from 'lucide-react';
 
 function ContactPage() {
@@ -27,14 +30,44 @@ function ContactPage() {
     message: ''
   });
 
-  const contactMutation = useContactForm();
+  // Admin pubkey - replace with actual admin public key
+  const ADMIN_NPUB = 'npub1xtscya34g58tk0z605fvr788k263gsu6cy9x0mhnm87echrgufzsevkk5s'; // Replace with real admin npub
+  
+  // Decode npub to hex pubkey
+  let ADMIN_PUBKEY: string;
+  try {
+    const decoded = nip19.decode(ADMIN_NPUB);
+    ADMIN_PUBKEY = decoded.data as string;
+  } catch {
+    // Fallback to default pubkey if decode fails
+    ADMIN_PUBKEY = '3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d';
+  }
+
+  const { account, isLoading: isLoadingAccount, secretKey } = useAnonymousNostr();
+  const sendMessageMutation = useSendEncryptedMessage();
 
   // Set page title
-  document.title = `${t.contact} - ${t.companyName}`;
+  useEffect(() => {
+    document.title = `${t.contact} - ${t.companyName}`;
+  }, [t.contact, t.companyName]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    contactMutation.mutate(formData);
+    
+    if (!account || !secretKey) {
+      return;
+    }
+
+    sendMessageMutation.mutate({
+      recipientPubkey: ADMIN_PUBKEY,
+      senderSecretKey: secretKey,
+      senderPubkey: account.publicKey,
+      message: formData.message,
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      subject: formData.subject,
+    });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -44,7 +77,14 @@ function ContactPage() {
     }));
   };
 
-  if (contactMutation.isSuccess) {
+  const openInMaps = () => {
+    // Coordinates: 23°38'11.9"N 58°12'26.7"E
+    // Converted to decimal: 23.636639, 58.207417
+    const url = `https://www.openstreetmap.org/?mlat=23.636639&mlon=58.207417#map=18/23.636639/58.207417`;
+    window.open(url, '_blank');
+  };
+
+  if (sendMessageMutation.isSuccess) {
     return (
       <div className="min-h-screen bg-background">
         {/* Header */}
@@ -52,7 +92,7 @@ function ContactPage() {
           <div className="container mx-auto px-4">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">{t.contactUs}</h1>
             <p className="text-lg opacity-90 max-w-2xl">
-              Thank you for your message. We'll get back to you soon.
+              {t.contactPageSubtitle}
             </p>
           </div>
         </section>
@@ -62,12 +102,12 @@ function ContactPage() {
             <Card className="max-w-md">
               <CardContent className="flex flex-col items-center text-center py-8">
                 <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
-                <h2 className="text-2xl font-bold mb-2">{t.messagesSentSuccess}</h2>
+                <h2 className="text-2xl font-bold mb-2">{t.messageSentSuccess}</h2>
                 <p className="text-muted-foreground mb-6">
-                  We appreciate you reaching out to us. Our team will review your message and respond within 24 hours.
+                  {t.messageReceivedResponse}
                 </p>
                 <Button onClick={() => window.location.reload()}>
-                  Send Another Message
+                  {t.sendAnotherMessage}
                 </Button>
               </CardContent>
             </Card>
@@ -107,11 +147,11 @@ function ContactPage() {
                     <div className="bg-primary/10 p-3 rounded-lg">
                       <Phone className="h-6 w-6 text-primary" />
                     </div>
-                    <div>
-                      <h3 className="font-semibold mb-2">{t.phone}</h3>
-                      <p className="text-muted-foreground">+968 1234 5678</p>
-                      <p className="text-muted-foreground">+968 9876 5432</p>
-                      <p className="text-sm text-muted-foreground mt-1">Available 24/7 for emergencies</p>
+                    <div className="flex-1">
+                      <h3 className="font-semibold mb-2">{t.callUs}</h3>
+                      <p className="text-muted-foreground" dir="ltr">+968 99823023</p>
+                      <p className="text-muted-foreground" dir="ltr">+968 24188398</p>
+                      <p className="text-sm text-muted-foreground mt-1">{t.availableForEmergencies}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -123,11 +163,10 @@ function ContactPage() {
                     <div className="bg-primary/10 p-3 rounded-lg">
                       <Mail className="h-6 w-6 text-primary" />
                     </div>
-                    <div>
-                      <h3 className="font-semibold mb-2">{t.email}</h3>
-                      <p className="text-muted-foreground">info@creativeccs.om</p>
-                      <p className="text-muted-foreground">projects@creativeccs.om</p>
-                      <p className="text-sm text-muted-foreground mt-1">We respond within 24 hours</p>
+                    <div className="flex-1">
+                      <h3 className="font-semibold mb-2">{t.emailUs}</h3>
+                      <p className="text-muted-foreground" dir="ltr">ahmed@creativeccs.com</p>
+                      <p className="text-sm text-muted-foreground mt-1">{t.respondWithin24Hours}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -139,11 +178,19 @@ function ContactPage() {
                     <div className="bg-primary/10 p-3 rounded-lg">
                       <MapPin className="h-6 w-6 text-primary" />
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <h3 className="font-semibold mb-2">{t.address}</h3>
-                      <p className="text-muted-foreground">Muscat, Sultanate of Oman</p>
-                      <p className="text-muted-foreground">Building 123, Street 456</p>
-                      <p className="text-muted-foreground">Al Khuwair District</p>
+                      <p className="text-muted-foreground">Al Barakat St, Sib</p>
+                      <p className="text-muted-foreground">Muscat, Oman</p>
+                      <p className="text-sm text-muted-foreground mt-2" dir="ltr">23°38'11.9"N 58°12'26.7"E</p>
+                      <Button 
+                        variant="link" 
+                        className="px-0 mt-2 h-auto" 
+                        onClick={openInMaps}
+                      >
+                        <ExternalLink className="h-4 w-4 me-1" />
+                        {t.openMapLocation}
+                      </Button>
                     </div>
                   </div>
                 </CardContent>
@@ -155,9 +202,9 @@ function ContactPage() {
                     <div className="bg-primary/10 p-3 rounded-lg">
                       <Clock className="h-6 w-6 text-primary" />
                     </div>
-                    <div>
-                      <h3 className="font-semibold mb-2">Business Hours</h3>
-                      <div className="space-y-1 text-muted-foreground">
+                    <div className="flex-1">
+                      <h3 className="font-semibold mb-2">{t.businessHours}</h3>
+                      <div className="space-y-1 text-muted-foreground" dir="ltr">
                         <p>Sunday - Thursday: 8:00 AM - 6:00 PM</p>
                         <p>Friday: 2:00 PM - 6:00 PM</p>
                         <p>Saturday: 9:00 AM - 4:00 PM</p>
@@ -175,15 +222,23 @@ function ContactPage() {
               <CardHeader>
                 <CardTitle className="text-2xl">{t.sendMessage}</CardTitle>
                 <p className="text-muted-foreground">
-                  Fill out the form below and we'll get back to you as soon as possible.
+                  {t.fillFormBelow}
                 </p>
               </CardHeader>
               <CardContent>
-                {contactMutation.error && (
+                {sendMessageMutation.error && (
                   <Alert variant="destructive" className="mb-6">
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription>
-                      Failed to send message. Please try again or contact us directly.
+                      {sendMessageMutation.error.message}
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                {isLoadingAccount && (
+                  <Alert className="mb-6">
+                    <AlertDescription>
+                      {t.loading}
                     </AlertDescription>
                   </Alert>
                 )}
@@ -198,7 +253,7 @@ function ContactPage() {
                         required
                         value={formData.name}
                         onChange={handleChange}
-                        placeholder="Enter your full name"
+                        placeholder={t.enterFullName}
                       />
                     </div>
                     <div className="space-y-2">
@@ -210,7 +265,7 @@ function ContactPage() {
                         required
                         value={formData.email}
                         onChange={handleChange}
-                        placeholder="your.email@example.com"
+                        placeholder={t.enterEmailPlaceholder}
                       />
                     </div>
                   </div>
@@ -223,7 +278,8 @@ function ContactPage() {
                       type="tel"
                       value={formData.phone}
                       onChange={handleChange}
-                      placeholder="+968 1234 5678"
+                      placeholder={t.enterPhonePlaceholder}
+                      dir="ltr"
                     />
                   </div>
 
@@ -235,7 +291,7 @@ function ContactPage() {
                       required
                       value={formData.subject}
                       onChange={handleChange}
-                      placeholder="What's this regarding?"
+                      placeholder={t.subjectPlaceholder}
                     />
                   </div>
 
@@ -247,7 +303,7 @@ function ContactPage() {
                       required
                       value={formData.message}
                       onChange={handleChange}
-                      placeholder="Tell us about your project, inquiry, or how we can help..."
+                      placeholder={t.messagePlaceholder}
                       rows={6}
                     />
                   </div>
@@ -256,16 +312,16 @@ function ContactPage() {
                     type="submit" 
                     className="w-full" 
                     size="lg"
-                    disabled={contactMutation.isPending}
+                    disabled={sendMessageMutation.isPending || isLoadingAccount}
                   >
-                    {contactMutation.isPending ? (
+                    {sendMessageMutation.isPending ? (
                       <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                        Sending...
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white me-2" />
+                        {t.sendingMessage}
                       </>
                     ) : (
                       <>
-                        <Send className="h-4 w-4 mr-2" />
+                        <Send className="h-4 w-4 me-2" />
                         {t.sendMessage}
                       </>
                     )}
@@ -279,57 +335,53 @@ function ContactPage() {
         {/* FAQ Section */}
         <div className="mt-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
+            <h2 className="text-3xl font-bold mb-4">{t.frequentlyAskedQuestions}</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Quick answers to common questions about our services and processes.
+              {t.quickAnswers}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">How do I schedule a property viewing?</CardTitle>
+                <CardTitle className="text-lg">{t.scheduleViewing}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  You can schedule a viewing by calling us, sending an email, or filling out the contact form above. 
-                  We offer flexible scheduling including evenings and weekends.
+                  {t.scheduleViewingDesc}
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">What areas do you serve?</CardTitle>
+                <CardTitle className="text-lg">{t.areasServed}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  We primarily serve the Greater Muscat area including Al Khuwair, Qurum, Al Ghubra, 
-                  and surrounding districts. Contact us for projects in other locations.
+                  {t.areasServedDesc}
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Do you offer construction services?</CardTitle>
+                <CardTitle className="text-lg">{t.constructionServicesQuestion}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Yes, we provide comprehensive construction services including residential, commercial, 
-                  and renovation projects. Our team handles everything from design to completion.
+                  {t.constructionServicesAnswer}
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">How long does property registration take?</CardTitle>
+                <CardTitle className="text-lg">{t.propertyRegistration}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Property registration typically takes 2-4 weeks depending on the property type and documentation. 
-                  We guide you through the entire process to ensure smooth completion.
+                  {t.propertyRegistrationDesc}
                 </p>
               </CardContent>
             </Card>

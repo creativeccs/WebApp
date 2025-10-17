@@ -323,4 +323,56 @@ export interface Translation {
   getInTouch: string;
   contactPageSubtitle: string;
   getInTouchDesc: string;
+  
+  // Contact Page Details
+  callUs: string;
+  emailUs: string;
+  officeLocation: string;
+  businessHours: string;
+  availableForEmergencies: string;
+  respondWithin24Hours: string;
+  openMapLocation: string;
+  frequentlyAskedQuestions: string;
+  quickAnswers: string;
+  scheduleViewing: string;
+  scheduleViewingDesc: string;
+  areasServed: string;
+  areasServedDesc: string;
+  constructionServicesQuestion: string;
+  constructionServicesAnswer: string;
+  propertyRegistration: string;
+  propertyRegistrationDesc: string;
+  sendingMessage: string;
+  messageSentSuccess: string;
+  messageReceivedResponse: string;
+  sendAnotherMessage: string;
+  fillFormBelow: string;
+  enterFullName: string;
+  enterEmailPlaceholder: string;
+  enterPhonePlaceholder: string;
+  subjectPlaceholder: string;
+  messagePlaceholder: string;
+  
+  // Admin - Encrypted Messages
+  encryptedMessages: string;
+  receivedMessages: string;
+  noEncryptedMessages: string;
+  noMessagesReceived: string;
+  sender: string;
+  decryptionFailed: string;
+  messageDate: string;
+  from: string;
+  sentOn: string;
+  noSubject: string;
+  decrypted: string;
+  failed: string;
+  deleteMessage: string;
+  deleteMessageConfirm: string;
+  deleteMessageDescription: string;
+  hideMessage: string;
+  hideMessageConfirm: string;
+  hideMessageDescription: string;
+  hide: string;
+  hidden: string;
+  showHidden: string;
 }
