@@ -19,6 +19,7 @@ import { useCreateProperty, useUpdateProperty } from '@/hooks/usePropertyManagem
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useIsAdmin } from '@/hooks/useAdmin';
 import { useEffect } from 'react';
+import { RichTextEditor } from '@/components/RichTextEditor';
 import type { 
   PropertyFormData, 
   Property, 
@@ -379,11 +380,10 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                       <Label htmlFor="description_en" className="flex items-center gap-2">
                         🇺🇸 English Description
                       </Label>
-                      <Textarea 
-                        id="description_en"
-                        {...form.register('description_en')}
+                      <RichTextEditor
+                        content={form.watch('description_en') || ''}
+                        onChange={(content) => form.setValue('description_en', content)}
                         placeholder="Detailed description of the property in English..."
-                        rows={4}
                         className="mt-1"
                       />
                     </div>
@@ -391,37 +391,32 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                       <Label htmlFor="description_fa" className="flex items-center gap-2">
                         🇮🇷 Persian Description
                       </Label>
-                      <Textarea 
-                        id="description_fa"
-                        {...form.register('description_fa')}
+                      <RichTextEditor
+                        content={form.watch('description_fa') || ''}
+                        onChange={(content) => form.setValue('description_fa', content)}
                         placeholder="توضیحات详细 ملک به زبان فارسی..."
-                        rows={4}
                         className="mt-1"
-                        dir="rtl"
                       />
                     </div>
                     <div>
                       <Label htmlFor="description_ar" className="flex items-center gap-2">
                         🇸🇦 Arabic Description
                       </Label>
-                      <Textarea 
-                        id="description_ar"
-                        {...form.register('description_ar')}
+                      <RichTextEditor
+                        content={form.watch('description_ar') || ''}
+                        onChange={(content) => form.setValue('description_ar', content)}
                         placeholder="وصف مفصل للعقار باللغة العربية..."
-                        rows={4}
                         className="mt-1"
-                        dir="rtl"
                       />
                     </div>
                     <div>
                       <Label htmlFor="description_ru" className="flex items-center gap-2">
                         🇷🇺 Russian Description
                       </Label>
-                      <Textarea 
-                        id="description_ru"
-                        {...form.register('description_ru')}
+                      <RichTextEditor
+                        content={form.watch('description_ru') || ''}
+                        onChange={(content) => form.setValue('description_ru', content)}
                         placeholder="Подробное описание объекта на русском..."
-                        rows={4}
                         className="mt-1"
                       />
                     </div>

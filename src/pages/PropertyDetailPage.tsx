@@ -11,6 +11,7 @@ import { useProperty } from '@/hooks/useProperties';
 import { useIsAdmin } from '@/hooks/useAdmin';
 import { PropertyForm } from '@/components/PropertyForm';
 import { ShareDialog } from '@/components/ShareDialog';
+import { HTMLContent } from '@/components/HTMLContent';
 import { 
   MapPin, 
   Bed, 
@@ -398,9 +399,7 @@ function PropertyDetailPage() {
                 <CardTitle>{t.description}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                  {getLocalizedDescription()}
-                </p>
+                <HTMLContent content={getLocalizedDescription()} />
               </CardContent>
             </Card>
 
