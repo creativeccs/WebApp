@@ -40,16 +40,15 @@ function PropertyDetailPage() {
   const [showEditForm, setShowEditForm] = useState(false);
   const [showShareDialog, setShowShareDialog] = useState(false);
 
+  // Re-initialize carousel when language changes (for RTL/LTR switch)
   useEffect(() => {
     if (!api) {
       return;
     }
 
-    // Optional: Listen to API changes
-    // api.on("select", () => {
-    //   console.log("current slide", api.selectedScrollSnap());
-    // });
-  }, [api]);
+    // Reapply direction and reinitialize carousel
+    api.reInit();
+  }, [api, language]);
   
   const { data: property, isLoading, error } = useProperty(propertyId || '');
 
@@ -58,6 +57,7 @@ function PropertyDetailPage() {
     if (!property) return '';
     if (language === 'fa') return property.title_fa || property.title;
     if (language === 'ar') return property.title_ar || property.title;
+    if (language === 'ru') return property.title_ru || property.title;
     return property.title_en || property.title;
   };
 
@@ -65,6 +65,7 @@ function PropertyDetailPage() {
     if (!property) return '';
     if (language === 'fa') return property.description_fa || property.description;
     if (language === 'ar') return property.description_ar || property.description;
+    if (language === 'ru') return property.description_ru || property.description;
     return property.description_en || property.description;
   };
 
@@ -75,6 +76,8 @@ function PropertyDetailPage() {
         ? (property.title_fa || property.title)
         : language === 'ar'
         ? (property.title_ar || property.title)
+        : language === 'ru'
+        ? (property.title_ru || property.title)
         : (property.title_en || property.title);
       document.title = `${localizedTitle} - ${t.companyName}`;
     } else {
@@ -99,17 +102,58 @@ function PropertyDetailPage() {
       <div className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-8">
           <div className="animate-pulse space-y-6">
-            <div className="h-8 bg-muted rounded w-1/4" />
-            <div className="aspect-[16/9] bg-muted rounded-lg" />
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2 space-y-4">
-                <div className="h-8 bg-muted rounded w-3/4" />
-                <div className="h-32 bg-muted rounded" />
-                <div className="h-64 bg-muted rounded" />
+            {/* Header Skeleton */}
+            <div className="flex items-center justify-between mb-6">
+              <div className="h-10 bg-muted rounded w-32" />
+              <div className="flex gap-2">
+                <div className="h-9 bg-muted rounded w-20" />
+                <div className="h-9 bg-muted rounded w-20" />
               </div>
-              <div className="space-y-4">
-                <div className="h-64 bg-muted rounded" />
-                <div className="h-32 bg-muted rounded" />
+            </div>
+
+            {/* Main Grid Skeleton */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Left Column - Property Details */}
+              <div className="lg:col-span-2 space-y-6">
+                {/* Image Gallery Skeleton */}
+                <div className="space-y-4">
+                  <div className="aspect-[16/9] bg-muted rounded-xl" />
+                  {/* Thumbnails Skeleton */}
+                  <div className="flex gap-3">
+                    <div className="w-24 h-16 bg-muted rounded-lg" />
+                    <div className="w-24 h-16 bg-muted rounded-lg" />
+                    <div className="w-24 h-16 bg-muted rounded-lg" />
+                    <div className="w-24 h-16 bg-muted rounded-lg" />
+                  </div>
+                </div>
+
+                {/* Title and Stats Skeleton */}
+                <div className="space-y-4">
+                  <div className="h-8 bg-muted rounded w-3/4" />
+                  <div className="h-6 bg-muted rounded w-1/2" />
+                  {/* Stats Grid */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-muted/50 rounded-lg">
+                    <div className="h-16 bg-muted rounded" />
+                    <div className="h-16 bg-muted rounded" />
+                    <div className="h-16 bg-muted rounded" />
+                    <div className="h-16 bg-muted rounded" />
+                  </div>
+                </div>
+
+                {/* Description Card Skeleton */}
+                <div className="h-48 bg-muted rounded-lg" />
+
+                {/* Amenities Card Skeleton */}
+                <div className="h-64 bg-muted rounded-lg" />
+
+                {/* Additional Details Skeleton */}
+                <div className="h-48 bg-muted rounded-lg" />
+              </div>
+
+              {/* Right Column - Contact Info */}
+              <div className="space-y-6">
+                <div className="h-80 bg-muted rounded-lg" />
+                <div className="h-48 bg-muted rounded-lg" />
               </div>
             </div>
           </div>
@@ -204,7 +248,7 @@ function PropertyDetailPage() {
             {/* Professional Image Gallery with Internal Controls */}
             {property.images && property.images.length > 0 && (
               <div className="space-y-4">
-                <Carousel setApi={setApi} className="w-full relative group overflow-hidden rounded-xl">
+                <Carousel key={language} setApi={setApi} className="w-full relative group overflow-hidden rounded-xl">
                   <CarouselContent className="rounded-xl">
                     {property.images.map((image, index) => (
                       <CarouselItem key={index} className="rounded-xl">
@@ -214,12 +258,12 @@ function PropertyDetailPage() {
                             alt={image.alt || `${property.title} - Image ${index + 1}`}
                             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                           />
-                          {/* Image Counter Badge */}
-                          <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium">
+                          {/* Image Counter Badge - RTL aware */}
+                          <div className="absolute top-4 end-4 bg-black/70 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium">
                             {index + 1} / {property.images?.length || 0}
                           </div>
-                          {/* Property Status Badge */}
-                          <div className="absolute top-4 left-4">
+                          {/* Property Status Badge - RTL aware */}
+                          <div className="absolute top-4 start-4">
                             <Badge 
                               variant={property.status === 'available' ? 'default' : 'secondary'}
                               className="text-sm px-3 py-1"
@@ -229,24 +273,24 @@ function PropertyDetailPage() {
                                property.status === 'rented' ? t.rented : t.pending}
                             </Badge>
                           </div>
-                          {/* Navigation Arrows on Image */}
+                          {/* Navigation Arrows on Image - RTL aware */}
                           {property.images && property.images.length > 1 && (
                             <>
                               <button
                                 onClick={() => api?.scrollPrev()}
-                                className="absolute left-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110 flex items-center justify-center"
+                                className="absolute start-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110 flex items-center justify-center"
                                 title="Previous image"
                               >
-                                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="h-5 w-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                                 </svg>
                               </button>
                               <button
                                 onClick={() => api?.scrollNext()}
-                                className="absolute right-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110 flex items-center justify-center"
+                                className="absolute end-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110 flex items-center justify-center"
                                 title="Next image"
                               >
-                                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="h-5 w-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                 </svg>
                               </button>
@@ -292,8 +336,8 @@ function PropertyDetailPage() {
                     <span className="text-lg">{property.location}</span>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-3xl font-bold text-primary mb-2">
+                <div className="text-end">
+                  <div className="text-3xl font-bold text-primary mb-2" dir="ltr">
                     {property.price} {property.currency}
                   </div>
                   <div className="flex gap-2">
@@ -315,7 +359,7 @@ function PropertyDetailPage() {
                   <div className="flex items-center gap-2">
                     <Bed className="h-5 w-5 text-muted-foreground" />
                     <div>
-                      <div className="font-medium">{property.bedrooms}</div>
+                      <div className="font-medium" dir="ltr">{property.bedrooms}</div>
                       <div className="text-sm text-muted-foreground">{t.bedrooms}</div>
                     </div>
                   </div>
@@ -324,7 +368,7 @@ function PropertyDetailPage() {
                   <div className="flex items-center gap-2">
                     <Bath className="h-5 w-5 text-muted-foreground" />
                     <div>
-                      <div className="font-medium">{property.bathrooms}</div>
+                      <div className="font-medium" dir="ltr">{property.bathrooms}</div>
                       <div className="text-sm text-muted-foreground">{t.bathrooms}</div>
                     </div>
                   </div>
@@ -333,7 +377,7 @@ function PropertyDetailPage() {
                   <div className="flex items-center gap-2">
                     <Square className="h-5 w-5 text-muted-foreground" />
                     <div>
-                      <div className="font-medium">{property.area} m²</div>
+                      <div className="font-medium" dir="ltr">{property.area} m²</div>
                       <div className="text-sm text-muted-foreground">{t.area}</div>
                     </div>
                   </div>
@@ -404,19 +448,19 @@ function PropertyDetailPage() {
                   {property.year_built && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">{t.yearBuilt}:</span>
-                      <span className="font-medium">{property.year_built}</span>
+                      <span className="font-medium" dir="ltr">{property.year_built}</span>
                     </div>
                   )}
                   {property.floor && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">{t.floor}:</span>
-                      <span className="font-medium">{property.floor}</span>
+                      <span className="font-medium" dir="ltr">{property.floor}</span>
                     </div>
                   )}
                   {property.total_floors && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">{t.totalFloors}:</span>
-                      <span className="font-medium">{property.total_floors}</span>
+                      <span className="font-medium" dir="ltr">{property.total_floors}</span>
                     </div>
                   )}
                 </CardContent>
@@ -455,8 +499,8 @@ function PropertyDetailPage() {
                     className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors"
                   >
                     <Phone className="h-5 w-5 text-primary" />
-                    <div>
-                      <div className="font-medium">{property.contact_phone}</div>
+                    <div className="flex-1">
+                      <div className="font-medium" dir="ltr">{property.contact_phone}</div>
                       <div className="text-sm text-muted-foreground">Call now</div>
                     </div>
                   </a>
@@ -468,8 +512,8 @@ function PropertyDetailPage() {
                     className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors"
                   >
                     <Mail className="h-5 w-5 text-primary" />
-                    <div>
-                      <div className="font-medium">{property.contact_email}</div>
+                    <div className="flex-1">
+                      <div className="font-medium" dir="ltr">{property.contact_email}</div>
                       <div className="text-sm text-muted-foreground">Send email</div>
                     </div>
                   </a>
@@ -494,13 +538,13 @@ function PropertyDetailPage() {
               <CardContent className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Property ID:</span>
-                  <span className="font-mono text-sm">
+                  <span className="font-mono text-sm" dir="ltr">
                     {property.d.slice(0, 8).toUpperCase()}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Listed:</span>
-                  <span className="font-medium">
+                  <span className="font-medium" dir="ltr">
                     {new Date(property.created_at * 1000).toLocaleDateString()}
                   </span>
                 </div>

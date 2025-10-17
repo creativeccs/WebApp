@@ -18,6 +18,7 @@ import { useUploadFile } from '@/hooks/useUploadFile';
 import { useCreateProperty, useUpdateProperty } from '@/hooks/usePropertyManagement';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useIsAdmin } from '@/hooks/useAdmin';
+import { useEffect } from 'react';
 import type { 
   PropertyFormData, 
   Property, 
@@ -192,6 +193,14 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
   });
 
   const watchedType = form.watch('type');
+
+  // Load existing images when editing
+  useEffect(() => {
+    if (property?.images && property.images.length > 0) {
+      const imageUrls = property.images.map(img => img.url);
+      setSelectedImages(imageUrls);
+    }
+  }, [property]);
 
   if (!user || !isAdmin) {
     return (
@@ -597,7 +606,9 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                   {selectedImages.length > 0 && (
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-sm font-medium">Selected Images</h4>
+                        <h4 className="text-sm font-medium">
+                          {isEditing ? 'Property Images' : 'Selected Images'} ({selectedImages.length})
+                        </h4>
                         <Button
                           type="button"
                           variant="outline"
@@ -625,11 +636,12 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                                 type="button"
                                 variant="destructive"
                                 size="sm"
-                                className="absolute top-2 right-2 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                className="absolute top-2 right-2 h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity rounded-full shadow-lg"
                                 onClick={() => removeImage(index)}
                                 disabled={uploadingImages.has(index)}
+                                title="Remove image"
                               >
-                                <X className="h-3 w-3" />
+                                <X className="h-4 w-4" />
                               </Button>
                               
                               {/* Upload indicator */}
@@ -642,7 +654,6 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                               {/* Image info overlay */}
                               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <p className="text-xs text-white truncate">Image {index + 1}</p>
-                                <p className="text-xs text-white/80">Uploaded to Primal</p>
                               </div>
                             </div>
                           </div>

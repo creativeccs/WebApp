@@ -52,17 +52,17 @@ const Index = () => {
     {
       icon: Building,
       title: t.realEstateServices,
-      description: 'We offer a variety of real estate opportunities in Oman to Omani nationals and foreigners. We provide renting and the sale of properties including freehold properties with permanent residence.',
+      description: t.realEstateServicesDesc,
     },
     {
       icon: Users,
       title: t.constructionServices,
-      description: 'We are highly experienced in the construction of residential villas and commercial buildings. In addition to this, we offer demolition, renovation, and refurbishment of antiquated properties.',
+      description: t.constructionServicesDescription,
     },
     {
       icon: Award,
       title: t.maintenanceServices,
-      description: 'We engage in comprehensive maintenance of buildings including building completion tasks such as finishing work, electrical work, plumbing, interior decoration, and paint work.',
+      description: t.maintenanceServicesDesc,
     },
   ];
 
@@ -80,7 +80,7 @@ const Index = () => {
     {
       icon: Award,
       title: t.innovativeSolutions,
-      description: 'We provide smart and various options in both the field of construction and real estate.',
+      description: t.innovativeSolutionsDesc,
     },
   ];
 
@@ -298,10 +298,10 @@ const Index = () => {
                 {t.companyDescription}
               </p>
               <p className="text-muted-foreground mb-6">
-                A company specialized in the implementation of construction projects and real estate management. Creative Construction Solution is one of the leading companies in the field of construction and real estate. The company was established with a strong foundation of over 10 years of experience and is distinguished by providing comprehensive services to its clients, both individual and corporate.
+                {t.companyAbout}
               </p>
               <p className="text-muted-foreground">
-                The company seeks to meet the needs of its clients effectively through providing specialized and innovative solutions in enhancing their success in growing their business.
+                {t.companyGoal}
               </p>
             </div>
 

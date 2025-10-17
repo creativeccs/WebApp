@@ -77,14 +77,24 @@ export interface Translation {
   
   // Company Information
   companyName: string;
+  companyTagline: string;
   companyDescription: string;
+  companyAbout: string;
+  companyGoal: string;
   companyVision: string;
   companyMission: string;
   
   // Services
+  services: string;
   realEstateServices: string;
+  realEstateServicesDesc: string;
   constructionServices: string;
+  constructionServicesDescription: string;
+  propertyManagementService: string;
   maintenanceServices: string;
+  maintenanceServicesDesc: string;
+  innovativeSolutionsDesc: string;
+  allRightsReserved: string;
   
   // Contact
   contactUs: string;
@@ -311,4 +321,6 @@ export interface Translation {
   buyingSelling: string;
   viewProperties: string;
   getInTouch: string;
+  contactPageSubtitle: string;
+  getInTouchDesc: string;
 }

@@ -10,7 +10,7 @@ export function I18nProvider({ children }: I18nProviderProps) {
   const [language, setLanguage] = useState<Language>(() => {
     const saved = localStorage.getItem('language') as Language;
     const defaultLang = (import.meta.env.VITE_DEFAULT_LANGUAGE || 'en') as Language;
-    return saved && ['en', 'ar', 'fa'].includes(saved) ? saved : defaultLang;
+    return saved && ['en', 'ar', 'fa', 'ru'].includes(saved) ? saved : defaultLang;
   });
 
   const t = getTranslation(language);

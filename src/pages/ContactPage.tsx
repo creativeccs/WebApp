@@ -84,7 +84,7 @@ function ContactPage() {
         <div className="container mx-auto px-4">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">{t.contactUs}</h1>
           <p className="text-lg opacity-90 max-w-2xl">
-            Get in touch with Creative Construction Solution. We're here to help with all your real estate and construction needs.
+            {t.contactPageSubtitle}
           </p>
         </div>
       </section>
@@ -94,9 +94,9 @@ function ContactPage() {
           {/* Contact Information */}
           <div className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold mb-6">Get in Touch</h2>
+              <h2 className="text-3xl font-bold mb-6">{t.getInTouch}</h2>
               <p className="text-muted-foreground text-lg mb-8">
-                Ready to start your next project? Contact our expert team for professional consultation and support.
+                {t.getInTouchDesc}
               </p>
             </div>
 

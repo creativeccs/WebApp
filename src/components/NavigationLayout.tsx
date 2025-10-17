@@ -65,7 +65,7 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
                 </div>
                 <div className="block">
                   <div className="font-bold text-base sm:text-lg whitespace-nowrap">{t.companyName}</div>
-                  <div className="text-xs text-muted-foreground whitespace-nowrap">Real Estate & Construction</div>
+                  <div className="text-xs text-muted-foreground whitespace-nowrap">{t.companyTagline}</div>
                 </div>
               </Link>
             </div>
@@ -206,7 +206,7 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
                       </div>
                       <div>
                         <div className="font-bold text-lg">{t.companyName}</div>
-                        <div className="text-xs text-muted-foreground">Real Estate & Construction</div>
+                        <div className="text-xs text-muted-foreground">{t.companyTagline}</div>
                       </div>
                     </div>
 
@@ -339,7 +339,7 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
                 </div>
                 <div>
                   <div className="font-bold text-lg">{t.companyName}</div>
-                  <div className="text-sm text-muted-foreground">Real Estate & Construction</div>
+                  <div className="text-sm text-muted-foreground">{t.companyTagline}</div>
                 </div>
               </div>
               <p className={`text-muted-foreground mb-4 max-w-md ${isRTL ? 'text-right' : 'text-left'}`}>
@@ -370,12 +370,12 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
 
             {/* Services */}
             <div>
-              <h3 className="font-semibold mb-4">Services</h3>
+              <h3 className="font-semibold mb-4">{t.services}</h3>
               <div className="space-y-2 text-muted-foreground">
-                <p>Real Estate Development</p>
-                <p>Construction Services</p>
-                <p>Property Management</p>
-                <p>Investment Consulting</p>
+                <p>{t.realEstateDevelopment}</p>
+                <p>{t.constructionServices}</p>
+                <p>{t.propertyManagementService}</p>
+                <p>{t.investmentConsulting}</p>
               </div>
             </div>
           </div>
@@ -383,7 +383,7 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
           {/* Bottom Footer */}
           <div className="border-t mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center">
             <div className="text-sm text-muted-foreground">
-              © 2024 Creative Construction Solution. All rights reserved.
+              © 2024 {t.companyName}. {t.allRightsReserved}.
             </div>
             <div className="flex items-center space-x-4 mt-4 sm:mt-0">
               <LanguageSwitcher />

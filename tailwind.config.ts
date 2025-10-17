@@ -19,6 +19,11 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				sans: ['Inter Variable', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+				persian: ['Vazirmatn Variable', 'Vazirmatn', 'Tahoma', 'sans-serif'],
+				arabic: ['Noto Sans Arabic', 'Noto Sans', 'Tahoma', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',

@@ -266,11 +266,15 @@ export function validateProperty(event: NostrEvent): Property | null {
       title: getTag('title')!,
       title_en: getTag('title_en') || getTag('title')!,
       title_fa: getTag('title_fa') || getTag('title')!,
-      title_ar: getTag('title_ar') || getTag('title')!,
+  title_ar: getTag('title_ar') || getTag('title')!,
+  // Russian localized title (optional)
+  title_ru: getTag('title_ru') || getTag('title')!,
       description: getTag('description') || '',
       description_en: getTag('description_en') || getTag('description') || '',
       description_fa: getTag('description_fa') || getTag('description') || '',
-      description_ar: getTag('description_ar') || getTag('description') || '',
+  description_ar: getTag('description_ar') || getTag('description') || '',
+  // Russian localized description (optional)
+  description_ru: getTag('description_ru') || getTag('description') || '',
       type: getTag('type')! as PropertyType,
       category: getTag('category')! as PropertyCategory,
       price: getTag('price')!,

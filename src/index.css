@@ -99,6 +99,32 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Font families based on language */
+  /* Default: English & Russian - Inter */
+  html {
+    font-family: 'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Persian (Farsi) - Vazirmatn */
+  html[lang="fa"] {
+    font-family: 'Vazirmatn Variable', 'Vazirmatn', Tahoma, sans-serif;
+  }
+
+  /* Arabic - Noto Sans Arabic */
+  html[lang="ar"] {
+    font-family: 'Noto Sans Arabic', 'Noto Sans', Tahoma, sans-serif;
+  }
+
+  /* Russian - Inter (has excellent Cyrillic support) */
+  html[lang="ru"] {
+    font-family: 'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* English - Inter */
+  html[lang="en"] {
+    font-family: 'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif;
+  }
 }
 
 @layer components {
@@ -164,4 +190,9 @@
     border-top-left-radius: 0.25rem;
     border-bottom-left-radius: 0.25rem;
   }
+}
+
+*:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }

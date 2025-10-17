@@ -83,6 +83,8 @@ export default function Admin() {
       return field === 'title' ? (property.title_fa || property.title) : (property.description_fa || property.description);
     } else if (language === 'ar') {
       return field === 'title' ? (property.title_ar || property.title) : (property.description_ar || property.description);
+    } else if (language === 'ru') {
+      return field === 'title' ? (property.title_ru || property.title) : (property.description_ru || property.description);
     }
     return field === 'title' ? (property.title_en || property.title) : (property.description_en || property.description);
   };

@@ -79,14 +79,24 @@ export const en: Translation = {
   
   // Company Information
   companyName: 'Creative Construction Solution',
+  companyTagline: 'Real Estate & Construction',
   companyDescription: 'CCS is a leading company in construction and real estate development sector.',
+  companyAbout: 'A company specialized in the implementation of construction projects and real estate management. Creative Construction Solution is one of the leading companies in the field of construction and real estate. The company was established with a strong foundation of over 10 years of experience and is distinguished by providing comprehensive services to its clients, both individual and corporate.',
+  companyGoal: 'The company seeks to meet the needs of its clients effectively through providing specialized and innovative solutions in enhancing their success in growing their business.',
   companyVision: 'To be the leading force in shaping Oman\'s skyline and communities, pioneering innovative and sustainable construction and real estate solutions that enhance the quality of life and drive economic growth.',
   companyMission: 'To revolutionize property development and real estate in Oman by delivering scientific and specialized solutions that blend innovation with functionality.',
   
   // Services
+  services: 'Services',
   realEstateServices: 'Real Estate Services',
+  realEstateServicesDesc: 'We offer a variety of real estate opportunities in Oman to Omani nationals and foreigners. We provide renting and the sale of properties including freehold properties with permanent residence.',
   constructionServices: 'Construction Services',
+  constructionServicesDescription: 'We are highly experienced in the construction of residential villas and commercial buildings. In addition to this, we offer demolition, renovation, and refurbishment of antiquated properties.',
+  propertyManagementService: 'Property Management',
   maintenanceServices: 'Maintenance Services',
+  maintenanceServicesDesc: 'We engage in comprehensive maintenance of buildings including building completion tasks such as finishing work, electrical work, plumbing, interior decoration, and paint work.',
+  innovativeSolutionsDesc: 'We provide smart and various options in both the field of construction and real estate.',
+  allRightsReserved: 'All rights reserved',
   
   // Contact
   contactUs: 'Contact Us',
@@ -313,4 +323,6 @@ export const en: Translation = {
   buyingSelling: 'Whether you\'re looking to buy, sell, or develop property, our expert team is here to guide you every step of the way',
   viewProperties: 'View Properties',
   getInTouch: 'Get in Touch',
+  contactPageSubtitle: 'Get in touch with Creative Construction Solution. We\'re here to help with all your real estate and construction needs.',
+  getInTouchDesc: 'Ready to start your next project? Contact our expert team for professional consultation and support.',
 };
