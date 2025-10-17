@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNostr } from '@nostrify/react';
-import { finalizeEvent, type EventTemplate } from 'nostr-tools';
-import { nip44 } from 'nostr-tools';
+import { finalizeEvent, type EventTemplate, nip04 } from 'nostr-tools';
 import { useToast } from '@/hooks/useToast';
 
 interface EncryptedMessageData {
@@ -16,7 +15,7 @@ interface EncryptedMessageData {
 }
 
 /**
- * Hook to send encrypted Nostr messages (kind 4 - NIP-04/NIP-44).
+ * Hook to send encrypted Nostr messages (kind 4 - NIP-04).
  * Used for contact form submissions to admin.
  */
 export function useSendEncryptedMessage() {
@@ -39,9 +38,8 @@ export function useSendEncryptedMessage() {
 
       const messageText = JSON.stringify(messageContent, null, 2);
 
-      // Encrypt the message using NIP-44
-      const conversationKey = nip44.v2.utils.getConversationKey(senderSecretKey, recipientPubkey);
-      const encryptedContent = nip44.v2.encrypt(messageText, conversationKey);
+      // Encrypt the message using NIP-04
+      const encryptedContent = await nip04.encrypt(senderSecretKey, recipientPubkey, messageText);
 
       // Create kind 4 event (encrypted direct message)
       const eventTemplate: EventTemplate = {

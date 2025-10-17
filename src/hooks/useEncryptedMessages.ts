@@ -55,20 +55,20 @@ export function useEncryptedMessages() {
       const decryptedMessages: DecryptedMessage[] = await Promise.all(
         sortedEvents.map(async (event) => {
           try {
-            // Check if nip44 is available
-            if (!user.signer.nip44) {
+            // Check if nip04 is available
+            if (!user.signer.nip04) {
               return {
                 id: event.id,
                 event,
                 decryptedContent: null,
                 senderPubkey: event.pubkey,
                 createdAt: event.created_at,
-                error: 'NIP-44 decryption not supported by your signer',
+                error: 'NIP-04 decryption not supported by your signer',
               };
             }
 
-            // Decrypt the message
-            const decryptedText = await user.signer.nip44.decrypt(event.pubkey, event.content);
+            // Decrypt the message using NIP-04
+            const decryptedText = await user.signer.nip04.decrypt(event.pubkey, event.content);
             
             // Parse the decrypted JSON content
             const decryptedContent = JSON.parse(decryptedText);
