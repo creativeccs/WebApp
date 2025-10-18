@@ -701,7 +701,7 @@ const Index = () => {
                 <img 
                   src={partner.src} 
                   alt={partner.alt}
-                  className="h-16 sm:h-18 lg:h-20 w-auto max-w-full object-contain filter brightness-0 dark:brightness-100 hover:brightness-100 dark:hover:brightness-125 transition-all duration-300"
+                  className="h-16 sm:h-18 lg:h-20 w-auto max-w-full object-contain transition-all duration-300 opacity-60 hover:opacity-100"
                 />
               </motion.div>
             ))}

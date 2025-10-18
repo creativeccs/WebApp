@@ -66,14 +66,14 @@ export function Slideshow({
 
   if (images.length === 0) {
     return (
-      <div className={`relative w-full h-[calc(100vh-65px)] bg-muted rounded-lg flex items-center justify-center ${className}`}>
+      <div className={`relative w-full h-[calc(100vh-65px)] bg-muted flex items-center justify-center ${className}`}>
         <p className="text-muted-foreground">No images available</p>
       </div>
     );
   }
 
   return (
-    <div className={`relative w-full h-[calc(100vh-65px)] rounded-lg overflow-hidden group ${className}`}>
+    <div className={`relative w-full h-[calc(100vh-65px)] overflow-hidden group ${className}`}>
       {/* Slides Container */}
       <div className="relative w-full h-full">
         {images.map((image, index) => {
@@ -114,11 +114,11 @@ export function Slideshow({
               
               {/* Content overlay */}
               <div className="absolute inset-0 flex items-end justify-start p-8">
-                <div className="text-white max-w-2xl">
-                  <h3 className="text-2xl md:text-4xl font-bold mb-2 drop-shadow-lg">
+                <div className="max-w-2xl">
+                  <h3 className="text-2xl md:text-4xl font-bold mb-2 text-primary-foreground drop-shadow-lg">
                     Professional Real Estate
                   </h3>
-                  <p className="text-lg md:text-xl text-white/90 drop-shadow-md">
+                  <p className="text-lg md:text-xl text-primary-foreground/90 drop-shadow-md">
                     Discover premium properties in Muscat, Oman
                   </p>
                 </div>
@@ -136,7 +136,7 @@ export function Slideshow({
             size="icon"
             onClick={prevSlide}
             disabled={isTransitioning}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full text-white opacity-0 group-hover:opacity-100 transition-all duration-300 disabled:opacity-50"
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full text-primary-foreground opacity-0 group-hover:opacity-100 transition-all duration-300 disabled:opacity-50"
             aria-label="Previous slide"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -146,7 +146,7 @@ export function Slideshow({
             size="icon"
             onClick={nextSlide}
             disabled={isTransitioning}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full text-white opacity-0 group-hover:opacity-100 transition-all duration-300 disabled:opacity-50"
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full text-primary-foreground opacity-0 group-hover:opacity-100 transition-all duration-300 disabled:opacity-50"
             aria-label="Next slide"
           >
             <ChevronRight className="w-6 h-6" />
@@ -174,7 +174,7 @@ export function Slideshow({
       )}
 
       {/* Slide Counter */}
-      <div className="absolute top-4 right-4 bg-black/30 backdrop-blur-md text-white px-3 py-1 rounded-full text-sm font-medium z-10">
+      <div className="absolute top-4 right-4 bg-black/30 backdrop-blur-md text-primary-foreground px-3 py-1 rounded-full text-sm font-medium z-10">
         {currentIndex + 1} / {images.length}
       </div>
     </div>

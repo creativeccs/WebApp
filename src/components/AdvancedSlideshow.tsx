@@ -63,14 +63,14 @@ export function AdvancedSlideshow({
 
   if (images.length === 0) {
     return (
-      <div className={`relative w-full h-[80vh] min-h-[700px] bg-muted rounded-lg flex items-center justify-center ${className}`}>
+      <div className={`relative w-full h-[80vh] min-h-[700px] bg-muted flex items-center justify-center ${className}`}>
         <p className="text-muted-foreground">No images available</p>
       </div>
     );
   }
 
   return (
-    <div className={`relative w-full h-[80vh] min-h-[700px] rounded-lg overflow-hidden group ${className}`}>
+    <div className={`relative w-full h-[80vh] min-h-[700px] overflow-hidden group ${className}`}>
       <div className="relative w-full h-full">
         {images.map((image, index) => {
           const isCurrent = index === currentIndex;
@@ -112,7 +112,7 @@ export function AdvancedSlideshow({
             size="icon"
             onClick={prevSlide}
             disabled={isTransitioning}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full text-white opacity-0 group-hover:opacity-100 transition-all duration-300 disabled:opacity-50"
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full text-primary-foreground opacity-0 group-hover:opacity-100 transition-all duration-300 disabled:opacity-50"
             aria-label="Previous slide"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -122,7 +122,7 @@ export function AdvancedSlideshow({
             size="icon"
             onClick={nextSlide}
             disabled={isTransitioning}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full text-white opacity-0 group-hover:opacity-100 transition-all duration-300 disabled:opacity-50"
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full text-primary-foreground opacity-0 group-hover:opacity-100 transition-all duration-300 disabled:opacity-50"
             aria-label="Next slide"
           >
             <ChevronRight className="w-6 h-6" />
@@ -146,7 +146,7 @@ export function AdvancedSlideshow({
         </div>
       )}
 
-      <div className="absolute top-4 right-4 bg-black/30 backdrop-blur-md text-white px-3 py-1 rounded-full text-sm font-medium z-10">
+      <div className="absolute top-4 right-4 bg-black/30 backdrop-blur-md text-primary-foreground px-3 py-1 rounded-full text-sm font-medium z-10">
         {currentIndex + 1} / {images.length}
       </div>
     </div>
