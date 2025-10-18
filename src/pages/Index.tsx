@@ -10,9 +10,9 @@ import { useI18n } from '@/contexts/I18nContext';
 import { Building, Users, Award, TrendingUp, ArrowRight, MapPin, Bed, Bath, Square } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// Animation Variants
+// Motion.dev Inspired Animation Variants
 const fadeInUp = {
-  hidden: { opacity: 0, y: 60 },
+  hidden: { opacity: 0, y: 20 },
   visible: { 
     opacity: 1, 
     y: 0
@@ -20,18 +20,18 @@ const fadeInUp = {
 };
 
 const staggerContainer = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.1
+      staggerChildren: 0.15,
+      delayChildren: 0.2
     }
   }
 };
 
 const scaleIn = {
-  hidden: { scale: 0.8, opacity: 0 },
+  hidden: { scale: 0.95, opacity: 0 },
   visible: { 
     scale: 1, 
     opacity: 1
@@ -154,99 +154,124 @@ const Index = () => {
       </section>
 
       {/* WHO ARE WE Section */}
-      <section className="py-20 bg-background">
+      <section className="py-24 bg-background">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeInUp}
+            className="text-center mb-20"
+          >
+            <Badge variant="secondary" className="mb-6">
+              <Building className="h-4 w-4 mr-2" />
+              About Creative CCS
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
               WHO ARE WE?
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              A leading real estate company in Sultanate of Oman, dedicated to excellence and innovation in property services
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              A leading construction and real estate company in Sultanate of Oman, dedicated to excellence and innovation in property services
             </p>
-          </div>
+          </motion.div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
-            <div className="space-y-6">
-              <Card>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className="grid lg:grid-cols-2 gap-16 items-center mb-20"
+          >
+            <motion.div variants={fadeInUp} className="space-y-8">
+              <Card className="group hover:shadow-lg transition-all duration-500">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-primary text-primary-foreground rounded-lg flex items-center justify-center text-sm font-semibold">
+                  <CardTitle className="flex items-center gap-4 text-xl">
+                    <div className="w-12 h-12 bg-primary text-primary-foreground rounded-xl flex items-center justify-center text-lg font-bold group-hover:scale-110 transition-transform">
                       01
                     </div>
                     Decade of Excellence
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground">
-                    Over 10 years of proven expertise in the Omani real estate market, delivering exceptional results and building lasting relationships.
+                  <p className="text-muted-foreground leading-relaxed">
+                    Over 10 years of proven expertise in the Omani real estate market, delivering exceptional results and building lasting relationships with our valued clients.
                   </p>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="group hover:shadow-lg transition-all duration-500">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-primary text-primary-foreground rounded-lg flex items-center justify-center text-sm font-semibold">
+                  <CardTitle className="flex items-center gap-4 text-xl">
+                    <div className="w-12 h-12 bg-primary text-primary-foreground rounded-xl flex items-center justify-center text-lg font-bold group-hover:scale-110 transition-transform">
                       02
                     </div>
                     Innovation Driven
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground">
-                    Leveraging cutting-edge technology and modern approaches to provide seamless property solutions that exceed expectations.
+                  <p className="text-muted-foreground leading-relaxed">
+                    Leveraging cutting-edge technology and modern approaches to provide seamless property solutions that consistently exceed client expectations.
                   </p>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="group hover:shadow-lg transition-all duration-500">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-primary text-primary-foreground rounded-lg flex items-center justify-center text-sm font-semibold">
+                  <CardTitle className="flex items-center gap-4 text-xl">
+                    <div className="w-12 h-12 bg-primary text-primary-foreground rounded-xl flex items-center justify-center text-lg font-bold group-hover:scale-110 transition-transform">
                       03
                     </div>
                     Complete Solutions
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground">
-                    From property sales and rentals to management and consultation, we offer comprehensive services under one roof.
+                  <p className="text-muted-foreground leading-relaxed">
+                    From property sales and rentals to management and consultation, we offer comprehensive real estate services under one trusted roof.
                   </p>
                 </CardContent>
               </Card>
-            </div>
+            </motion.div>
 
-            <div className="relative">
-              <img 
-                src="/logo.png" 
-                alt="Creative CCS Modern Office in Oman"
-                className="w-full h-[600px] object-cover"
-              />
-            </div>
-          </div>
+            <motion.div variants={fadeInUp} className="relative w-full max-w-2xl mx-auto">
+              <div className="relative overflow-hidden rounded-2xl shadow-2xl bg-gradient-to-br from-primary/5 to-secondary/5 aspect-[4/3] sm:aspect-[16/10] lg:aspect-[4/3]">
+                <img 
+                  src="/images/main.webp" 
+                  alt="Creative CCS Modern Office in Oman"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none" />
+              </div>
+              {/* Decorative elements */}
+              <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 w-16 h-16 sm:w-24 sm:h-24 bg-primary/10 rounded-full blur-xl" />
+              <div className="absolute -bottom-2 -left-2 sm:-bottom-4 sm:-left-4 w-20 h-20 sm:w-32 sm:h-32 bg-secondary/10 rounded-full blur-xl" />
+            </motion.div>
+          </motion.div>
 
           {/* Statistics */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="text-center">
-              <CardContent className="pt-6">
-                <div className="text-3xl font-bold text-primary mb-2">10+</div>
-                <p className="text-sm text-muted-foreground">Years of Excellence</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center">
-              <CardContent className="pt-6">
-                <div className="text-3xl font-bold text-primary mb-2">500+</div>
-                <p className="text-sm text-muted-foreground">Successful Projects</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center">
-              <CardContent className="pt-6">
-                <div className="text-3xl font-bold text-primary mb-2">100%</div>
-                <p className="text-sm text-muted-foreground">Client Satisfaction</p>
-              </CardContent>
-            </Card>
-          </div>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
+            {[
+              { value: "10+", label: "Years of Excellence" },
+              { value: "500+", label: "Successful Projects" },
+              { value: "100%", label: "Client Satisfaction" }
+            ].map((stat, index) => (
+              <motion.div key={index} variants={scaleIn}>
+                <Card className="text-center hover:shadow-xl hover:-translate-y-1 transition-all duration-500 group">
+                  <CardContent className="pt-8 pb-6">
+                    <div className="text-4xl md:text-5xl font-bold text-primary mb-3 group-hover:scale-110 transition-transform">
+                      {stat.value}
+                    </div>
+                    <p className="text-muted-foreground font-medium">{stat.label}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
@@ -290,7 +315,7 @@ const Index = () => {
                         <img 
                           src={service.image} 
                           alt={service.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          className="w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                         <motion.div 
@@ -327,19 +352,19 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-muted/30">
+      {/* Key Features Section */}
+      <section className="py-24 bg-muted/30">
         <div className="container mx-auto px-4">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeInUp}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Features</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Key features of our services and operations.
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">Key Features</h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              What sets us apart in the competitive Omani real estate and construction market
             </p>
           </motion.div>
 
@@ -354,25 +379,30 @@ const Index = () => {
               const IconComponent = feature.icon;
               return (
                 <motion.div key={index} variants={scaleIn}>
-                  <motion.div
-                    whileHover={{ 
-                      scale: 1.05,
-                      transition: { type: 'spring', stiffness: 300 }
-                    }}
-                    className="text-center p-8 rounded-2xl bg-background hover:shadow-xl transition-all duration-300"
-                  >
-                    <motion.div 
-                      className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6"
-                      whileHover={{ rotate: 360 }}
-                      transition={{ duration: 0.6 }}
-                    >
-                      <IconComponent className="h-8 w-8 text-primary" />
-                    </motion.div>
-                    <h3 className="text-xl font-bold mb-4">{feature.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {feature.description}
-                    </p>
-                  </motion.div>
+                  <Card className="text-center p-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group h-full">
+                    <CardContent className="pt-0">
+                      <motion.div 
+                        className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors"
+                        whileHover={{ 
+                          rotate: 360,
+                          scale: 1.1 
+                        }}
+                        transition={{ 
+                          duration: 0.6,
+                          type: "spring",
+                          stiffness: 300 
+                        }}
+                      >
+                        <IconComponent className="h-10 w-10 text-primary" />
+                      </motion.div>
+                      <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
+                        {feature.title}
+                      </h3>
+                      <p className="text-muted-foreground leading-relaxed text-base">
+                        {feature.description}
+                      </p>
+                    </CardContent>
+                  </Card>
                 </motion.div>
               );
             })}
@@ -381,103 +411,159 @@ const Index = () => {
       </section>
 
       {/* Vision & Mission Section */}
-      <section className="py-20 bg-gradient-to-br from-primary/10 to-secondary/10">
+      <section className="py-24 bg-gradient-to-br from-primary/5 to-secondary/5">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeInUp}
+            className="text-center mb-20"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">Vision & Mission</h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Our commitment to excellence and innovation drives everything we do
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-12"
+          >
             {/* Vision */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={fadeInUp}
-              className="text-center lg:text-left"
-            >
-              <div className="mb-8">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto lg:mx-0 mb-6">
-                  <TrendingUp className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="text-2xl md:text-3xl font-bold mb-6">Vision</h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  To be the leading force in shaping Oman's skyline and communities, pioneering innovative and sustainable 
-                  construction and real estate solutions that enhance the quality of life and drive economic growth. We aspire 
-                  to set new standards of excellence through our commitment to integrity, cutting-edge technology, and a deep 
-                  respect for Oman's rich heritage and natural environment.
-                </p>
-              </div>
+            <motion.div variants={fadeInUp}>
+              <Card className="h-full hover:shadow-2xl transition-all duration-700 group">
+                <CardHeader className="text-center pb-8">
+                  <motion.div 
+                    className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors"
+                    whileHover={{ 
+                      rotate: 360,
+                      scale: 1.1 
+                    }}
+                    transition={{ 
+                      duration: 0.6,
+                      type: "spring",
+                      stiffness: 300 
+                    }}
+                  >
+                    <TrendingUp className="h-10 w-10 text-primary" />
+                  </motion.div>
+                  <CardTitle className="text-3xl font-bold group-hover:text-primary transition-colors">
+                    Vision
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed text-lg">
+                    To be the leading force in shaping Oman's skyline and communities, pioneering innovative and sustainable 
+                    construction and real estate solutions that enhance the quality of life and drive economic growth. We aspire 
+                    to set new standards of excellence through our commitment to integrity, cutting-edge technology, and a deep 
+                    respect for Oman's rich heritage and natural environment.
+                  </p>
+                </CardContent>
+              </Card>
             </motion.div>
 
             {/* Mission */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={fadeInUp}
-              className="text-center lg:text-left"
-            >
-              <div className="mb-8">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto lg:mx-0 mb-6">
-                  <Award className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="text-2xl md:text-3xl font-bold mb-6">Mission</h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  To revolutionize property development and real estate in Oman by delivering scientific and specialized 
-                  solutions that blend innovation with functionality. We are dedicated to transforming visions into reality 
-                  through our expertise, advanced technology, and commitment to sustainability. Our mission is to create 
-                  exceptional spaces that meet the evolving needs of our clients and contribute to the growth and prosperity 
-                  of our communities.
-                </p>
-              </div>
+            <motion.div variants={fadeInUp}>
+              <Card className="h-full hover:shadow-2xl transition-all duration-700 group">
+                <CardHeader className="text-center pb-8">
+                  <motion.div 
+                    className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors"
+                    whileHover={{ 
+                      rotate: 360,
+                      scale: 1.1 
+                    }}
+                    transition={{ 
+                      duration: 0.6,
+                      type: "spring",
+                      stiffness: 300 
+                    }}
+                  >
+                    <Award className="h-10 w-10 text-primary" />
+                  </motion.div>
+                  <CardTitle className="text-3xl font-bold group-hover:text-primary transition-colors">
+                    Mission
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed text-lg">
+                    To revolutionize property development and real estate in Oman by delivering scientific and specialized 
+                    solutions that blend innovation with functionality. We are dedicated to transforming visions into reality 
+                    through our expertise, advanced technology, and commitment to sustainability. Our mission is to create 
+                    exceptional spaces that meet the evolving needs of our clients and contribute to the growth and prosperity 
+                    of our communities.
+                  </p>
+                </CardContent>
+              </Card>
             </motion.div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Supporting Oman Vision 2040 Section */}
-      <section className="py-20 bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-950/20 dark:to-green-950/20">
+      <section className="py-24 bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-950/20 dark:to-green-950/20">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
+          >
             {/* Text Content */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={fadeInUp}
-              className="text-center lg:text-left"
-            >
-              <div className="w-20 h-20 bg-emerald-600/10 rounded-full flex items-center justify-center mx-auto lg:mx-0 mb-8">
-                <TrendingUp className="h-10 w-10 text-emerald-600" />
-              </div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-emerald-800 dark:text-emerald-200">
+            <motion.div variants={fadeInUp} className="text-center lg:text-left">
+              <motion.div 
+                className="w-24 h-24 bg-emerald-600/10 rounded-2xl flex items-center justify-center mx-auto lg:mx-0 mb-8"
+                whileHover={{ 
+                  rotate: 360,
+                  scale: 1.1 
+                }}
+                transition={{ 
+                  duration: 0.6,
+                  type: "spring",
+                  stiffness: 300 
+                }}
+              >
+                <TrendingUp className="h-12 w-12 text-emerald-600" />
+              </motion.div>
+              <h2 className="text-4xl md:text-5xl font-bold mb-8 text-emerald-800 dark:text-emerald-200">
                 Supporting Oman Vision 2040
               </h2>
-              <p className="text-lg text-emerald-700 dark:text-emerald-300 leading-relaxed">
+              <p className="text-xl text-emerald-700 dark:text-emerald-300 leading-relaxed mb-8">
                 Our objectives align with the vision of Oman to meet the modern renaissance requirements. 
                 We are committed to contributing to the economic diversification and sustainable development 
                 goals outlined in Oman Vision 2040, creating value for our community and the nation.
               </p>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-emerald-600 mb-2">2040</div>
+                  <p className="text-sm text-emerald-600/80">Vision Goal</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-emerald-600 mb-2">100%</div>
+                  <p className="text-sm text-emerald-600/80">Commitment</p>
+                </div>
+              </div>
             </motion.div>
 
             {/* Image */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={scaleIn}
-              className="relative"
-            >
-              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-2xl">
+            <motion.div variants={fadeInUp} className="relative">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-2xl">
                 <img 
                   src="/images/oman-vision-2040.webp" 
                   alt="Modern development supporting Oman Vision 2040"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/30 to-transparent" />
               </div>
               {/* Decorative elements */}
-              <div className="absolute -top-4 -right-4 w-24 h-24 bg-emerald-200/20 rounded-full blur-xl"></div>
-              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-green-200/20 rounded-full blur-xl"></div>
+              <div className="absolute -top-6 -right-6 w-32 h-32 bg-emerald-200/20 rounded-full blur-2xl" />
+              <div className="absolute -bottom-6 -left-6 w-40 h-40 bg-green-200/20 rounded-full blur-2xl" />
             </motion.div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -567,102 +653,23 @@ const Index = () => {
         </section>
       )}
 
-      {/* Company Info Section */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t.whoAreWe}</h2>
-          </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h3 className="text-2xl font-bold mb-4">{t.companyName}</h3>
-              <p className="text-lg text-muted-foreground mb-6">
-                {t.companyDescription}
-              </p>
-              <p className="text-muted-foreground mb-6">
-                {t.companyAbout}
-              </p>
-              <p className="text-muted-foreground">
-                {t.companyGoal}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>{t.vision}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {t.companyVision}
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>{t.mission}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {t.companyMission}
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 bg-muted/50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t.features}</h2>
-            <p className="text-lg text-muted-foreground">
-              {t.keyFeatures}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature, index) => {
-              const IconComponent = feature.icon;
-              return (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <IconComponent className="h-8 w-8 text-primary" />
-                    </div>
-                    <CardTitle>{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-base leading-relaxed">
-                      {feature.description}
-                    </CardDescription>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-      </section>
 
       {/* Partners Section */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeInUp}
-            className="text-center mb-12"
+            className="text-center mb-16"
           >
-            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-muted-foreground">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
               Our Trusted Partners
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Collaborating with leading companies in Oman to deliver exceptional results
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Collaborating with leading companies in Oman to deliver exceptional results and drive innovation
             </p>
           </motion.div>
 
@@ -671,29 +678,30 @@ const Index = () => {
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerContainer}
-            className="flex flex-wrap justify-center items-center gap-8 md:gap-12"
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center"
           >
             {[
-              { src: "/images/partners/client-1.png", alt: "" },
-              { src: "/images/partners/client-2.png", alt: "" },
-              { src: "/images/partners/client-3.png", alt: "" },
-              { src: "/images/partners/client-4.png", alt: "" },
-              { src: "/images/partners/client-5.png", alt: "" },
-              { src: "/images/partners/client-6.png", alt: "" }
+              { src: "/images/partners/client-1.png", alt: "Partner 1" },
+              { src: "/images/partners/client-2.png", alt: "Partner 2" },
+              { src: "/images/partners/client-3.png", alt: "Partner 3" },
+              { src: "/images/partners/client-4.png", alt: "Partner 4" },
+              { src: "/images/partners/client-5.png", alt: "Partner 5" },
+              { src: "/images/partners/client-6.png", alt: "Partner 6" }
             ].map((partner, index) => (
               <motion.div
                 key={index}
                 variants={scaleIn}
                 whileHover={{ 
                   scale: 1.1,
+                  y: -5,
                   transition: { type: 'spring', stiffness: 300 }
                 }}
-                className="grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100"
+                className="flex items-center justify-center p-8 h-24 sm:h-28 lg:h-32 bg-background rounded-xl shadow-sm hover:shadow-lg transition-all duration-500 grayscale hover:grayscale-0 opacity-70 hover:opacity-100"
               >
                 <img 
                   src={partner.src} 
                   alt={partner.alt}
-                  className="h-16 w-auto max-w-[120px] object-contain"
+                  className="h-16 sm:h-18 lg:h-20 w-auto max-w-full object-contain filter brightness-0 dark:brightness-100 hover:brightness-100 dark:hover:brightness-125 transition-all duration-300"
                 />
               </motion.div>
             ))}

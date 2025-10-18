@@ -35,14 +35,18 @@ const queryClient = new QueryClient({
 
 const defaultConfig: AppConfig = {
   theme: "light",
-  relayUrl: "wss://relay.primal.net",
+  relayUrl: "wss://relay.primal.net", // This is now just for UI display, actual connection uses relay pool
 };
 
+// Updated relay pool based on your specification
 const presetRelays = [
-  { url: 'wss://ditto.pub/relay', name: 'Ditto' },
-  { url: 'wss://relay.nostr.band', name: 'Nostr.Band' },
+  { url: 'wss://nostr-01.yakihonne.com', name: 'Yakihonne 1' },
+  { url: 'wss://nostr-02.yakihonne.com', name: 'Yakihonne 2' },
   { url: 'wss://relay.damus.io', name: 'Damus' },
+  { url: 'wss://relay.nostr.band', name: 'Nostr.Band' },
+  { url: 'wss://relay.angor.io', name: 'Angor' },
   { url: 'wss://relay.primal.net', name: 'Primal' },
+  { url: 'wss://nos.lol', name: 'nos.lol' },
 ];
 
 export function App() {
