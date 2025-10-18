@@ -15,7 +15,10 @@ import {
   MessageCircle, 
   Settings,
   Sun,
-  Moon
+  Moon,
+  MapPin,
+  Phone,
+  Mail
 } from 'lucide-react';
 
 interface NavigationLayoutProps {
@@ -346,9 +349,24 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
                 {t.companyDescription}
               </p>
               <div className={`text-sm text-muted-foreground ${isRTL ? 'text-right' : 'text-left'}`}>
-                <p>Muscat, Sultanate of Oman</p>
-                <p>Phone: +968 1234 5678</p>
-                <p>Email: info@creativeccs.om</p>
+                <p className="flex items-center gap-2 mb-2">
+                  <MapPin className="h-4 w-4 text-primary" />
+                  Al Barakat St, Sib, Muscat, Oman
+                </p>
+                <div className="space-y-1">
+                  <p className="flex items-center gap-2">
+                    <Phone className="h-4 w-4 text-primary" />
+                    <span dir="ltr">+968 99823023</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <Phone className="h-4 w-4 text-primary" />
+                    <span dir="ltr">+968 97990098</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-primary" />
+                    <span dir="ltr">ahmed@creativeccs.com</span>
+                  </p>
+                </div>
               </div>
             </div>
 

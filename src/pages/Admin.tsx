@@ -611,11 +611,16 @@ export default function Admin() {
                                       {/* Image */}
                                       {property.images && property.images.length > 0 && (
                                         <div className="relative w-full sm:w-48 h-32 sm:h-auto overflow-hidden flex-shrink-0">
-                                          <img
-                                            src={property.images[0].url}
-                                            alt={property.title}
-                                            className="w-full h-full object-cover"
-                                          />
+                                          {(() => {
+                                            const mainImage = property.images.find(img => img.isMain) || property.images[0];
+                                            return (
+                                              <img
+                                                src={mainImage.url}
+                                                alt={mainImage.alt || property.title}
+                                                className="w-full h-full object-cover"
+                                              />
+                                            );
+                                          })()}
                                         </div>
                                       )}
                                       {/* Content */}
@@ -716,11 +721,16 @@ export default function Admin() {
                               <Card className="overflow-hidden hover:shadow-lg transition-shadow">
                                 {property.images && property.images.length > 0 && (
                                   <div className="relative h-40 sm:h-48 overflow-hidden">
-                                    <img
-                                      src={property.images[0].url}
-                                      alt={property.title}
-                                      className="w-full h-full object-cover"
-                                    />
+                                    {(() => {
+                                      const mainImage = property.images.find(img => img.isMain) || property.images[0];
+                                      return (
+                                        <img
+                                          src={mainImage.url}
+                                          alt={mainImage.alt || property.title}
+                                          className="w-full h-full object-cover"
+                                        />
+                                      );
+                                    })()}
                                     <div className="absolute top-2 right-2 flex flex-col sm:flex-row gap-2">
                                       <span className={`px-2 py-1 text-xs font-semibold rounded ${
                                         property.status === 'available' ? 'bg-green-500' :
@@ -740,9 +750,7 @@ export default function Admin() {
                                   <h3 className="text-base sm:text-lg font-bold mb-2 line-clamp-1">
                                     {localizedTitle}
                                   </h3>
-                                  <p className="text-xs sm:text-sm text-muted-foreground mb-3 line-clamp-2">
-                                    {localizedDescription}
-                                  </p>
+
                                   <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
                                     <div className="flex items-center justify-between">
                                       <span className="text-muted-foreground">Price:</span>
