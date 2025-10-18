@@ -28,7 +28,8 @@ import type {
   PropertyStatus, 
   Currency,
   BooleanValue,
-  GenderPreference 
+  GenderPreference,
+  PropertyImage
 } from '@/lib/types/property';
 
 // Validation schema with multilingual support
@@ -118,8 +119,9 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
   const { t, language } = useI18n();
   const { user } = useCurrentUser();
   const isAdmin = useIsAdmin();
-  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [selectedImages, setSelectedImages] = useState<PropertyImage[]>([]);
   const [uploadingImages, setUploadingImages] = useState<Set<number>>(new Set());
+  const [_mainImageIndex, setMainImageIndex] = useState<number>(0);
   
   const createProperty = useCreateProperty();
   const updateProperty = useUpdateProperty();
@@ -198,8 +200,12 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
   // Load existing images when editing
   useEffect(() => {
     if (property?.images && property.images.length > 0) {
-      const imageUrls = property.images.map(img => img.url);
-      setSelectedImages(imageUrls);
+      setSelectedImages(property.images);
+      // Find main image index
+      const mainIndex = property.images.findIndex(img => img.isMain);
+      if (mainIndex >= 0) {
+        setMainImageIndex(mainIndex);
+      }
     }
   }, [property]);
 
@@ -257,7 +263,12 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
         // Extract URL from NIP-94 tags (first tag contains the URL)
         const url = tags[0]?.[1];
         if (url) {
-          setSelectedImages(prev => [...prev, url]);
+          const newImage: PropertyImage = {
+            url,
+            alt: `Property image ${selectedImages.length + 1}`,
+            isMain: selectedImages.length === 0 // First image is main by default
+          };
+          setSelectedImages(prev => [...prev, newImage]);
         }
       } catch (error) {
         console.error('Failed to upload image:', error);
@@ -616,15 +627,46 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                       </div>
                       
                       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {selectedImages.map((imageUrl, index) => (
+                        {selectedImages.map((image, index) => (
                           <div key={index} className="relative group">
                             <div className="aspect-square rounded-lg overflow-hidden border bg-muted">
                               <img
-                                src={imageUrl}
-                                alt={`Property image ${index + 1}`}
+                                src={image.url}
+                                alt={image.alt || `Property image ${index + 1}`}
                                 className="w-full h-full object-cover"
                               />
                               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
+                              
+                              {/* Main image indicator */}
+                              {image.isMain && (
+                                <div className="absolute top-2 left-2">
+                                  <Badge variant="secondary" className="bg-yellow-500 text-white text-xs">
+                                    Main
+                                  </Badge>
+                                </div>
+                              )}
+                              
+                              {/* Set as main button */}
+                              {!image.isMain && (
+                                <Button
+                                  type="button"
+                                  variant="secondary"
+                                  size="sm"
+                                  className="absolute bottom-2 left-2 h-8 px-2 py-0 opacity-0 group-hover:opacity-100 transition-opacity text-xs"
+                                  onClick={() => {
+                                    setSelectedImages(prev => 
+                                      prev.map((img, i) => ({
+                                        ...img,
+                                        isMain: i === index
+                                      }))
+                                    );
+                                    setMainImageIndex(index);
+                                  }}
+                                  title="Set as main image"
+                                >
+                                  Set Main
+                                </Button>
+                              )}
                               
                               {/* Remove button */}
                               <Button
@@ -929,67 +971,177 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
             </TabsContent>
 
             {/* Location */}
-            <TabsContent value="location" className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <TabsContent value="location" className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Address Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Address Information</h3>
+                  
+                  <div>
+                    <Label htmlFor="address">Full Address</Label>
+                    <Textarea 
+                      id="address"
+                      {...form.register('address')}
+                      placeholder="Street address, building, etc."
+                      rows={3}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="city">City</Label>
+                      <Input 
+                        id="city"
+                        {...form.register('city')}
+                        placeholder="Muscat"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="region">Region</Label>
+                      <Input 
+                        id="region"
+                        {...form.register('region')}
+                        placeholder="Muscat Governorate"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="country">Country</Label>
+                    <Input 
+                      id="country"
+                      {...form.register('country')}
+                      placeholder="Oman"
+                    />
+                  </div>
+                </div>
+
+                {/* Geographic Coordinates */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Geographic Coordinates</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Enter precise latitude and longitude for accurate map display. Click on the map to set coordinates.
+                  </p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="lat">Latitude *</Label>
+                      <Input 
+                        id="lat"
+                        {...form.register('lat')}
+                        placeholder="23.5859"
+                        type="number"
+                        step="any"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Decimal degrees (e.g., 23.5859)
+                      </p>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="lon">Longitude *</Label>
+                      <Input 
+                        id="lon"
+                        {...form.register('lon')}
+                        placeholder="58.4059"
+                        type="number"
+                        step="any"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Decimal degrees (e.g., 58.4059)
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="p-4 bg-muted/30 rounded-lg">
+                    <h4 className="font-medium mb-2">💡 How to get coordinates:</h4>
+                    <ul className="text-sm text-muted-foreground space-y-1">
+                      <li>• Open Google Maps and find your property</li>
+                      <li>• Right-click on the exact location</li>
+                      <li>• Click the coordinates shown in the popup</li>
+                      <li>• Copy and paste the latitude, longitude values</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* Map Preview */}
+              {form.watch('lat') && form.watch('lon') && (
+                <div className="space-y-2">
+                  <h3 className="text-lg font-semibold">Map Preview</h3>
+                  <div className="w-full h-[300px] rounded-lg border overflow-hidden">
+                    {/* Map will be rendered here dynamically */}
+                    <div className="w-full h-full bg-muted/30 flex items-center justify-center">
+                      <div className="text-center text-muted-foreground">
+                        <div className="text-2xl mb-2">🗺️</div>
+                        <p>Map preview will show when coordinates are valid</p>
+                        <p className="text-sm mt-1">
+                          Lat: {form.watch('lat')}, Lon: {form.watch('lon')}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Nearby Locations */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold">Nearby Locations & Amenities</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="nearest_landmarks">Nearby Landmarks</Label>
+                    <Textarea 
+                      id="nearest_landmarks"
+                      {...form.register('nearest_landmarks')}
+                      placeholder="Shopping mall, mosque, hospital, beach..."
+                      rows={3}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="public_transport">Public Transport</Label>
+                    <Textarea 
+                      id="public_transport"
+                      {...form.register('public_transport')}
+                      placeholder="Bus stops, metro stations, taxi stands..."
+                      rows={3}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="schools_nearby">Schools Nearby</Label>
+                    <Textarea 
+                      id="schools_nearby"
+                      {...form.register('schools_nearby')}
+                      placeholder="Primary schools, universities, training centers..."
+                      rows={3}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="hospitals_nearby">Medical Facilities</Label>
+                    <Textarea 
+                      id="hospitals_nearby"
+                      {...form.register('hospitals_nearby')}
+                      placeholder="Hospitals, clinics, pharmacies..."
+                      rows={3}
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <Label htmlFor="address">Full Address</Label>
+                  <Label htmlFor="shopping_nearby">Shopping & Entertainment</Label>
                   <Textarea 
-                    id="address"
-                    {...form.register('address')}
-                    placeholder="Street address, building, etc."
+                    id="shopping_nearby"
+                    {...form.register('shopping_nearby')}
+                    placeholder="Malls, supermarkets, restaurants, parks..."
                     rows={3}
                   />
                 </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="city">City</Label>
-                    <Input 
-                      id="city"
-                      {...form.register('city')}
-                      placeholder="Muscat"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="region">Region</Label>
-                    <Input 
-                      id="region"
-                      {...form.register('region')}
-                      placeholder="Muscat Governorate"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="lat">Latitude</Label>
-                  <Input 
-                    id="lat"
-                    {...form.register('lat')}
-                    placeholder="23.5859"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="lon">Longitude</Label>
-                  <Input 
-                    id="lon"
-                    {...form.register('lon')}
-                    placeholder="58.4059"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <Label htmlFor="nearest_landmarks">Nearby Landmarks</Label>
-                <Textarea 
-                  id="nearest_landmarks"
-                  {...form.register('nearest_landmarks')}
-                  placeholder="Shopping mall, mosque, hospital..."
-                  rows={3}
-                />
               </div>
             </TabsContent>
 

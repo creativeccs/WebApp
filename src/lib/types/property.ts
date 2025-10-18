@@ -106,6 +106,7 @@ export interface PropertyImage {
   size?: string;
   mimeType?: string;
   hash?: string;
+  isMain?: boolean; // Flag to indicate if this is the main image for display
 }
 
 // Property Form Data Interface
@@ -188,7 +189,7 @@ export interface PropertyFormData {
   shopping_nearby?: string;
   
   // Images (URLs after upload to Primal servers)
-  images?: string[];
+  images?: string[] | PropertyImage[];
   
   // System
   language?: string;
