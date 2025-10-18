@@ -139,7 +139,7 @@ function ContactPage() {
                     <div className="flex-1">
                       <h3 className="font-semibold mb-2">{t.callUs}</h3>
                       <p className="text-muted-foreground" dir="ltr">+968 99823023</p>
-                      <p className="text-muted-foreground" dir="ltr">+968 24188398</p>
+                      <p className="text-muted-foreground" dir="ltr">+968 97990098</p>
                       <p className="text-sm text-muted-foreground mt-1">{t.availableForEmergencies}</p>
                     </div>
                   </div>

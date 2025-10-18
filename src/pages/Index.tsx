@@ -219,9 +219,9 @@ const Index = () => {
 
             <div className="relative">
               <img 
-                src="/images/logo.png" 
+                src="/logo.png" 
                 alt="Creative CCS Modern Office in Oman"
-                className="w-full h-[500px] object-cover rounded-lg"
+                className="w-full h-[600px] object-cover"
               />
             </div>
           </div>
