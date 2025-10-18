@@ -22,7 +22,8 @@ export function useCreateProperty() {
       // Images are already uploaded URLs, just add them as tags
       const imageMetaTags: string[][] = [];
       if (formData.images && formData.images.length > 0) {
-        for (const imageUrl of formData.images) {
+        for (const image of formData.images) {
+          const imageUrl = typeof image === 'string' ? image : image.url;
           imageMetaTags.push(['image', imageUrl]);
         }
       }
@@ -101,7 +102,8 @@ export function useUpdateProperty() {
       // Images are already uploaded URLs, just add them as tags
       const imageMetaTags: string[][] = [];
       if (formData.images && formData.images.length > 0) {
-        for (const imageUrl of formData.images) {
+        for (const image of formData.images) {
+          const imageUrl = typeof image === 'string' ? image : image.url;
           imageMetaTags.push(['image', imageUrl]);
         }
       }

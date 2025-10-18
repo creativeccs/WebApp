@@ -12,6 +12,7 @@ import { useIsAdmin } from '@/hooks/useAdmin';
 import { PropertyForm } from '@/components/PropertyForm';
 import { ShareDialog } from '@/components/ShareDialog';
 import { HTMLContent } from '@/components/HTMLContent';
+import { PropertyMap } from '@/components/PropertyMap';
 import { 
   MapPin, 
   Bed, 
@@ -476,6 +477,42 @@ function PropertyDetailPage() {
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">{t.city}:</span>
                     <span className="font-medium">{property.city}</span>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Property Location Map */}
+            {(property.lat && property.lon) && (
+              <Card className="overflow-hidden">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <MapPin className="h-5 w-5 text-primary" />
+                    {language === 'fa' ? 'موقعیت ملک' : 'Property Location'}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="relative">
+                    <PropertyMap
+                      lat={parseFloat(property.lat)}
+                      lon={parseFloat(property.lon)}
+                      title={getLocalizedTitle()}
+                      className="h-64 w-full rounded-none"
+                    />
+                    {/* Elegant overlay gradient */}
+                    <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-background/80 to-transparent pointer-events-none" />
+                  </div>
+                  {/* Location info overlay */}
+                  <div className="p-4 bg-muted/30 border-t">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <MapPin className="h-4 w-4" />
+                      <span>{property.location}</span>
+                      {property.lat && property.lon && (
+                        <span className="text-xs font-mono bg-background px-2 py-1 rounded border" dir="ltr">
+                          {parseFloat(property.lat).toFixed(6)}, {parseFloat(property.lon).toFixed(6)}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
