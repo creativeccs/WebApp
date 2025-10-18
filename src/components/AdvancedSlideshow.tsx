@@ -63,14 +63,14 @@ export function AdvancedSlideshow({
 
   if (images.length === 0) {
     return (
-      <div className={`relative w-full h-[600px] bg-muted rounded-lg flex items-center justify-center ${className}`}>
+      <div className={`relative w-full h-[80vh] min-h-[700px] bg-muted rounded-lg flex items-center justify-center ${className}`}>
         <p className="text-muted-foreground">No images available</p>
       </div>
     );
   }
 
   return (
-    <div className={`relative w-full h-[600px] rounded-lg overflow-hidden group ${className}`}>
+    <div className={`relative w-full h-[80vh] min-h-[700px] rounded-lg overflow-hidden group ${className}`}>
       <div className="relative w-full h-full">
         {images.map((image, index) => {
           const isCurrent = index === currentIndex;
@@ -99,20 +99,7 @@ export function AdvancedSlideshow({
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
               <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/30" />
               
-              <div className="absolute inset-0 flex items-end justify-start p-8">
-                <div className="text-white max-w-2xl">
-                  {image.title && (
-                    <h3 className="text-2xl md:text-4xl font-bold mb-2 drop-shadow-lg">
-                      {image.title}
-                    </h3>
-                  )}
-                  {image.description && (
-                    <p className="text-lg md:text-xl text-white/90 drop-shadow-md">
-                      {image.description}
-                    </p>
-                  )}
-                </div>
-              </div>
+
             </div>
           );
         })}

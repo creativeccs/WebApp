@@ -153,25 +153,195 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Company Info Section */}
-      <section className="py-20 bg-gradient-to-br from-primary/5 to-secondary/5">
-        <div className="container mx-auto px-4">
+      {/* WHO ARE WE - Professional Section */}
+      <section className="py-24 bg-white dark:bg-gray-950 relative overflow-hidden">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-0 left-0 w-full h-full bg-[url('/images/pattern.svg')] bg-repeat"></div>
+        </div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          {/* Section Header */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeInUp}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Creative Construction Solution</h2>
-            <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-              CCS is a leading company in construction and real estate development sector in the Sultanate of Oman. 
-              A company specialized in the implementation of construction projects and real estate management across all Omani governorates. 
-              Creative Construction Solution is one of the leading companies in the field of construction and real estate in Oman. 
-              The company was established with a strong foundation of over 10 years of experience serving Omani nationals and residents, 
-              and is distinguished by providing comprehensive services to its clients, both individual and corporate, 
-              while supporting Oman Vision 2040.
-            </p>
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-2xl mb-6">
+              <Building className="w-8 h-8 text-primary" />
+            </div>
+            <div className="space-y-4">
+              <span className="inline-block px-6 py-2 bg-primary/5 text-primary text-sm font-semibold rounded-full uppercase tracking-wider border border-primary/20">
+                WHO ARE WE?
+              </span>
+              <h2 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white">
+                Creative Construction
+                <span className="block text-primary">Solution</span>
+              </h2>
+              <div className="flex justify-center">
+                <div className="w-24 h-1 bg-primary rounded-full"></div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 xl:grid-cols-12 gap-12 items-start">
+            
+            {/* Left Column - Company Description */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={fadeInUp}
+              className="xl:col-span-5 space-y-8"
+            >
+              <div className="prose prose-lg dark:prose-invert max-w-none">
+                <p className="text-xl leading-relaxed text-gray-700 dark:text-gray-300 mb-6">
+                  <strong className="text-gray-900 dark:text-white">CCS is a leading company</strong> in construction and real estate development sector in the Sultanate of Oman.
+                </p>
+                
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+                  A company specialized in the implementation of construction projects and real estate management across all Omani governorates. Creative Construction Solution is one of the leading companies in the field of construction and real estate in Oman.
+                </p>
+                
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  The company was established with a strong foundation of over 10 years of experience serving Omani nationals and residents, and is distinguished by providing comprehensive services to its clients, both individual and corporate, while supporting Oman Vision 2040.
+                </p>
+              </div>
+
+              {/* Key Features */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8">
+                <div className="text-center p-6 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
+                  <div className="text-3xl font-bold text-primary mb-2">10+</div>
+                  <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Years of Excellence</div>
+                </div>
+                <div className="text-center p-6 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
+                  <div className="text-3xl font-bold text-primary mb-2">500+</div>
+                  <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Projects Delivered</div>
+                </div>
+                <div className="text-center p-6 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
+                  <div className="text-3xl font-bold text-primary mb-2">100%</div>
+                  <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Client Satisfaction</div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Right Column - Company Highlights */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={staggerContainer}
+              className="xl:col-span-7 space-y-6"
+            >
+              {[
+                {
+                  number: "01",
+                  title: "Decade of Excellence",
+                  subtitle: "Experience & Expertise",
+                  description: "A strong foundation of over 10 years of experience in construction and real estate development across Oman, delivering quality projects that stand the test of time.",
+                  image: "/images/company/experience.jpg",
+                  icon: Building,
+                  accent: "bg-blue-500"
+                },
+                {
+                  number: "02",
+                  title: "Innovation Driven",
+                  subtitle: "Modern Technology & Methods",
+                  description: "We are committed to innovation and apply cutting-edge technology to move to the forefront of our field, ensuring efficiency and superior quality in every project.",
+                  image: "/images/company/innovation.jpg",
+                  icon: TrendingUp,
+                  accent: "bg-emerald-500"
+                },
+                {
+                  number: "03",
+                  title: "Complete Solutions",
+                  subtitle: "Comprehensive Services",
+                  description: "Providing specialized and innovative end-to-end solutions that enhance client success and drive business growth in the competitive Omani market.",
+                  image: "/images/company/quality.jpg",
+                  icon: Award,
+                  accent: "bg-amber-500"
+                }
+              ].map((item, index) => {
+                const IconComponent = item.icon;
+                return (
+                  <motion.div key={index} variants={scaleIn}>
+                    <motion.div
+                      whileHover={{ 
+                        scale: 1.02,
+                        transition: { type: 'spring', stiffness: 300 }
+                      }}
+                      className="relative p-8 bg-white dark:bg-gray-900 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-800 group overflow-hidden"
+                    >
+                      {/* Background accent */}
+                      <div className={`absolute top-0 left-0 w-2 h-full ${item.accent} opacity-80`}></div>
+                      
+                      <div className="flex items-start space-x-6">
+                        {/* Number & Icon */}
+                        <div className="flex-shrink-0 space-y-4">
+                          <div className="relative">
+                            <div className="text-6xl font-bold text-gray-100 dark:text-gray-800 select-none">
+                              {item.number}
+                            </div>
+                            <motion.div 
+                              className={`absolute top-4 left-4 w-12 h-12 ${item.accent} rounded-xl flex items-center justify-center shadow-lg`}
+                              whileHover={{ rotate: 15, scale: 1.1 }}
+                              transition={{ duration: 0.3 }}
+                            >
+                              <IconComponent className="w-6 h-6 text-white" />
+                            </motion.div>
+                          </div>
+                        </div>
+
+                        {/* Content */}
+                        <div className="flex-1 space-y-4">
+                          <div>
+                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+                              {item.title}
+                            </h3>
+                            <p className={`text-sm font-medium ${item.accent.replace('bg-', 'text-')} uppercase tracking-wider`}>
+                              {item.subtitle}
+                            </p>
+                          </div>
+                          
+                          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                            {item.description}
+                          </p>
+
+                          {/* Decorative image */}
+                          <div className="relative w-20 h-12 overflow-hidden rounded-lg opacity-20 group-hover:opacity-30 transition-opacity duration-300">
+                            <img 
+                              src={item.image} 
+                              alt={item.title}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          </div>
+
+          {/* Bottom CTA */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeInUp}
+            className="text-center pt-16"
+          >
+            <div className="inline-flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+              <span>Established in Oman</span>
+              <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+              <span>Serving the Nation</span>
+              <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+              <span>Building the Future</span>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -197,45 +367,51 @@ const Index = () => {
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerContainer}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 h-full"
           >
             {services.map((service, index) => {
               const IconComponent = service.icon;
               return (
-                <motion.div key={index} variants={scaleIn} className="h-full">
+                <motion.div key={index} variants={scaleIn} className="flex h-full">
                   <motion.div
                     whileHover={{ 
                       y: -10,
                       transition: { type: 'spring', stiffness: 300 }
                     }}
-                    className="h-full"
+                    className="flex-1"
                   >
-                    <Card className="h-full hover:shadow-2xl transition-all duration-300 border-2 overflow-hidden group">
+                    <Card className="h-full hover:shadow-2xl transition-all duration-500 border-0 shadow-lg overflow-hidden group bg-gradient-to-br from-white via-white to-gray-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
                       {/* Service Image */}
                       <div className="relative h-48 overflow-hidden">
                         <img 
                           src={service.image} 
                           alt={service.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                         <motion.div 
-                          className="absolute top-4 left-4 w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center"
-                          whileHover={{ rotate: 360 }}
-                          transition={{ duration: 0.6 }}
+                          className="absolute top-4 left-4 w-14 h-14 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/30"
+                          whileHover={{ rotate: 360, scale: 1.1 }}
+                          transition={{ duration: 0.8 }}
                         >
-                          <IconComponent className="h-6 w-6 text-white" />
+                          <IconComponent className="h-7 w-7 text-white drop-shadow-lg" />
                         </motion.div>
+                        <div className="absolute bottom-4 right-4 w-8 h-8 bg-primary/20 rounded-full animate-pulse"></div>
                       </div>
                       
-                      <div className="flex flex-col h-full">
-                        <CardHeader className="pb-3">
-                          <CardTitle className="text-xl font-bold">{service.title}</CardTitle>
+                      <div className="flex flex-col h-full p-6">
+                        <CardHeader className="p-0 pb-4">
+                          <CardTitle className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent">
+                            {service.title}
+                          </CardTitle>
                         </CardHeader>
-                        <CardContent className="flex-1 flex flex-col justify-between">
+                        <CardContent className="p-0 flex-1 flex flex-col justify-between">
                           <CardDescription className="text-sm leading-relaxed text-muted-foreground">
                             {service.description}
                           </CardDescription>
+                          <div className="mt-6 flex justify-end">
+                            <div className="w-12 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+                          </div>
                         </CardContent>
                       </div>
                     </Card>
@@ -355,15 +531,16 @@ const Index = () => {
       {/* Supporting Oman Vision 2040 Section */}
       <section className="py-20 bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-950/20 dark:to-green-950/20">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeInUp}
-            className="text-center"
-          >
-            <div className="max-w-4xl mx-auto">
-              <div className="w-20 h-20 bg-emerald-600/10 rounded-full flex items-center justify-center mx-auto mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Text Content */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={fadeInUp}
+              className="text-center lg:text-left"
+            >
+              <div className="w-20 h-20 bg-emerald-600/10 rounded-full flex items-center justify-center mx-auto lg:mx-0 mb-8">
                 <TrendingUp className="h-10 w-10 text-emerald-600" />
               </div>
               <h2 className="text-3xl md:text-4xl font-bold mb-6 text-emerald-800 dark:text-emerald-200">
@@ -374,8 +551,29 @@ const Index = () => {
                 We are committed to contributing to the economic diversification and sustainable development 
                 goals outlined in Oman Vision 2040, creating value for our community and the nation.
               </p>
-            </div>
-          </motion.div>
+            </motion.div>
+
+            {/* Image */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={scaleIn}
+              className="relative"
+            >
+              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-2xl">
+                <img 
+                  src="/images/oman-vision-2040.webp" 
+                  alt="Modern development supporting Oman Vision 2040"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/30 to-transparent" />
+              </div>
+              {/* Decorative elements */}
+              <div className="absolute -top-4 -right-4 w-24 h-24 bg-emerald-200/20 rounded-full blur-xl"></div>
+              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-green-200/20 rounded-full blur-xl"></div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -546,13 +744,56 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Supporting Oman Vision 2040 */}
-      <section className="py-20 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">{t.supportingVision}</h2>
-          <p className="text-lg opacity-90 max-w-3xl mx-auto">
-            Our objectives align with the vision of Oman to meet the modern renaissance requirements.
-          </p>
+      {/* Partners Section */}
+      <section className="py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeInUp}
+            className="text-center mb-12"
+          >
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-muted-foreground">
+              Our Trusted Partners
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Collaborating with leading companies in Oman to deliver exceptional results
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className="flex flex-wrap justify-center items-center gap-8 md:gap-12"
+          >
+            {[
+              { src: "/images/partners/client-1.png", alt: "" },
+              { src: "/images/partners/client-2.png", alt: "" },
+              { src: "/images/partners/client-3.png", alt: "" },
+              { src: "/images/partners/client-4.png", alt: "" },
+              { src: "/images/partners/client-5.png", alt: "" },
+              { src: "/images/partners/client-6.png", alt: "" }
+            ].map((partner, index) => (
+              <motion.div
+                key={index}
+                variants={scaleIn}
+                whileHover={{ 
+                  scale: 1.1,
+                  transition: { type: 'spring', stiffness: 300 }
+                }}
+                className="grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100"
+              >
+                <img 
+                  src={partner.src} 
+                  alt={partner.alt}
+                  className="h-16 w-auto max-w-[120px] object-contain"
+                />
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
     </div>
