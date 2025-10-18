@@ -21,10 +21,24 @@ export function useCreateProperty() {
 
       // Images are already uploaded URLs, just add them as tags
       const imageMetaTags: string[][] = [];
+      let mainImageUrl: string | undefined;
+      
       if (formData.images && formData.images.length > 0) {
         for (const image of formData.images) {
           const imageUrl = typeof image === 'string' ? image : image.url;
+          const isMain = typeof image === 'string' ? false : image.isMain;
+          
           imageMetaTags.push(['image', imageUrl]);
+          
+          if (isMain) {
+            mainImageUrl = imageUrl;
+          }
+        }
+        
+        // If no main image is specified, use the first image as main
+        if (!mainImageUrl && imageMetaTags.length > 0) {
+          const firstImage = formData.images[0];
+          mainImageUrl = typeof firstImage === 'string' ? firstImage : firstImage.url;
         }
       }
 
@@ -45,6 +59,11 @@ export function useCreateProperty() {
         ['t', 'oman'],
         ...imageMetaTags
       ];
+      
+      // Add main image tag if available
+      if (mainImageUrl) {
+        tags.push(['main_image', mainImageUrl]);
+      }
 
       // Add optional fields including multilingual
       const optionalFields: (keyof PropertyFormData)[] = [
@@ -101,10 +120,24 @@ export function useUpdateProperty() {
 
       // Images are already uploaded URLs, just add them as tags
       const imageMetaTags: string[][] = [];
+      let mainImageUrl: string | undefined;
+      
       if (formData.images && formData.images.length > 0) {
         for (const image of formData.images) {
           const imageUrl = typeof image === 'string' ? image : image.url;
+          const isMain = typeof image === 'string' ? false : image.isMain;
+          
           imageMetaTags.push(['image', imageUrl]);
+          
+          if (isMain) {
+            mainImageUrl = imageUrl;
+          }
+        }
+        
+        // If no main image is specified, use the first image as main
+        if (!mainImageUrl && imageMetaTags.length > 0) {
+          const firstImage = formData.images[0];
+          mainImageUrl = typeof firstImage === 'string' ? firstImage : firstImage.url;
         }
       }
 
@@ -125,6 +158,11 @@ export function useUpdateProperty() {
         ['t', 'oman'],
         ...imageMetaTags
       ];
+      
+      // Add main image tag if available
+      if (mainImageUrl) {
+        tags.push(['main_image', mainImageUrl]);
+      }
 
       // Add optional fields including multilingual
       const optionalFields: (keyof PropertyFormData)[] = [

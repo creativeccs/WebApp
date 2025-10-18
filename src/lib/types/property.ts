@@ -344,14 +344,21 @@ export function validateProperty(event: NostrEvent): Property | null {
       // System
       language: getTag('language'),
       
-      // Parse images from image tags (simple URL tags)
-      images: event.tags
-        .filter(tag => tag[0] === 'image')
-        .map(tag => ({
-          url: tag[1],
-          alt: `Property image`,
-        }))
-        .filter(img => img.url) as PropertyImage[]
+      // Parse images from image tags with main image detection
+      images: (() => {
+        const imageUrls = event.tags
+          .filter(tag => tag[0] === 'image')
+          .map(tag => tag[1])
+          .filter(url => url);
+        
+        const mainImageUrl = getTag('main_image');
+        
+        return imageUrls.map((url, index) => ({
+          url,
+          alt: `Property image ${index + 1}`,
+          isMain: mainImageUrl ? url === mainImageUrl : index === 0 // First image is main by default
+        })) as PropertyImage[];
+      })()
     };
     
     return property;

@@ -361,13 +361,16 @@ function PropertiesPage() {
               {properties.map((property) => {
               const localizedTitle = getLocalizedText(property, 'title');
               
+              // Find main image or fallback to first image
+              const mainImage = property.images?.find(img => img.isMain) || property.images?.[0];
+              
               return (
                 <Card key={property.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-                  {property.images && property.images.length > 0 && (
+                  {property.images && property.images.length > 0 && mainImage && (
                     <div className="relative aspect-[4/3] overflow-hidden">
                       <img
-                        src={property.images[0].url}
-                        alt={property.images[0].alt || property.title}
+                        src={mainImage.url}
+                        alt={mainImage.alt || property.title}
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute top-2 left-2 flex gap-2">

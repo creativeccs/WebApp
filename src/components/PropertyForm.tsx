@@ -629,68 +629,69 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {selectedImages.map((image, index) => (
                           <div key={index} className="relative group">
-                            <div className="aspect-square rounded-lg overflow-hidden border bg-muted">
+                            <div className="aspect-square rounded-lg overflow-hidden border bg-muted relative">
                               <img
                                 src={image.url}
                                 alt={image.alt || `Property image ${index + 1}`}
                                 className="w-full h-full object-cover"
                               />
+
+                              {/* subtle hover darken */}
                               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
-                              
-                              {/* Main image indicator */}
-                              {image.isMain && (
-                                <div className="absolute top-2 left-2">
-                                  <Badge variant="secondary" className="bg-yellow-500 text-white text-xs">
-                                    Main
-                                  </Badge>
-                                </div>
-                              )}
-                              
-                              {/* Set as main button */}
-                              {!image.isMain && (
-                                <Button
-                                  type="button"
-                                  variant="secondary"
-                                  size="sm"
-                                  className="absolute bottom-2 left-2 h-8 px-2 py-0 opacity-0 group-hover:opacity-100 transition-opacity text-xs"
-                                  onClick={() => {
-                                    setSelectedImages(prev => 
-                                      prev.map((img, i) => ({
-                                        ...img,
-                                        isMain: i === index
-                                      }))
-                                    );
-                                    setMainImageIndex(index);
-                                  }}
-                                  title="Set as main image"
-                                >
-                                  Set Main
-                                </Button>
-                              )}
-                              
-                              {/* Remove button */}
+
+                              {/* Top controls (remove) */}
                               <Button
                                 type="button"
                                 variant="destructive"
                                 size="sm"
-                                className="absolute top-2 right-2 h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity rounded-full shadow-lg"
+                                className="absolute top-2 right-2 h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity rounded-full shadow-lg z-20"
                                 onClick={() => removeImage(index)}
                                 disabled={uploadingImages.has(index)}
                                 title="Remove image"
                               >
                                 <X className="h-4 w-4" />
                               </Button>
-                              
+
+                              {/* Top-left main badge */}
+                              {image.isMain && (
+                                <div className="absolute top-2 left-2 z-20">
+                                  <Badge variant="secondary" className="bg-yellow-500 text-white text-xs">
+                                    Main
+                                  </Badge>
+                                </div>
+                              )}
+
                               {/* Upload indicator */}
                               {uploadingImages.has(index) && (
-                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-30">
                                   <div className="text-white text-sm">Uploading...</div>
                                 </div>
                               )}
-                              
-                              {/* Image info overlay */}
-                              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+
+                              {/* Bottom overlay: Image label + Set Main button */}
+                              <div className="absolute left-0 right-0 bottom-0 p-2 bg-gradient-to-t from-black/70 to-transparent flex items-center justify-between gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                                 <p className="text-xs text-white truncate">Image {index + 1}</p>
+                                <div className="flex items-center gap-2">
+                                  {!image.isMain ? (
+                                    <Button
+                                      type="button"
+                                      variant="secondary"
+                                      size="sm"
+                                      className="h-8 px-2 py-0 text-xs z-30"
+                                      onClick={() => {
+                                        setSelectedImages(prev => 
+                                          prev.map((img, i) => ({ ...img, isMain: i === index }))
+                                        );
+                                        setMainImageIndex(index);
+                                      }}
+                                      title="Set as main image"
+                                    >
+                                      Set Main
+                                    </Button>
+                                  ) : (
+                                    <Badge className="bg-yellow-500 text-white text-xs">Main</Badge>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
