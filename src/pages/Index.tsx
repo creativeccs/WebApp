@@ -153,196 +153,100 @@ const Index = () => {
         </div>
       </section>
 
-      {/* WHO ARE WE - Professional Section */}
-      <section className="py-24 bg-white dark:bg-gray-950 relative overflow-hidden">
-        {/* Subtle background pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-0 left-0 w-full h-full bg-[url('/images/pattern.svg')] bg-repeat"></div>
-        </div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          {/* Section Header */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeInUp}
-            className="text-center mb-20"
-          >
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-2xl mb-6">
-              <Building className="w-8 h-8 text-primary" />
-            </div>
-            <div className="space-y-4">
-              <span className="inline-block px-6 py-2 bg-primary/5 text-primary text-sm font-semibold rounded-full uppercase tracking-wider border border-primary/20">
-                WHO ARE WE?
-              </span>
-              <h2 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white">
-                Creative Construction
-                <span className="block text-primary">Solution</span>
-              </h2>
-              <div className="flex justify-center">
-                <div className="w-24 h-1 bg-primary rounded-full"></div>
-              </div>
-            </div>
-          </motion.div>
+      {/* WHO ARE WE Section */}
+      <section className="py-20 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
 
-          {/* Main Content Grid */}
-          <div className="grid grid-cols-1 xl:grid-cols-12 gap-12 items-start">
-            
-            {/* Left Column - Company Description */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={fadeInUp}
-              className="xl:col-span-5 space-y-8"
-            >
-              <div className="prose prose-lg dark:prose-invert max-w-none">
-                <p className="text-xl leading-relaxed text-gray-700 dark:text-gray-300 mb-6">
-                  <strong className="text-gray-900 dark:text-white">CCS is a leading company</strong> in construction and real estate development sector in the Sultanate of Oman.
-                </p>
-                
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
-                  A company specialized in the implementation of construction projects and real estate management across all Omani governorates. Creative Construction Solution is one of the leading companies in the field of construction and real estate in Oman.
-                </p>
-                
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  The company was established with a strong foundation of over 10 years of experience serving Omani nationals and residents, and is distinguished by providing comprehensive services to its clients, both individual and corporate, while supporting Oman Vision 2040.
-                </p>
-              </div>
-
-              {/* Key Features */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8">
-                <div className="text-center p-6 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
-                  <div className="text-3xl font-bold text-primary mb-2">10+</div>
-                  <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Years of Excellence</div>
-                </div>
-                <div className="text-center p-6 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
-                  <div className="text-3xl font-bold text-primary mb-2">500+</div>
-                  <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Projects Delivered</div>
-                </div>
-                <div className="text-center p-6 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
-                  <div className="text-3xl font-bold text-primary mb-2">100%</div>
-                  <div className="text-sm font-medium text-gray-600 dark:text-gray-400">Client Satisfaction</div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Right Column - Company Highlights */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerContainer}
-              className="xl:col-span-7 space-y-6"
-            >
-              {[
-                {
-                  number: "01",
-                  title: "Decade of Excellence",
-                  subtitle: "Experience & Expertise",
-                  description: "A strong foundation of over 10 years of experience in construction and real estate development across Oman, delivering quality projects that stand the test of time.",
-                  image: "/images/company/experience.jpg",
-                  icon: Building,
-                  accent: "bg-blue-500"
-                },
-                {
-                  number: "02",
-                  title: "Innovation Driven",
-                  subtitle: "Modern Technology & Methods",
-                  description: "We are committed to innovation and apply cutting-edge technology to move to the forefront of our field, ensuring efficiency and superior quality in every project.",
-                  image: "/images/company/innovation.jpg",
-                  icon: TrendingUp,
-                  accent: "bg-emerald-500"
-                },
-                {
-                  number: "03",
-                  title: "Complete Solutions",
-                  subtitle: "Comprehensive Services",
-                  description: "Providing specialized and innovative end-to-end solutions that enhance client success and drive business growth in the competitive Omani market.",
-                  image: "/images/company/quality.jpg",
-                  icon: Award,
-                  accent: "bg-amber-500"
-                }
-              ].map((item, index) => {
-                const IconComponent = item.icon;
-                return (
-                  <motion.div key={index} variants={scaleIn}>
-                    <motion.div
-                      whileHover={{ 
-                        scale: 1.02,
-                        transition: { type: 'spring', stiffness: 300 }
-                      }}
-                      className="relative p-8 bg-white dark:bg-gray-900 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-800 group overflow-hidden"
-                    >
-                      {/* Background accent */}
-                      <div className={`absolute top-0 left-0 w-2 h-full ${item.accent} opacity-80`}></div>
-                      
-                      <div className="flex items-start space-x-6">
-                        {/* Number & Icon */}
-                        <div className="flex-shrink-0 space-y-4">
-                          <div className="relative">
-                            <div className="text-6xl font-bold text-gray-100 dark:text-gray-800 select-none">
-                              {item.number}
-                            </div>
-                            <motion.div 
-                              className={`absolute top-4 left-4 w-12 h-12 ${item.accent} rounded-xl flex items-center justify-center shadow-lg`}
-                              whileHover={{ rotate: 15, scale: 1.1 }}
-                              transition={{ duration: 0.3 }}
-                            >
-                              <IconComponent className="w-6 h-6 text-white" />
-                            </motion.div>
-                          </div>
-                        </div>
-
-                        {/* Content */}
-                        <div className="flex-1 space-y-4">
-                          <div>
-                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-                              {item.title}
-                            </h3>
-                            <p className={`text-sm font-medium ${item.accent.replace('bg-', 'text-')} uppercase tracking-wider`}>
-                              {item.subtitle}
-                            </p>
-                          </div>
-                          
-                          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                            {item.description}
-                          </p>
-
-                          {/* Decorative image */}
-                          <div className="relative w-20 h-12 overflow-hidden rounded-lg opacity-20 group-hover:opacity-30 transition-opacity duration-300">
-                            <img 
-                              src={item.image} 
-                              alt={item.title}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              WHO ARE WE?
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              A leading real estate company in Sultanate of Oman, dedicated to excellence and innovation in property services
+            </p>
           </div>
 
-          {/* Bottom CTA */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeInUp}
-            className="text-center pt-16"
-          >
-            <div className="inline-flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-              <span>Established in Oman</span>
-              <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-              <span>Serving the Nation</span>
-              <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-              <span>Building the Future</span>
+          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-primary text-primary-foreground rounded-lg flex items-center justify-center text-sm font-semibold">
+                      01
+                    </div>
+                    Decade of Excellence
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    Over 10 years of proven expertise in the Omani real estate market, delivering exceptional results and building lasting relationships.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-primary text-primary-foreground rounded-lg flex items-center justify-center text-sm font-semibold">
+                      02
+                    </div>
+                    Innovation Driven
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    Leveraging cutting-edge technology and modern approaches to provide seamless property solutions that exceed expectations.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-primary text-primary-foreground rounded-lg flex items-center justify-center text-sm font-semibold">
+                      03
+                    </div>
+                    Complete Solutions
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">
+                    From property sales and rentals to management and consultation, we offer comprehensive services under one roof.
+                  </p>
+                </CardContent>
+              </Card>
             </div>
-          </motion.div>
+
+            <div className="relative">
+              <img 
+                src="/images/logo.png" 
+                alt="Creative CCS Modern Office in Oman"
+                className="w-full h-[500px] object-cover rounded-lg"
+              />
+            </div>
+          </div>
+
+          {/* Statistics */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="text-center">
+              <CardContent className="pt-6">
+                <div className="text-3xl font-bold text-primary mb-2">10+</div>
+                <p className="text-sm text-muted-foreground">Years of Excellence</p>
+              </CardContent>
+            </Card>
+            <Card className="text-center">
+              <CardContent className="pt-6">
+                <div className="text-3xl font-bold text-primary mb-2">500+</div>
+                <p className="text-sm text-muted-foreground">Successful Projects</p>
+              </CardContent>
+            </Card>
+            <Card className="text-center">
+              <CardContent className="pt-6">
+                <div className="text-3xl font-bold text-primary mb-2">100%</div>
+                <p className="text-sm text-muted-foreground">Client Satisfaction</p>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 
