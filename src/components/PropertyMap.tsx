@@ -54,7 +54,7 @@ export function PropertyMap({
   return (
     <Card className={`overflow-hidden ${className}`}>
       <CardContent className="p-0">
-        <div className="w-full h-96 relative">
+        <div className="w-full h-[500px] relative">
           {/* Google Maps Embed - Works without API key */}
           <iframe
             src={`https://www.google.com/maps?q=${lat},${lon}&z=${zoom}&output=embed`}
@@ -67,17 +67,17 @@ export function PropertyMap({
             className="w-full h-full border-0"
           />
           
-          {/* Property Info Overlay */}
+          {/* Enhanced Property Info Overlay - Wider to cover Google Maps controls */}
           {showPopup && (title || price) && (
-            <div className="absolute top-4 left-4 bg-background/95 backdrop-blur-sm border rounded-lg p-4 shadow-lg max-w-xs">
+            <div className="absolute top-2 left-2 bg-background/95 backdrop-blur-sm border rounded-lg p-4 shadow-lg w-80 ">
               {title && (
-                <h3 className="font-semibold text-sm mb-2 line-clamp-2">
+                <h3 className="font-semibold text-base mb-3 line-clamp-2 text-foreground">
                   {title}
                 </h3>
               )}
               {price && (
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-lg font-bold text-primary">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xl font-bold text-primary">
                     {price} {currency}
                   </span>
                   {type && (
