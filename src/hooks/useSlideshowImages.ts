@@ -15,19 +15,27 @@ export function useSlideshowImages(): SlideImage[] {
     const defaultImages: SlideImage[] = [
       {
         src: '/slides/slide1.jpg',
-        alt: 'Modern Villa Construction',
+        alt: 'Modern Omani Architecture',
+        title: 'Excellence in Oman',
+        description: 'Leading construction and real estate development in the Sultanate of Oman'
        },
       {
         src: '/slides/slide2.jpg',
-        alt: 'Commercial Building',
+        alt: 'Luxury Properties in Oman',
+        title: 'Premium Real Estate',
+        description: 'Modern villas and commercial buildings designed for Omani lifestyle'
        },
       {
         src: '/slides/slide3.jpg',
-        alt: 'Residential Complex',
+        alt: 'Construction Excellence in Oman',
+        title: 'Professional Construction',
+        description: 'Expert construction services across Muscat and all Oman governorates'
        },
       {
         src: '/slides/slide4.jpg',
-        alt: 'Interior Design',
+        alt: 'Modern Omani Interior Design',
+        title: 'Complete Solutions',
+        description: 'From planning to finishing - comprehensive services in Oman'
        }
     ];
 

@@ -51,36 +51,39 @@ const Index = () => {
   const services = [
     {
       icon: Building,
-      title: t.realEstateServices,
-      description: t.realEstateServicesDesc,
+      title: 'Real Estate Services',
+      description: 'We offer a variety of real estate opportunities, in Oman to Omani nationals and foreigners. We provide renting and the sale of properties including freehold properties with permanent residence. Additionally, we provide Property Management services.',
+      image: '/images/services/real-estate.jpg'
     },
     {
       icon: Users,
-      title: t.constructionServices,
-      description: t.constructionServicesDescription,
+      title: 'Construction Services',
+      description: 'We are highly experienced in the construction of residential villas and commercial buildings. In addition to this, we offer demolition, renovation, and refurbishment of antiquated properties.',
+      image: '/images/services/construction.jpg'
     },
     {
       icon: Award,
-      title: t.maintenanceServices,
-      description: t.maintenanceServicesDesc,
+      title: 'Maintenance Services',
+      description: 'We engage in comprehensive maintenance of buildings including building completion tasks such as finishing work, electrical work, plumbing, interior decoration, and paint work.',
+      image: '/images/services/maintenance.jpg'
     },
   ];
 
   const features = [
     {
       icon: TrendingUp,
-      title: t.marketAnalysis,
+      title: 'Market Analysis',
       description: 'Our services stand out through market analysis and data collection, consistently aligning with investor expectations.',
     },
     {
       icon: Building,
-      title: t.constructionServices,
+      title: 'Modern Construction Methods',
       description: 'The application of modern methods of construction in line with client\'s needs to deliver a long-lasting property.',
     },
     {
       icon: Award,
-      title: t.innovativeSolutions,
-      description: t.innovativeSolutionsDesc,
+      title: 'Innovative Solutions',
+      description: 'We provide smart and various options in both the field of construction and real estate.',
     },
   ];
 
@@ -98,44 +101,77 @@ const Index = () => {
         />
         
         {/* Hero Content Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-black/60 via-black/40 to-transparent">
           <motion.div
             initial="hidden"
             animate="visible"
             variants={staggerContainer}
-            className="text-center text-white px-4 max-w-4xl"
+            className="text-center text-white px-4 max-w-5xl"
           >
             <motion.h1 
               variants={fadeInUp}
-              className="text-3xl md:text-6xl font-bold mb-4"
+              className="text-4xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent"
             >
-              {t.welcomeTo}
+              Welcome To
             </motion.h1>
             <motion.h2 
               variants={fadeInUp}
-              className="text-xl md:text-3xl font-semibold mb-6 opacity-90"
+              className="text-2xl md:text-4xl font-bold mb-8 text-primary"
             >
-              {t.companyName}
+              Creative Construction Solution
             </motion.h2>
             <motion.p 
               variants={fadeInUp}
-              className="text-lg md:text-xl mb-8 opacity-80 max-w-2xl mx-auto"
+              className="text-xl md:text-2xl mb-12 opacity-90 max-w-3xl mx-auto leading-relaxed"
             >
-              {t.leadingCompany}
+              Leading construction and real estate development in the Sultanate of Oman
             </motion.p>
-            <motion.div variants={fadeInUp}>
+            <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/properties">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button size="lg" className="bg-primary hover:bg-primary/90 shadow-2xl">
-                    {t.viewProjects}
+                  <Button size="lg" className="bg-primary hover:bg-primary/90 shadow-2xl px-8 py-4 text-lg">
+                    View Properties
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </motion.div>
               </Link>
+              <Link to="/contact">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button size="lg" variant="outline" className="bg-white/10 hover:bg-white/20 border-white/30 text-white backdrop-blur-sm px-8 py-4 text-lg">
+                    Contact Us
+                  </Button>
+                </motion.div>
+              </Link>
             </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Company Info Section */}
+      <section className="py-20 bg-gradient-to-br from-primary/5 to-secondary/5">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeInUp}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Creative Construction Solution</h2>
+            <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+              CCS is a leading company in construction and real estate development sector in the Sultanate of Oman. 
+              A company specialized in the implementation of construction projects and real estate management across all Omani governorates. 
+              Creative Construction Solution is one of the leading companies in the field of construction and real estate in Oman. 
+              The company was established with a strong foundation of over 10 years of experience serving Omani nationals and residents, 
+              and is distinguished by providing comprehensive services to its clients, both individual and corporate, 
+              while supporting Oman Vision 2040.
+            </p>
           </motion.div>
         </div>
       </section>
@@ -150,9 +186,9 @@ const Index = () => {
             variants={fadeInUp}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t.realEstateServices}</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Services</h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              {t.companyDescription}
+              Comprehensive services tailored to meet your needs.
             </p>
           </motion.div>
 
@@ -166,34 +202,179 @@ const Index = () => {
             {services.map((service, index) => {
               const IconComponent = service.icon;
               return (
-                <motion.div key={index} variants={scaleIn}>
+                <motion.div key={index} variants={scaleIn} className="h-full">
                   <motion.div
                     whileHover={{ 
                       y: -10,
                       transition: { type: 'spring', stiffness: 300 }
                     }}
+                    className="h-full"
                   >
-                    <Card className="h-full hover:shadow-2xl transition-shadow duration-300 border-2">
-                      <CardHeader>
+                    <Card className="h-full hover:shadow-2xl transition-all duration-300 border-2 overflow-hidden group">
+                      {/* Service Image */}
+                      <div className="relative h-48 overflow-hidden">
+                        <img 
+                          src={service.image} 
+                          alt={service.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                         <motion.div 
-                          className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4"
+                          className="absolute top-4 left-4 w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center"
                           whileHover={{ rotate: 360 }}
                           transition={{ duration: 0.6 }}
                         >
-                          <IconComponent className="h-6 w-6 text-primary" />
+                          <IconComponent className="h-6 w-6 text-white" />
                         </motion.div>
-                        <CardTitle className="text-xl">{service.title}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <CardDescription className="text-base leading-relaxed">
-                          {service.description}
-                        </CardDescription>
-                      </CardContent>
+                      </div>
+                      
+                      <div className="flex flex-col h-full">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-xl font-bold">{service.title}</CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex-1 flex flex-col justify-between">
+                          <CardDescription className="text-sm leading-relaxed text-muted-foreground">
+                            {service.description}
+                          </CardDescription>
+                        </CardContent>
+                      </div>
                     </Card>
                   </motion.div>
                 </motion.div>
               );
             })}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeInUp}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Features</h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Key features of our services and operations.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
+            {features.map((feature, index) => {
+              const IconComponent = feature.icon;
+              return (
+                <motion.div key={index} variants={scaleIn}>
+                  <motion.div
+                    whileHover={{ 
+                      scale: 1.05,
+                      transition: { type: 'spring', stiffness: 300 }
+                    }}
+                    className="text-center p-8 rounded-2xl bg-background hover:shadow-xl transition-all duration-300"
+                  >
+                    <motion.div 
+                      className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6"
+                      whileHover={{ rotate: 360 }}
+                      transition={{ duration: 0.6 }}
+                    >
+                      <IconComponent className="h-8 w-8 text-primary" />
+                    </motion.div>
+                    <h3 className="text-xl font-bold mb-4">{feature.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </motion.div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Vision & Mission Section */}
+      <section className="py-20 bg-gradient-to-br from-primary/10 to-secondary/10">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Vision */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={fadeInUp}
+              className="text-center lg:text-left"
+            >
+              <div className="mb-8">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto lg:mx-0 mb-6">
+                  <TrendingUp className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-2xl md:text-3xl font-bold mb-6">Vision</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  To be the leading force in shaping Oman's skyline and communities, pioneering innovative and sustainable 
+                  construction and real estate solutions that enhance the quality of life and drive economic growth. We aspire 
+                  to set new standards of excellence through our commitment to integrity, cutting-edge technology, and a deep 
+                  respect for Oman's rich heritage and natural environment.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Mission */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={fadeInUp}
+              className="text-center lg:text-left"
+            >
+              <div className="mb-8">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto lg:mx-0 mb-6">
+                  <Award className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-2xl md:text-3xl font-bold mb-6">Mission</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  To revolutionize property development and real estate in Oman by delivering scientific and specialized 
+                  solutions that blend innovation with functionality. We are dedicated to transforming visions into reality 
+                  through our expertise, advanced technology, and commitment to sustainability. Our mission is to create 
+                  exceptional spaces that meet the evolving needs of our clients and contribute to the growth and prosperity 
+                  of our communities.
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Supporting Oman Vision 2040 Section */}
+      <section className="py-20 bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-950/20 dark:to-green-950/20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeInUp}
+            className="text-center"
+          >
+            <div className="max-w-4xl mx-auto">
+              <div className="w-20 h-20 bg-emerald-600/10 rounded-full flex items-center justify-center mx-auto mb-8">
+                <TrendingUp className="h-10 w-10 text-emerald-600" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-emerald-800 dark:text-emerald-200">
+                Supporting Oman Vision 2040
+              </h2>
+              <p className="text-lg text-emerald-700 dark:text-emerald-300 leading-relaxed">
+                Our objectives align with the vision of Oman to meet the modern renaissance requirements. 
+                We are committed to contributing to the economic diversification and sustainable development 
+                goals outlined in Oman Vision 2040, creating value for our community and the nation.
+              </p>
+            </div>
           </motion.div>
         </div>
       </section>
