@@ -51,20 +51,20 @@ const Index = () => {
   const services = [
     {
       icon: Building,
-      title: 'Real Estate Services',
-      description: 'We offer a variety of real estate opportunities, in Oman to Omani nationals and foreigners. We provide renting and the sale of properties including freehold properties with permanent residence. Additionally, we provide Property Management services.',
+      title: t.realEstateServicesTitle,
+      description: t.realEstateDevelopmentDesc,
       image: '/images/services/real-estate.jpg'
     },
     {
       icon: Users,
-      title: 'Construction Services',
-      description: 'We are highly experienced in the construction of residential villas and commercial buildings. In addition to this, we offer demolition, renovation, and refurbishment of antiquated properties.',
+      title: t.constructionServicesTitle,
+      description: t.constructionServicesDesc,
       image: '/images/services/construction.jpg'
     },
     {
       icon: Award,
-      title: 'Maintenance Services',
-      description: 'We engage in comprehensive maintenance of buildings including building completion tasks such as finishing work, electrical work, plumbing, interior decoration, and paint work.',
+      title: t.maintenanceServicesTitle,
+      description: t.propertyManagementDesc,
       image: '/images/services/maintenance.jpg'
     },
   ];
@@ -72,18 +72,18 @@ const Index = () => {
   const features = [
     {
       icon: TrendingUp,
-      title: 'Market Analysis',
-      description: 'Our services stand out through market analysis and data collection, consistently aligning with investor expectations.',
+      title: t.marketAnalysis,
+      description: t.marketAnalysisDesc,
     },
     {
       icon: Building,
-      title: 'Modern Construction Methods',
-      description: 'The application of modern methods of construction in line with client\'s needs to deliver a long-lasting property.',
+      title: t.modernConstructionMethodsTitle,
+      description: t.modernConstructionMethodsDesc,
     },
     {
       icon: Award,
-      title: 'Innovative Solutions',
-      description: 'We provide smart and various options in both the field of construction and real estate.',
+      title: t.innovativeSolutions,
+      description: t.investmentConsultingDesc,
     },
   ];
 
@@ -112,19 +112,19 @@ const Index = () => {
               variants={fadeInUp}
               className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent"
             >
-              Welcome To
+              {t.welcomeTo}
             </motion.h1>
             <motion.h2 
               variants={fadeInUp}
               className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-6 sm:mb-8 text-primary"
             >
-              Creative Construction Solution
+              {t.companyName}
             </motion.h2>
             <motion.p 
               variants={fadeInUp}
               className="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 sm:mb-12 opacity-90 max-w-3xl mx-auto leading-relaxed"
             >
-              Leading construction and real estate development in the Sultanate of Oman
+              {t.leadingCompany}
             </motion.p>
             <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <Link to="/properties" className="w-full sm:w-auto">
@@ -134,7 +134,7 @@ const Index = () => {
                   className="w-full"
                 >
                   <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 shadow-2xl px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base md:text-lg">
-                    View Properties
+                    {t.viewProperties}
                     <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                   </Button>
                 </motion.div>
@@ -146,7 +146,7 @@ const Index = () => {
                   className="w-full"
                 >
                   <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 border-white/30 text-white backdrop-blur-sm px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base md:text-lg">
-                    Contact Us
+                    {t.contactUs}
                   </Button>
                 </motion.div>
               </Link>
@@ -167,13 +167,13 @@ const Index = () => {
           >
             <Badge variant="secondary" className="mb-6">
               <Building className="h-4 w-4 mr-2" />
-              About Creative CCS
+              {t.aboutCreativeCCS}
             </Badge>
             <h2 className="text-xl md:text-2xl font-bold mb-6 bg-gradient-to-r from-primary via-primary to-blue-600 bg-clip-text text-transparent">
-              WHO ARE WE?
+              {t.whoAreWe}
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              A leading construction and real estate company in Sultanate of Oman, dedicated to excellence and innovation in property services
+              {t.whoAreWeDesc}
             </p>
           </motion.div>
 
@@ -191,12 +191,12 @@ const Index = () => {
                     <div className="w-12 h-12 bg-primary text-primary-foreground rounded-xl flex items-center justify-center text-lg font-bold group-hover:scale-110 transition-transform">
                       01
                     </div>
-                    Decade of Excellence
+                    {t.decadeOfExcellence}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground leading-relaxed">
-                    Over 10 years of proven expertise in the Omani real estate market, delivering exceptional results and building lasting relationships with our valued clients.
+                    {t.decadeOfExcellenceDesc}
                   </p>
                 </CardContent>
               </Card>
@@ -207,12 +207,12 @@ const Index = () => {
                     <div className="w-12 h-12 bg-primary text-primary-foreground rounded-xl flex items-center justify-center text-lg font-bold group-hover:scale-110 transition-transform">
                       02
                     </div>
-                    Innovation Driven
+                    {t.innovationDriven}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground leading-relaxed">
-                    Leveraging cutting-edge technology and modern approaches to provide seamless property solutions that consistently exceed client expectations.
+                    {t.innovationDrivenDesc}
                   </p>
                 </CardContent>
               </Card>
@@ -223,12 +223,12 @@ const Index = () => {
                     <div className="w-12 h-12 bg-primary text-primary-foreground rounded-xl flex items-center justify-center text-lg font-bold group-hover:scale-110 transition-transform">
                       03
                     </div>
-                    Complete Solutions
+                    {t.completeSolutions}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground leading-relaxed">
-                    From property sales and rentals to management and consultation, we offer comprehensive real estate services under one trusted roof.
+                    {t.completeSolutionsDesc}
                   </p>
                 </CardContent>
               </Card>
@@ -258,9 +258,9 @@ const Index = () => {
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
           >
             {[
-              { value: "10+", label: "Years of Excellence" },
-              { value: "500+", label: "Successful Projects" },
-              { value: "100%", label: "Client Satisfaction" }
+              { value: "10+", label: t.yearsOfExcellence },
+              { value: "500+", label: t.successfulProjects },
+              { value: "100%", label: t.clientSatisfaction }
             ].map((stat, index) => (
               <motion.div key={index} variants={scaleIn}>
                 <Card className="text-center hover:shadow-xl hover:-translate-y-1 transition-all duration-500 group">
@@ -288,10 +288,10 @@ const Index = () => {
             className="text-center mb-16"
           >
             <h2 className="text-xl md:text-2xl font-bold mb-4 bg-gradient-to-r from-primary via-primary to-blue-600 bg-clip-text text-transparent">
-              Our Services
+              {t.ourServices}
             </h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Comprehensive services tailored to meet your needs.
+              {t.ourServicesDesc}
             </p>
           </motion.div>
 
@@ -367,10 +367,10 @@ const Index = () => {
             className="text-center mb-20"
           >
             <h2 className="text-xl md:text-2xl font-bold mb-6 bg-gradient-to-r from-primary via-primary to-blue-600 bg-clip-text text-transparent">
-              Key Features
+              {t.keyFeatures}
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              What sets us apart in the competitive Omani real estate and construction market
+              {t.keyFeaturesDesc}
             </p>
           </motion.div>
 
@@ -427,10 +427,10 @@ const Index = () => {
             className="text-center mb-20"
           >
             <h2 className="text-xl md:text-2xl font-bold mb-6 bg-gradient-to-r from-primary via-primary to-blue-600 bg-clip-text text-transparent">
-              Vision & Mission
+              {t.visionMission}
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Our commitment to excellence and innovation drives everything we do
+              {t.visionMissionDesc}
             </p>
           </motion.div>
 
@@ -460,15 +460,12 @@ const Index = () => {
                     <TrendingUp className="h-10 w-10 text-primary" />
                   </motion.div>
                   <CardTitle className="text-3xl font-bold group-hover:text-primary transition-colors">
-                    Vision
+                    {t.vision}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground leading-relaxed text-lg">
-                    To be the leading force in shaping Oman's skyline and communities, pioneering innovative and sustainable 
-                    construction and real estate solutions that enhance the quality of life and drive economic growth. We aspire 
-                    to set new standards of excellence through our commitment to integrity, cutting-edge technology, and a deep 
-                    respect for Oman's rich heritage and natural environment.
+                    {t.visionDesc}
                   </p>
                 </CardContent>
               </Card>
@@ -493,16 +490,12 @@ const Index = () => {
                     <Award className="h-10 w-10 text-primary" />
                   </motion.div>
                   <CardTitle className="text-3xl font-bold group-hover:text-primary transition-colors">
-                    Mission
+                    {t.mission}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground leading-relaxed text-lg">
-                    To revolutionize property development and real estate in Oman by delivering scientific and specialized 
-                    solutions that blend innovation with functionality. We are dedicated to transforming visions into reality 
-                    through our expertise, advanced technology, and commitment to sustainability. Our mission is to create 
-                    exceptional spaces that meet the evolving needs of our clients and contribute to the growth and prosperity 
-                    of our communities.
+                    {t.missionDesc}
                   </p>
                 </CardContent>
               </Card>
@@ -538,21 +531,19 @@ const Index = () => {
                 <TrendingUp className="h-12 w-12 text-emerald-600" />
               </motion.div>
               <h2 className="text-xl md:text-2xl font-bold mb-8 text-emerald-800 dark:text-emerald-200">
-                Supporting Oman Vision 2040
+                {t.supportingVision}
               </h2>
               <p className="text-xl text-emerald-700 dark:text-emerald-300 leading-relaxed mb-8">
-                Our objectives align with the vision of Oman to meet the modern renaissance requirements. 
-                We are committed to contributing to the economic diversification and sustainable development 
-                goals outlined in Oman Vision 2040, creating value for our community and the nation.
+                {t.supportingVisionDesc}
               </p>
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-emerald-600 mb-2">2040</div>
-                  <p className="text-sm text-emerald-600/80">Vision Goal</p>
+                  <p className="text-sm text-emerald-600/80">{t.visionGoal}</p>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-emerald-600 mb-2">100%</div>
-                  <p className="text-sm text-emerald-600/80">Commitment</p>
+                  <p className="text-sm text-emerald-600/80">{t.commitment}</p>
                 </div>
               </div>
             </motion.div>
@@ -674,10 +665,10 @@ const Index = () => {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-6 bg-gradient-to-r from-primary via-primary to-blue-600 bg-clip-text text-transparent">
-              Our Trusted Partners
+              {t.ourTrustedPartners}
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Collaborating with leading companies in Oman to deliver exceptional results and drive innovation
+              {t.ourTrustedPartnersDesc}
             </p>
           </motion.div>
 
