@@ -169,7 +169,7 @@ const Index = () => {
               <Building className="h-4 w-4 mr-2" />
               About Creative CCS
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-primary to-blue-600 bg-clip-text text-transparent">
+            <h2 className="text-xl md:text-2xl font-bold mb-6 bg-gradient-to-r from-primary via-primary to-blue-600 bg-clip-text text-transparent">
               WHO ARE WE?
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
@@ -287,7 +287,7 @@ const Index = () => {
             variants={fadeInUp}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-primary to-blue-600 bg-clip-text text-transparent">
+            <h2 className="text-xl md:text-2xl font-bold mb-4 bg-gradient-to-r from-primary via-primary to-blue-600 bg-clip-text text-transparent">
               Our Services
             </h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
@@ -366,7 +366,7 @@ const Index = () => {
             variants={fadeInUp}
             className="text-center mb-20"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-primary to-blue-600 bg-clip-text text-transparent">
+            <h2 className="text-xl md:text-2xl font-bold mb-6 bg-gradient-to-r from-primary via-primary to-blue-600 bg-clip-text text-transparent">
               Key Features
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
@@ -426,7 +426,7 @@ const Index = () => {
             variants={fadeInUp}
             className="text-center mb-20"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-primary to-blue-600 bg-clip-text text-transparent">
+            <h2 className="text-xl md:text-2xl font-bold mb-6 bg-gradient-to-r from-primary via-primary to-blue-600 bg-clip-text text-transparent">
               Vision & Mission
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
@@ -537,7 +537,7 @@ const Index = () => {
               >
                 <TrendingUp className="h-12 w-12 text-emerald-600" />
               </motion.div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-8 text-emerald-800 dark:text-emerald-200">
+              <h2 className="text-xl md:text-2xl font-bold mb-8 text-emerald-800 dark:text-emerald-200">
                 Supporting Oman Vision 2040
               </h2>
               <p className="text-xl text-emerald-700 dark:text-emerald-300 leading-relaxed mb-8">
