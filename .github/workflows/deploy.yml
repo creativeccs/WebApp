@@ -37,45 +37,24 @@ jobs:
           node-version: "22"
           cache: npm
 
-      - name: Create environment file
-        run: |
-          cat > .env << EOF
-          # Creative Construction Solution - Environment Configuration
-          
-          # Admin Configuration
-          VITE_ADMIN_PUBKEY=${{ secrets.VITE_ADMIN_PUBKEY }}
-          
-          # Application Configuration
-          VITE_APP_NAME="${{ secrets.VITE_APP_NAME }}"
-          VITE_APP_DOMAIN="${{ secrets.VITE_APP_DOMAIN }}"
-          
-          # Default Relay Configuration
-          VITE_DEFAULT_RELAY="${{ secrets.VITE_DEFAULT_RELAY }}"
-          VITE_BACKUP_RELAYS="${{ secrets.VITE_BACKUP_RELAYS }}"
-          
-          # Blossom Server for File Uploads
-          VITE_BLOSSOM_SERVER="${{ secrets.VITE_BLOSSOM_SERVER }}"
-          
-          # Company Information
-          VITE_COMPANY_PHONE="${{ secrets.VITE_COMPANY_PHONE }}"
-          VITE_COMPANY_PHONE_ALT="${{ secrets.VITE_COMPANY_PHONE_ALT }}"
-          VITE_COMPANY_EMAIL="${{ secrets.VITE_COMPANY_EMAIL }}"
-          VITE_COMPANY_ADDRESS="${{ secrets.VITE_COMPANY_ADDRESS }}"
-          
-          # Supported Languages
-          VITE_DEFAULT_LANGUAGE="${{ secrets.VITE_DEFAULT_LANGUAGE }}"
-          VITE_SUPPORTED_LANGUAGES="${{ secrets.VITE_SUPPORTED_LANGUAGES }}"
-          
-          # Map Configuration
-          VITE_MAP_API_KEY="${{ secrets.VITE_MAP_API_KEY }}"
-          VITE_DEFAULT_LAT="${{ secrets.VITE_DEFAULT_LAT }}"
-          VITE_DEFAULT_LNG="${{ secrets.VITE_DEFAULT_LNG }}"
-          
-          # Development Configuration
-          VITE_DEBUG_MODE=${{ secrets.VITE_DEBUG_MODE }}
-          EOF
-
       - name: Install dependencies and build
+        env:
+          VITE_ADMIN_PUBKEY: ${{ secrets.VITE_ADMIN_PUBKEY }}
+          VITE_APP_NAME: ${{ secrets.VITE_APP_NAME }}
+          VITE_APP_DOMAIN: ${{ secrets.VITE_APP_DOMAIN }}
+          VITE_DEFAULT_RELAY: ${{ secrets.VITE_DEFAULT_RELAY }}
+          VITE_BACKUP_RELAYS: ${{ secrets.VITE_BACKUP_RELAYS }}
+          VITE_BLOSSOM_SERVER: ${{ secrets.VITE_BLOSSOM_SERVER }}
+          VITE_COMPANY_PHONE: ${{ secrets.VITE_COMPANY_PHONE }}
+          VITE_COMPANY_PHONE_ALT: ${{ secrets.VITE_COMPANY_PHONE_ALT }}
+          VITE_COMPANY_EMAIL: ${{ secrets.VITE_COMPANY_EMAIL }}
+          VITE_COMPANY_ADDRESS: ${{ secrets.VITE_COMPANY_ADDRESS }}
+          VITE_DEFAULT_LANGUAGE: ${{ secrets.VITE_DEFAULT_LANGUAGE }}
+          VITE_SUPPORTED_LANGUAGES: ${{ secrets.VITE_SUPPORTED_LANGUAGES }}
+          VITE_MAP_API_KEY: ${{ secrets.VITE_MAP_API_KEY }}
+          VITE_DEFAULT_LAT: ${{ secrets.VITE_DEFAULT_LAT }}
+          VITE_DEFAULT_LNG: ${{ secrets.VITE_DEFAULT_LNG }}
+          VITE_DEBUG_MODE: ${{ secrets.VITE_DEBUG_MODE }}
         run: |
           npm install
           npm run build
