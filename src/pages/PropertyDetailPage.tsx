@@ -488,7 +488,7 @@ function PropertyDetailPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <MapPin className="h-5 w-5 text-primary" />
-                    {language === 'fa' ? 'موقعیت ملک' : 'Property Location'}
+                    {t.propertyLocation}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
@@ -508,7 +508,7 @@ function PropertyDetailPage() {
                       <MapPin className="h-4 w-4" />
                       <span>{property.location}</span>
                       {property.lat && property.lon && (
-                        <span className="text-xs font-mono bg-background px-2 py-1 rounded border" dir="ltr">
+                        <span className="text-xs font-mono bg-background px-2 py-1 rounded border" dir="ltr" title={t.coordinates}>
                           {parseFloat(property.lat).toFixed(6)}, {parseFloat(property.lon).toFixed(6)}
                         </span>
                       )}

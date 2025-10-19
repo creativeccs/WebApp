@@ -219,6 +219,10 @@ export interface Translation {
   totalFloors: string;
   maxOccupants: string;
   locationDetails: string;
+  propertyLocation: string;
+  coordinates: string;
+  viewOnGoogleMaps: string;
+  locationNotAvailable: string;
   city: string;
   contactProperty: string;
   quickActions: string;

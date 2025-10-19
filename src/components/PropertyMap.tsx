@@ -2,6 +2,7 @@ import { MapPin, ExternalLink } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface PropertyMapProps {
   lat?: number;
@@ -30,6 +31,8 @@ export function PropertyMap({
   height: _height = '400px',
   showPopup = true,
 }: PropertyMapProps) {
+  const { t } = useI18n();
+  
   // Extract coordinates from either props or coordinates object
   const lat = propLat ?? coordinates?.lat;
   const lon = propLon ?? coordinates?.lon;
@@ -41,7 +44,7 @@ export function PropertyMap({
         <CardContent className="flex items-center justify-center p-8 h-96">
           <div className="text-center text-muted-foreground">
             <MapPin className="w-8 h-8 mx-auto mb-2" />
-            <p>موقعیت جغرافیایی در دسترس نیست</p>
+            <p>{t.locationNotAvailable}</p>
           </div>
         </CardContent>
       </Card>
@@ -94,7 +97,7 @@ export function PropertyMap({
                 onClick={() => window.open(googleMapsUrl, '_blank')}
               >
                 <ExternalLink className="w-3 h-3 mr-1" />
-                مشاهده در گوگل مپ
+                {t.viewOnGoogleMaps}
               </Button>
             </div>
           )}

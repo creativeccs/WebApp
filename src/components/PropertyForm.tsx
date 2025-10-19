@@ -350,7 +350,7 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                     </div>
                     <div>
                       <Label htmlFor="title_ar" className="flex items-center gap-2">
-                        🇸🇦 Arabic Title *
+                        🇴🇲 Arabic Title *
                       </Label>
                       <Input 
                         id="title_ar"
@@ -411,7 +411,7 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
                     </div>
                     <div>
                       <Label htmlFor="description_ar" className="flex items-center gap-2">
-                        🇸🇦 Arabic Description
+                        🇴🇲 Arabic Description
                       </Label>
                       <RichTextEditor
                         content={form.watch('description_ar') || ''}
