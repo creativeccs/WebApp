@@ -88,9 +88,9 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
       {/* Hero Section with Slideshow */}
-      <section className="relative">
+      <section className="relative overflow-hidden">
         <AdvancedSlideshow 
           images={slideshowImages} 
           autoPlay={true}
@@ -110,40 +110,42 @@ const Index = () => {
           >
             <motion.h1 
               variants={fadeInUp}
-              className="text-4xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent"
+              className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent"
             >
               Welcome To
             </motion.h1>
             <motion.h2 
               variants={fadeInUp}
-              className="text-2xl md:text-4xl font-bold mb-8 text-primary"
+              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-6 sm:mb-8 text-primary"
             >
               Creative Construction Solution
             </motion.h2>
             <motion.p 
               variants={fadeInUp}
-              className="text-xl md:text-2xl mb-12 opacity-90 max-w-3xl mx-auto leading-relaxed"
+              className="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 sm:mb-12 opacity-90 max-w-3xl mx-auto leading-relaxed"
             >
               Leading construction and real estate development in the Sultanate of Oman
             </motion.p>
-            <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/properties">
+            <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+              <Link to="/properties" className="w-full sm:w-auto">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  className="w-full"
                 >
-                  <Button size="lg" className="bg-primary hover:bg-primary/90 shadow-2xl px-8 py-4 text-lg">
+                  <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 shadow-2xl px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base md:text-lg">
                     View Properties
-                    <ArrowRight className="ml-2 h-5 w-5" />
+                    <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                   </Button>
                 </motion.div>
               </Link>
-              <Link to="/contact">
+              <Link to="/contact" className="w-full sm:w-auto">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  className="w-full"
                 >
-                  <Button size="lg" variant="outline" className="bg-white/10 hover:bg-white/20 border-white/30 text-white backdrop-blur-sm px-8 py-4 text-lg">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 border-white/30 text-white backdrop-blur-sm px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base md:text-lg">
                     Contact Us
                   </Button>
                 </motion.div>

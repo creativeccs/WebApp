@@ -171,7 +171,7 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
                 )}
               </Button>
 
-              {/* Language Switcher */}
+              {/* Language Switcher - Desktop */}
               <div className="hidden sm:block">
                 <LanguageSwitcher />
               </div>
@@ -183,6 +183,11 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
                   {t.admin}
                 </Button>
               </Link>
+
+              {/* Language Switcher - Mobile (visible next to hamburger) */}
+              <div className="sm:hidden">
+                <LanguageSwitcher />
+              </div>
 
               {/* Mobile Menu */}
               <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -300,11 +305,6 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
                         )}
                       </Button>
 
-                      {/* Language Switcher */}
-                      <div className="px-2">
-                        <LanguageSwitcher />
-                      </div>
-
                       {/* Admin Link */}
                       <Link to="/admin" className="w-full">
                         <Button variant="outline" className="w-full justify-start gap-3">
@@ -322,12 +322,36 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
       </header>
 
       {/* Main Content */}
-      <main>
+      <main className="pb-20 md:pb-0">
         {children}
       </main>
 
+      {/* Mobile Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-t md:hidden">
+        <div className="grid grid-cols-4 h-16">
+          {navigationItems.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.path);
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`flex flex-col items-center justify-center gap-1 transition-colors ${
+                  active 
+                    ? 'text-primary' 
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <Icon className={`w-5 h-5 ${active ? 'scale-110' : ''} transition-transform`} />
+                <span className="text-[10px] font-medium">{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+
       {/* Footer */}
-      <footer className="bg-muted/50 border-t">
+      <footer className="bg-muted/50 border-t pb-12 md:pb-0">
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Company Info */}
@@ -399,30 +423,9 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
           </div>
 
           {/* Bottom Footer */}
-          <div className="border-t mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center">
-            <div className="text-sm text-muted-foreground">
+          <div className="border-t mt-8 pt-8">
+            <div className="text-sm text-muted-foreground text-center">
               © 2024 {t.companyName}. {t.allRightsReserved}.
-            </div>
-            <div className="flex items-center space-x-4 mt-4 sm:mt-0">
-              <LanguageSwitcher />
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={toggleTheme}
-                className="gap-2"
-              >
-                {theme === 'dark' ? (
-                  <>
-                    <Sun className="h-4 w-4" />
-                    {t.lightMode}
-                  </>
-                ) : (
-                  <>
-                    <Moon className="h-4 w-4" />
-                    {t.darkMode}
-                  </>
-                )}
-              </Button>
             </div>
           </div>
         </div>

@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { AlertCircle, Upload, X } from 'lucide-react';
+import { AlertCircle, Upload, X, Languages, FileText, Info, Image, MapPin, Phone } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useI18n } from '@/contexts/I18nContext';
 import { useUploadFile } from '@/hooks/useUploadFile';
@@ -300,14 +300,34 @@ export function PropertyForm({ property, onSuccess, onCancel }: PropertyFormProp
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <Tabs defaultValue="multilingual" className="w-full">
-            <TabsList className="grid w-full grid-cols-6">
-              <TabsTrigger value="multilingual">🌐 Languages</TabsTrigger>
-              <TabsTrigger value="basic">Basic Info</TabsTrigger>
-              <TabsTrigger value="details">Details</TabsTrigger>
-              <TabsTrigger value="gallery">📸 Gallery</TabsTrigger>
-              <TabsTrigger value="location">Location</TabsTrigger>
-              <TabsTrigger value="contact">Contact</TabsTrigger>
-            </TabsList>
+            <div className="w-full overflow-x-auto">
+              <TabsList className="inline-flex w-auto min-w-full lg:grid lg:w-full lg:grid-cols-6">
+                <TabsTrigger value="multilingual" className="whitespace-nowrap gap-2">
+                  <Languages className="w-4 h-4" />
+                  Languages
+                </TabsTrigger>
+                <TabsTrigger value="basic" className="whitespace-nowrap gap-2">
+                  <FileText className="w-4 h-4" />
+                  Basic Info
+                </TabsTrigger>
+                <TabsTrigger value="details" className="whitespace-nowrap gap-2">
+                  <Info className="w-4 h-4" />
+                  Details
+                </TabsTrigger>
+                <TabsTrigger value="gallery" className="whitespace-nowrap gap-2">
+                  <Image className="w-4 h-4" />
+                  Gallery
+                </TabsTrigger>
+                <TabsTrigger value="location" className="whitespace-nowrap gap-2">
+                  <MapPin className="w-4 h-4" />
+                  Location
+                </TabsTrigger>
+                <TabsTrigger value="contact" className="whitespace-nowrap gap-2">
+                  <Phone className="w-4 h-4" />
+                  Contact
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             {/* Multilingual Content */}
             <TabsContent value="multilingual" className="space-y-6">

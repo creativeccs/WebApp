@@ -461,7 +461,7 @@ export default function Admin() {
                 <motion.button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center justify-center sm:justify-start gap-2 px-3 sm:px-4 py-2 rounded-md transition-all whitespace-nowrap ${
+                  className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-md transition-all ${
                     activeTab === tab.id
                       ? 'bg-background shadow-md text-primary'
                       : 'text-muted-foreground hover:text-foreground'
@@ -469,8 +469,8 @@ export default function Admin() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <tab.icon className="w-4 h-4" />
-                  <span className="font-medium text-sm sm:text-base">{tab.label}</span>
+                  <tab.icon className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="font-medium text-xs sm:text-base leading-tight text-center sm:text-left">{tab.label}</span>
                 </motion.button>
               ))}
             </div>
