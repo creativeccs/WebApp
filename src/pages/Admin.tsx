@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { LoginArea } from '@/components/auth/LoginArea';
 import { PropertyForm } from '@/components/PropertyForm';
+import { PropertyCard } from '@/components/PropertyCard';
 import { EncryptedMessagesPanel } from '@/components/EncryptedMessagesPanel';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -715,98 +716,53 @@ export default function Admin() {
                               key={property.id}
                               initial={{ opacity: 0, scale: 0.95 }}
                               animate={{ opacity: 1, scale: 1 }}
-                              whileHover={{ y: -4 }}
                               transition={{ duration: 0.2 }}
                             >
-                              <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                                {property.images && property.images.length > 0 && (
-                                  <div className="relative h-40 sm:h-48 overflow-hidden">
-                                    {(() => {
-                                      const mainImage = property.images.find(img => img.isMain) || property.images[0];
-                                      return (
-                                        <img
-                                          src={mainImage.url}
-                                          alt={mainImage.alt || property.title}
-                                          className="w-full h-full object-cover"
-                                        />
-                                      );
-                                    })()}
-                                    <div className="absolute top-2 right-2 flex flex-col sm:flex-row gap-2">
-                                      <span className={`px-2 py-1 text-xs font-semibold rounded ${
-                                        property.status === 'available' ? 'bg-green-500' :
-                                        property.status === 'pending' ? 'bg-yellow-500' :
-                                        property.status === 'sold' ? 'bg-red-500' :
-                                        'bg-blue-500'
-                                      } text-white`}>
-                                        {property.status.toUpperCase()}
-                                      </span>
-                                      <span className="px-2 py-1 text-xs font-semibold rounded bg-primary text-primary-foreground">
-                                        {property.type.toUpperCase()}
-                                      </span>
-                                    </div>
-                                  </div>
-                                )}
-                                <CardContent className="p-3 sm:p-4">
-                                  <h3 className="text-base sm:text-lg font-bold mb-2 line-clamp-1">
-                                    {localizedTitle}
-                                  </h3>
-
-                                  <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
-                                    <div className="flex items-center justify-between">
-                                      <span className="text-muted-foreground">Price:</span>
-                                      <span className="font-bold text-base sm:text-lg">
-                                        {property.price} {property.currency}
-                                      </span>
-                                    </div>
-                                    {property.area && (
-                                      <div className="flex items-center justify-between">
-                                        <span className="text-muted-foreground">Area:</span>
-                                        <span className="font-medium">{property.area} m²</span>
-                                      </div>
-                                    )}
-                                    {(property.bedrooms || property.bathrooms) && (
-                                      <div className="flex items-center justify-between">
-                                        <span className="text-muted-foreground">Bed/Bath:</span>
-                                        <span className="font-medium">
-                                          {property.bedrooms || '?'} / {property.bathrooms || '?'}
-                                        </span>
-                                      </div>
-                                    )}
-                                    <div className="flex items-center justify-between">
-                                      <span className="text-muted-foreground">Location:</span>
-                                      <span className="font-medium line-clamp-1">{property.location}</span>
-                                    </div>
-                                  </div>
-                                  <div className="flex gap-2 mt-3 sm:mt-4">
+                              <PropertyCard
+                                property={property}
+                                title={localizedTitle}
+                                t={{
+                                  sale: t.sale,
+                                  rent: t.rent,
+                                  both: t.both,
+                                  available: t.available,
+                                  sold: t.sold,
+                                  rented: t.rented,
+                                  pending: t.pending,
+                                  view: t.view,
+                                  propertyDetails: t.propertyDetails
+                                }}
+                                actions={
+                                  <>
                                     <Button 
                                       variant="outline" 
                                       size="sm" 
-                                      className="flex-1 text-xs sm:text-sm h-8 sm:h-9"
+                                      className="flex-1"
                                       onClick={() => window.open(`/property/${property.d}`, '_blank')}
                                     >
-                                      <Eye className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
-                                      <span className="hidden sm:inline">{t.view}</span>
+                                      <Eye className="w-4 h-4 mr-1" />
+                                      {t.view}
                                     </Button>
                                     <Button 
                                       variant="outline" 
                                       size="sm" 
-                                      className="flex-1 text-xs sm:text-sm h-8 sm:h-9"
+                                      className="flex-1"
                                       onClick={() => setPropertyToEdit(property)}
                                     >
-                                      <Pencil className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
-                                      <span className="hidden sm:inline">{t.edit}</span>
+                                      <Pencil className="w-4 h-4 mr-1" />
+                                      {t.edit}
                                     </Button>
                                     <Button 
                                       variant="outline" 
                                       size="sm"
-                                      className="text-destructive hover:text-destructive h-8 sm:h-9 px-2 sm:px-3"
+                                      className="text-destructive hover:text-destructive"
                                       onClick={() => setPropertyToDelete(property)}
                                     >
-                                      <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                                      <Trash2 className="w-4 h-4" />
                                     </Button>
-                                  </div>
-                                </CardContent>
-                              </Card>
+                                  </>
+                                }
+                              />
                             </motion.div>
                             );
                           })}

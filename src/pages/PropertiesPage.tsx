@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RelaySelector } from '@/components/RelaySelector';
+import { PropertyCard } from '@/components/PropertyCard';
 import { useI18n } from '@/contexts/I18nContext';
 import { useProperties, usePropertyFilterOptions } from '@/hooks/useProperties';
 import { useIsAdmin } from '@/hooks/useAdmin';
@@ -14,17 +15,12 @@ import type { Property } from '@/lib/types/property';
 import { 
   Search, 
   Plus, 
-  MapPin, 
-  Bed, 
-  Bath, 
-  Square, 
-  Car, 
-  TreePine, 
-  Waves,
   X,
-  SlidersHorizontal
+  SlidersHorizontal,
+  Car,
+  TreePine,
+  Waves
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 function PropertiesPage() {
@@ -359,95 +355,27 @@ function PropertiesPage() {
             {/* Properties Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {properties.map((property) => {
-              const localizedTitle = getLocalizedText(property, 'title');
-              
-              // Find main image or fallback to first image
-              const mainImage = property.images?.find(img => img.isMain) || property.images?.[0];
-              
-              return (
-                <Card key={property.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-                  {property.images && property.images.length > 0 && mainImage && (
-                    <div className="relative aspect-[4/3] overflow-hidden">
-                      <img
-                        src={mainImage.url}
-                        alt={mainImage.alt || property.title}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute top-2 left-2 flex gap-2">
-                        <Badge variant={property.type === 'sale' ? 'default' : 'secondary'}>
-                          {property.type === 'sale' ? t.sale : property.type === 'rent' ? t.rent : t.both}
-                        </Badge>
-                        <Badge variant="outline" className="bg-background/90">
-                          {property.status === 'available' ? t.available : 
-                           property.status === 'sold' ? t.sold :
-                           property.status === 'rented' ? t.rented : t.pending}
-                        </Badge>
-                      </div>
-                      {/* Amenities Icons */}
-                      <div className="absolute bottom-2 right-2 flex space-x-1">
-                        {property.parking === 'yes' && (
-                          <div className="bg-background/90 p-1 rounded">
-                            <Car className="h-3 w-3" />
-                          </div>
-                        )}
-                        {property.garden === 'yes' && (
-                          <div className="bg-background/90 p-1 rounded">
-                            <TreePine className="h-3 w-3" />
-                          </div>
-                        )}
-                        {property.pool === 'yes' && (
-                          <div className="bg-background/90 p-1 rounded">
-                            <Waves className="h-3 w-3" />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-xl line-clamp-1">{localizedTitle}</CardTitle>
-                    <div className="flex items-center text-muted-foreground">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      <span className="text-sm line-clamp-1">{property.location}</span>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-2xl font-bold text-primary">
-                        {property.price} {property.currency}
-                      </span>
-                      <Badge variant="outline">{property.category}</Badge>
-                    </div>
-                    
-                    <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-4">
-                      {property.bedrooms && (
-                        <div className="flex items-center">
-                          <Bed className="h-4 w-4 mr-1" />
-                          <span>{property.bedrooms}</span>
-                        </div>
-                      )}
-                      {property.bathrooms && (
-                        <div className="flex items-center">
-                          <Bath className="h-4 w-4 mr-1" />
-                          <span>{property.bathrooms}</span>
-                        </div>
-                      )}
-                      {property.area && (
-                        <div className="flex items-center">
-                          <Square className="h-4 w-4 mr-1" />
-                          <span>{property.area}m²</span>
-                        </div>
-                      )}
-                    </div>
-                    
-                    <Link to={`/property/${property.d}`}>
-                      <Button variant="outline" className="w-full">
-                        {t.view} {t.propertyDetails}
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                const localizedTitle = getLocalizedText(property, 'title');
+                
+                return (
+                  <PropertyCard
+                    key={property.id}
+                    property={property}
+                    title={localizedTitle}
+                    t={{
+                      sale: t.sale,
+                      rent: t.rent,
+                      both: t.both,
+                      available: t.available,
+                      sold: t.sold,
+                      rented: t.rented,
+                      pending: t.pending,
+                      view: t.view,
+                      propertyDetails: t.propertyDetails
+                    }}
+                  />
+                );
+              })}
             </div>
           </>
         )}

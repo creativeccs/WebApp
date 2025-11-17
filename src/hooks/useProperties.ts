@@ -30,14 +30,37 @@ export function useProperties(filters?: PropertyFilter) {
       const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
 
       try {
-        const events = await nostr.query([baseFilter], { 
-          signal: controller.signal 
-        });
+        // Query both properties and deletion events
+        const [propertyEvents, deletionEvents] = await Promise.all([
+          nostr.query([baseFilter], { signal: controller.signal }),
+          nostr.query([{
+            kinds: [5],
+            authors: [adminPubkey],
+            '#k': ['30403']
+          }], { signal: controller.signal })
+        ]);
 
         clearTimeout(timeoutId);
 
-        // Validate and convert events to properties
-        const properties: Property[] = events
+        // Build set of deleted property identifiers
+        const deletedProperties = new Set<string>();
+        for (const delEvent of deletionEvents) {
+          const aTags = delEvent.tags.filter(([name]) => name === 'a');
+          for (const [, aValue] of aTags) {
+            // Extract d-identifier from a tag (format: kind:pubkey:d-identifier)
+            const parts = aValue.split(':');
+            if (parts.length === 3) {
+              deletedProperties.add(parts[2]); // d-identifier
+            }
+          }
+        }
+
+        // Validate and convert events to properties, filtering out deleted ones
+        const properties: Property[] = propertyEvents
+          .filter(event => {
+            const dTag = event.tags.find(([name]) => name === 'd')?.[1];
+            return dTag && !deletedProperties.has(dTag);
+          })
           .map(validateProperty)
           .filter((property): property is Property => property !== null);
 
@@ -147,22 +170,38 @@ export function useProperty(propertyId: string) {
       const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
 
       try {
-        const events = await nostr.query([{
-          kinds: [30403],
-          authors: [adminPubkey],
-          '#d': [propertyId],
-          '#t': ['property']
-        }], { 
-          signal: controller.signal 
-        });
+        // Query both the property and deletion events
+        const [propertyEvents, deletionEvents] = await Promise.all([
+          nostr.query([{
+            kinds: [30403],
+            authors: [adminPubkey],
+            '#d': [propertyId],
+            '#t': ['property']
+          }], { signal: controller.signal }),
+          nostr.query([{
+            kinds: [5],
+            authors: [adminPubkey],
+            '#k': ['30403']
+          }], { signal: controller.signal })
+        ]);
 
         clearTimeout(timeoutId);
 
-        if (events.length === 0) {
+        if (propertyEvents.length === 0) {
           return null;
         }
 
-        return validateProperty(events[0]);
+        // Check if this property has been deleted
+        const addressableTag = `30403:${adminPubkey}:${propertyId}`;
+        const isDeleted = deletionEvents.some(delEvent =>
+          delEvent.tags.some(([name, value]) => name === 'a' && value === addressableTag)
+        );
+
+        if (isDeleted) {
+          return null;
+        }
+
+        return validateProperty(propertyEvents[0]);
       } catch (error) {
         clearTimeout(timeoutId);
         console.error('useProperty - Error querying property:', error);
@@ -190,18 +229,41 @@ export function useFeaturedProperties(limit = 6) {
       const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
 
       try {
-        const events = await nostr.query([{
-          kinds: [30403],
-          authors: [adminPubkey],
-          '#status': ['available'],
-          '#t': ['property']
-        }], { 
-          signal: controller.signal 
-        });
+        // Query both properties and deletion events
+        const [propertyEvents, deletionEvents] = await Promise.all([
+          nostr.query([{
+            kinds: [30403],
+            authors: [adminPubkey],
+            '#status': ['available'],
+            '#t': ['property']
+          }], { signal: controller.signal }),
+          nostr.query([{
+            kinds: [5],
+            authors: [adminPubkey],
+            '#k': ['30403']
+          }], { signal: controller.signal })
+        ]);
 
         clearTimeout(timeoutId);
 
-        const properties: Property[] = events
+        // Build set of deleted property identifiers
+        const deletedProperties = new Set<string>();
+        for (const delEvent of deletionEvents) {
+          const aTags = delEvent.tags.filter(([name]) => name === 'a');
+          for (const [, aValue] of aTags) {
+            const parts = aValue.split(':');
+            if (parts.length === 3) {
+              deletedProperties.add(parts[2]);
+            }
+          }
+        }
+
+        // Filter out deleted properties
+        const properties: Property[] = propertyEvents
+          .filter(event => {
+            const dTag = event.tags.find(([name]) => name === 'd')?.[1];
+            return dTag && !deletedProperties.has(dTag);
+          })
           .map(validateProperty)
           .filter((property): property is Property => property !== null);
 

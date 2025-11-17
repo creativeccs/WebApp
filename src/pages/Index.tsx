@@ -7,7 +7,8 @@ import { AdvancedSlideshow } from '@/components/AdvancedSlideshow';
 import { useSlideshowImages } from '@/hooks/useSlideshowImages';
 import { useFeaturedProperties } from '@/hooks/useProperties';
 import { useI18n } from '@/contexts/I18nContext';
-import { Building, Users, Award, TrendingUp, ArrowRight, MapPin, Bed, Bath, Square } from 'lucide-react';
+import { PropertyCard } from '@/components/PropertyCard';
+import { Building, Users, Award, TrendingUp, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 // Motion.dev Inspired Animation Variants
@@ -579,64 +580,21 @@ const Index = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
               {featuredProperties.map((property) => (
-                <Card key={property.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                  {property.images && property.images.length > 0 && (
-                    <div className="relative aspect-[4/3] overflow-hidden rounded-t-lg">
-                      <img
-                        src={property.images[0].url}
-                        alt={property.images[0].alt || property.title}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute top-2 left-2">
-                        <Badge variant={property.type === 'sale' ? 'default' : 'secondary'}>
-                          {property.type === 'sale' ? t.sale : property.type === 'rent' ? t.rent : t.both}
-                        </Badge>
-                      </div>
-                    </div>
-                  )}
-                  <CardHeader>
-                    <CardTitle className="text-xl line-clamp-1">{property.title}</CardTitle>
-                    <div className="flex items-center text-muted-foreground">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      <span className="text-sm">{property.location}</span>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-2xl font-bold text-primary">
-                        {property.price} {property.currency}
-                      </span>
-                      <Badge variant="outline">{property.category}</Badge>
-                    </div>
-                    
-                    <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                      {property.bedrooms && (
-                        <div className="flex items-center">
-                          <Bed className="h-4 w-4 mr-1" />
-                          <span>{property.bedrooms}</span>
-                        </div>
-                      )}
-                      {property.bathrooms && (
-                        <div className="flex items-center">
-                          <Bath className="h-4 w-4 mr-1" />
-                          <span>{property.bathrooms}</span>
-                        </div>
-                      )}
-                      {property.area && (
-                        <div className="flex items-center">
-                          <Square className="h-4 w-4 mr-1" />
-                          <span>{property.area}m²</span>
-                        </div>
-                      )}
-                    </div>
-                    
-                    <Link to={`/property/${property.d}`} className="mt-4 block">
-                      <Button variant="outline" className="w-full">
-                        {t.view} {t.propertyDetails}
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
+                <PropertyCard
+                  key={property.id}
+                  property={property}
+                  t={{
+                    sale: t.sale,
+                    rent: t.rent,
+                    both: t.both,
+                    available: t.available,
+                    sold: t.sold,
+                    rented: t.rented,
+                    pending: t.pending,
+                    view: t.view,
+                    propertyDetails: t.propertyDetails
+                  }}
+                />
               ))}
             </div>
 
