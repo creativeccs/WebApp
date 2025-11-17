@@ -217,13 +217,15 @@ export function useDeleteProperty() {
         throw new Error('Admin access required');
       }
 
-      // In Nostr, we can't truly delete events, but we can publish a deletion event
-      // Or update the property status to 'deleted' or 'inactive'
+      // For addressable events (kind 30403), use 'a' tag with format: kind:pubkey:d-identifier
+      const addressableTag = `30403:${user.pubkey}:${propertyId}`;
+
       const event = {
-        kind: 5, // Deletion event
+        kind: 5, // Deletion event (NIP-09)
         content: 'Property deleted by admin',
         tags: [
-          ['e', propertyId], // Reference to the property event to delete
+          ['a', addressableTag], // Reference to addressable event
+          ['k', '30403'], // Kind being deleted
           ['t', 'property-deletion']
         ]
       };
