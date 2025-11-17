@@ -70,8 +70,17 @@ export function useEncryptedMessages() {
             // Decrypt the message using NIP-04
             const decryptedText = await user.signer.nip04.decrypt(event.pubkey, event.content);
             
-            // Parse the decrypted JSON content
-            const decryptedContent = JSON.parse(decryptedText);
+            // Try to parse as JSON, if it fails, treat as plaintext message
+            let decryptedContent;
+            try {
+              decryptedContent = JSON.parse(decryptedText);
+            } catch {
+              // If not JSON, create a simple message object
+              decryptedContent = {
+                message: decryptedText,
+                timestamp: new Date(event.created_at * 1000).toISOString(),
+              };
+            }
 
             return {
               id: event.id,
