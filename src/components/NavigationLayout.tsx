@@ -51,10 +51,10 @@ export function NavigationLayout({ children }: NavigationLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 overflow-x-hidden">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <div className={`flex items-center ${isRTL ? 'space-x-reverse space-x-4' : 'space-x-4'}`}>
