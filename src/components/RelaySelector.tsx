@@ -23,17 +23,14 @@ interface RelaySelectorProps {
 
 export function RelaySelector(props: RelaySelectorProps) {
   const { className } = props;
-  const { config, updateConfig, presetRelays = [] } = useAppContext();
-  
-  const selectedRelay = config.relayUrl;
-  const setSelectedRelay = (relay: string) => {
-    updateConfig((current) => ({ ...current, relayUrl: relay }));
+  const { presetRelays = [] } = useAppContext();
+  // RelaySelector now shows the relay pool. Single-relay selection is disabled — the app uses the full pool.
+  const setSelectedRelay = (_relay: string) => {
+    // no-op: single relay selection is disabled when using a relay pool
   };
 
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
-
-  const selectedOption = presetRelays.find((option) => option.url === selectedRelay);
 
   // Function to normalize relay URL by adding wss:// if no protocol is present
   const normalizeRelayUrl = (url: string): string => {
@@ -82,14 +79,7 @@ export function RelaySelector(props: RelaySelectorProps) {
         >
           <div className="flex items-center gap-2">
             <Wifi className="h-4 w-4" />
-            <span className="truncate">
-              {selectedOption 
-                ? selectedOption.name 
-                : selectedRelay 
-                  ? selectedRelay.replace(/^wss?:\/\//, '')
-                  : "Select relay..."
-              }
-            </span>
+            <span className="truncate">Relay pool</span>
           </div>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -133,8 +123,8 @@ export function RelaySelector(props: RelaySelectorProps) {
                   <CommandItem
                     key={option.url}
                     value={option.url}
-                    onSelect={(currentValue) => {
-                      setSelectedRelay(normalizeRelayUrl(currentValue));
+                    onSelect={() => {
+                      // selection is disabled when using a relay pool; just close the popover
                       setOpen(false);
                       setInputValue("");
                     }}
@@ -142,7 +132,7 @@ export function RelaySelector(props: RelaySelectorProps) {
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        selectedRelay === option.url ? "opacity-100" : "opacity-0"
+                        "opacity-0"
                       )}
                     />
                     <div className="flex flex-col">

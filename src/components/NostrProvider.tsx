@@ -1,7 +1,6 @@
-import React, { useEffect, useRef } from 'react';
-import { NostrEvent, NPool, NRelay1 } from '@nostrify/nostrify';
+import React, { useMemo } from 'react';
+import { NostrEvent, NPool, NRelay1, type NostrFilter } from '@nostrify/nostrify';
 import { NostrContext } from '@nostrify/react';
-import { useQueryClient } from '@tanstack/react-query';
 import { useAppContext } from '@/hooks/useAppContext';
 
 interface NostrProviderProps {
@@ -10,62 +9,43 @@ interface NostrProviderProps {
 
 const NostrProvider: React.FC<NostrProviderProps> = (props) => {
   const { children } = props;
-  const { config, presetRelays } = useAppContext();
+  const { presetRelays } = useAppContext();
 
-  const queryClient = useQueryClient();
-
-  // Create NPool instance only once
-  const pool = useRef<NPool | undefined>(undefined);
-
-  // Use refs so the pool always has the latest data
-  const relayUrl = useRef<string>(config.relayUrl);
-
-  // Update refs when config changes
-  useEffect(() => {
-    relayUrl.current = config.relayUrl;
-    queryClient.resetQueries();
-  }, [config.relayUrl, queryClient]);
-
-  // Initialize NPool only once
-  if (!pool.current) {
-    pool.current = new NPool({
+  // Create NPool instance with current preset relays
+  const pool = useMemo(() => {
+    const relays = presetRelays ?? [];
+    
+    return new NPool({
       open(url: string) {
         return new NRelay1(url);
       },
       reqRouter(filters) {
-        // Use all available relays for reading to ensure better content discovery
-        const readRelays = new Map();
-        const allRelayUrls = [
-          relayUrl.current,
-          ...(presetRelays ?? []).map(relay => relay.url)
-        ];
+        // Use all available preset relays for reading to ensure better content discovery
+        const readRelays = new Map<string, NostrFilter[]>();
+        const allRelayUrls = relays.map((r) => r.url);
 
-        // Distribute queries across all relays for better decentralization
-        for (const relayUrl of allRelayUrls) {
-          readRelays.set(relayUrl, filters);
+        // Distribute identical filters across all relays
+        for (const rUrl of allRelayUrls) {
+          readRelays.set(rUrl, filters);
         }
 
         return readRelays;
       },
-      eventRouter(_event: NostrEvent) {
-        // Publish to ALL relays for maximum distribution and reliability
+      eventRouter(event: NostrEvent) {
+        // Publish to ALL preset relays for maximum distribution and reliability
         const allRelays = new Set<string>();
 
-        // Always include the current selected relay
-        allRelays.add(relayUrl.current);
-
-        // Add all preset relays for comprehensive coverage
-        for (const { url } of (presetRelays ?? [])) {
+        for (const { url } of relays) {
           allRelays.add(url);
         }
 
         return [...allRelays];
       },
     });
-  }
+  }, [presetRelays]);
 
   return (
-    <NostrContext.Provider value={{ nostr: pool.current }}>
+    <NostrContext.Provider value={{ nostr: pool }}>
       {children}
     </NostrContext.Provider>
   );

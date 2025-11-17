@@ -16,7 +16,6 @@ interface AppProviderProps {
 // Zod schema for AppConfig validation
 const AppConfigSchema: z.ZodType<AppConfig, z.ZodTypeDef, unknown> = z.object({
   theme: z.enum(['dark', 'light', 'system']),
-  relayUrl: z.string().url(),
 });
 
 export function AppProvider(props: AppProviderProps) {
@@ -35,7 +34,8 @@ export function AppProvider(props: AppProviderProps) {
       serialize: JSON.stringify,
       deserialize: (value: string) => {
         const parsed = JSON.parse(value);
-        return AppConfigSchema.parse(parsed);
+        // Validate at least the theme exists and ignore any legacy relayUrl
+        return AppConfigSchema.parse({ theme: parsed.theme });
       }
     }
   );

@@ -5,8 +5,7 @@ export type Theme = "dark" | "light" | "system";
 export interface AppConfig {
   /** Current theme */
   theme: Theme;
-  /** Selected relay URL */
-  relayUrl: string;
+  /** NOTE: No single relay URL is stored anymore. The app uses a relay pool (presetRelays) for all network operations. */
 }
 
 export interface AppContextType {

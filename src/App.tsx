@@ -27,27 +27,29 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      staleTime: 60000, // 1 minute
+      staleTime: 5 * 60 * 1000, // 5 minutes
       gcTime: Infinity,
+      retry: 1, // Retry only once on failure
     },
   },
 });
 
 const defaultConfig: AppConfig = {
   theme: "light",
-  relayUrl: "wss://relay.primal.net", // This is now just for UI display, actual connection uses relay pool
 };
 
-// Updated relay pool based on your specification
-const presetRelays = [
-  { url: 'wss://nostr-01.yakihonne.com', name: 'Yakihonne 1' },
-  { url: 'wss://nostr-02.yakihonne.com', name: 'Yakihonne 2' },
-  { url: 'wss://relay.damus.io', name: 'Damus' },
-  { url: 'wss://relay.nostr.band', name: 'Nostr.Band' },
-  { url: 'wss://relay.angor.io', name: 'Angor' },
-  { url: 'wss://relay.primal.net', name: 'Primal' },
-  { url: 'wss://nos.lol', name: 'nos.lol' },
-];
+// Parse backup relays from environment variable
+const RelayUrls = (import.meta.env.VITE_RELAYS || "wss://nos.lol,wss://nostr-1.nbo.angani.co,wss://nostr-pub.wellorder.net,wss://relay.angor.io,wss://relay.damus.io,wss://relay.nostr.band,wss://relay.primal.net,wss://relay.snort.social")
+  .split(',')
+  .map((url: string) => url.trim());
+
+// Build relay pool from backup relays
+const presetRelays = RelayUrls.map((url: string) => {
+  // Extract relay name from URL
+  const hostname = url.replace('wss://', '').replace('ws://', '');
+  const name = hostname.split('.')[0].charAt(0).toUpperCase() + hostname.split('.')[0].slice(1);
+  return { url, name };
+});
 
 export function App() {
   return (
